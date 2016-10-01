@@ -221,6 +221,10 @@ else
   KODI_VAAPI="--disable-vaapi"
 fi
 
+if [ "$PROJECT" = "Slice2" ]; then
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET led_tools"
+fi
+
 export CXX_FOR_BUILD="$HOST_CXX"
 export CC_FOR_BUILD="$HOST_CC"
 export CXXFLAGS_FOR_BUILD="$HOST_CXXFLAGS"
