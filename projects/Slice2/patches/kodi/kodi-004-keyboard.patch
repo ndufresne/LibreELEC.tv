@@ -9,3 +9,14 @@
        <x>Stop</x>
        <period>SkipNext</period>
        <comma>SkipPrevious</comma>
+@@ -321,8 +321,8 @@
+       <l>NextSubtitle</l>
+       <left>StepBack</left>
+       <right>StepForward</right>
+-      <up>ChapterOrBigStepForward</up>
+-      <down>ChapterOrBigStepBack</down>
++      <up>VolumeUp</up>
++      <down>VolumeDown</down>
+       <up mod="longpress">AudioNextLanguage</up>
+       <down mod="longpress">NextSubtitle</down>
+       <a>AudioDelay</a>
