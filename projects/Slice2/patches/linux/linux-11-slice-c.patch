@@ -246,7 +246,7 @@
 + 				SND_SOC_DAIFMT_CBM_CFM,
 + 	.ops		= &snd_slice_ops,
 + 	.init		= snd_slice_init,
-+    .be_hw_params_fixup = snd_slice_params_fixup,
++   .be_hw_params_fixup = snd_slice_params_fixup,
 + },
 + };
 +
