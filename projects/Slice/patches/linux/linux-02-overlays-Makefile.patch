@@ -1,0 +1,11 @@
+--- a/arch/arm/boot/dts/overlays/Makefile	2016-10-01 08:57:18.587961262 +0100
++++ b/arch/arm/boot/dts/overlays/Makefile	2016-10-01 09:28:00.697469994 +0100
+@@ -101,6 +101,8 @@ dtbo-$(RPI_DT_OVERLAYS) += vga666.dtbo
+ dtbo-$(RPI_DT_OVERLAYS) += w1-gpio.dtbo
+ dtbo-$(RPI_DT_OVERLAYS) += w1-gpio-pullup.dtbo
+ dtbo-$(RPI_DT_OVERLAYS) += wittypi.dtbo
++dtbo-$(RPI_DT_OVERLAYS) += ws2812.dtbo
++dtbo-$(RPI_DT_OVERLAYS) += slice.dtbo
+
+ targets += dtbs dtbs_install
+ targets += $(dtbo-y)

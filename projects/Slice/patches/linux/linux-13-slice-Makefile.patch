@@ -1,0 +1,15 @@
+--- a/sound/soc/bcm/Makefile	2016-10-01 08:20:27.118132254 +0100
++++ b/sound/soc/bcm/Makefile	2016-10-01 08:23:22.806031744 +0100
+@@ -20,6 +20,7 @@ snd-soc-audioinjector-pi-soundcard-objs
+ snd-soc-digidac1-soundcard-objs := digidac1-soundcard.o
+ snd-soc-dionaudio-loco-objs := dionaudio_loco.o
+ snd-soc-allo-piano-dac-objs := allo-piano-dac.o
++snd-soc-slice-objs := slice.o
+ 
+ obj-$(CONFIG_SND_BCM2708_SOC_ADAU1977_ADC) += snd-soc-adau1977-adc.o
+ obj-$(CONFIG_SND_BCM2708_SOC_HIFIBERRY_DAC) += snd-soc-hifiberry-dac.o
+@@ -37,3 +38,4 @@ obj-$(CONFIG_SND_AUDIOINJECTOR_PI_SOUNDC
+ obj-$(CONFIG_SND_DIGIDAC1_SOUNDCARD) += snd-soc-digidac1-soundcard.o
+ obj-$(CONFIG_SND_BCM2708_SOC_DIONAUDIO_LOCO) += snd-soc-dionaudio-loco.o
+ obj-$(CONFIG_SND_BCM2708_SOC_ALLO_PIANO_DAC) += snd-soc-allo-piano-dac.o
++obj-$(CONFIG_SND_BCM2708_SOC_SLICE) += snd-soc-slice.o

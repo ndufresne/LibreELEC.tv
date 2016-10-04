@@ -221,7 +221,7 @@ else
   KODI_VAAPI="--disable-vaapi"
 fi
 
-if [ "$PROJECT" = "Slice2" ]; then
+if [ "$PROJECT" = "Slice" ] || [ "$PROJECT" = "Slice2" ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET led_tools"
 fi
 
