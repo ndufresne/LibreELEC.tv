@@ -1,6 +1,6 @@
---- a/drivers/misc/ws2812.c     1970-01-01 01:00:00.000000000 +0100
-+++ b/drivers/misc/ws2812.c	2016-10-01 09:07:43.106069701 +0100
-@@ -0,0 +1,524 @@
+--- a/drivers/misc/ws2812.c	2016-08-17 21:00:22.264000134 +0100
++++ b/drivers/misc/ws2812.c 	2016-10-04 14:12:32.512699063 +0100
+@@ -0,0 +1,536 @@
 +/*
 + * Raspberry Pi WS2812 PWM driver
 + *
@@ -71,6 +71,7 @@
 +#include <linux/platform_device.h>
 +#include <linux/uaccess.h>
 +#include <linux/of.h>
++#include <linux/of_address.h>
 +#include <linux/gpio/consumer.h>
 +#include <asm-generic/ioctl.h>
 +
@@ -78,22 +79,22 @@
 +
 +struct ws2812_state {
 +	struct device *        dev;
-+    struct cdev            cdev;
-+    struct class *         cl;
-+    struct dma_chan *      dma_chan;
++	struct cdev            cdev;
++	struct class *         cl;
++	struct dma_chan *      dma_chan;
 +	dma_addr_t dma_addr;
 +
-+    void __iomem *         ioaddr;
-+    phys_addr_t            phys_addr;
++	void __iomem *         ioaddr;
++	phys_addr_t            phys_addr;
 +
-+    uint8_t *              buffer;
-+    uint32_t *             pixbuf;
++	uint8_t *              buffer;
++	uint32_t *             pixbuf;
 +
-+    struct gpio_desc *     led_en;
++	struct gpio_desc *     led_en;
 +
-+    unsigned char          brightness;
-+    u32                    invert;
-+    u32                    num_leds;
++	unsigned char          brightness;
++	u32                    invert;
++	u32                    num_leds;
 +};
 +
 +#ifndef BCM2708_PERI_BASE
@@ -178,7 +179,7 @@
 +	struct ws2812_state * state = (struct ws2812_state *) param;
 +
 +	dma_unmap_single(state->dev, state->dma_addr, state->num_leds * BYTES_PER_LED,
-+		DMA_TO_DEVICE);
++	                 DMA_TO_DEVICE);
 +
 +}
 +
@@ -219,24 +220,24 @@
 +
 +int clear_leds(struct ws2812_state * state)
 +{
-+    int i;
++	int i;
 +
-+    for(i = 0; i < state->num_leds * BYTES_PER_LED; i++)
-+        state->buffer[i] = 0x88;
-+    for(i = 0; i < RESET_BYTES; i++)
-+        state->buffer[state->num_leds * BYTES_PER_LED + i] = 0;
++	for(i = 0; i < state->num_leds * BYTES_PER_LED; i++)
++		state->buffer[i] = 0x88;
++	for(i = 0; i < RESET_BYTES; i++)
++		state->buffer[state->num_leds * BYTES_PER_LED + i] = 0;
 +
-+    issue_dma(state, state->buffer, state->num_leds * BYTES_PER_LED + RESET_BYTES);
++	issue_dma(state, state->buffer, state->num_leds * BYTES_PER_LED + RESET_BYTES);
 +
 +	return 0;
 +}
 +
 +static int ws2812_open(struct inode *inode, struct file *file)
 +{
-+    struct ws2812_state * state;
-+    state  = container_of(inode->i_cdev, struct ws2812_state, cdev);
++	struct ws2812_state * state;
++	state  = container_of(inode->i_cdev, struct ws2812_state, cdev);
 +
-+    file->private_data = state;
++	file->private_data = state;
 +
 +	return 0;
 +}
@@ -315,9 +316,9 @@
 +	int32_t *p_rgb;
 +	int8_t * p_buffer;
 +	int i, length, num_leds;
-+    struct ws2812_state * state = (struct ws2812_state *) filp->private_data;
++	struct ws2812_state * state = (struct ws2812_state *) filp->private_data;
 +
-+    num_leds = min(count/4, state->num_leds);
++	num_leds = min(count/4, state->num_leds);
 +
 +	if(copy_from_user(state->pixbuf, buf, num_leds * 4))
 +		return -EFAULT;
@@ -327,25 +328,25 @@
 +	for(i = 0; i < num_leds; i++)
 +		p_buffer = led_encode(state, *p_rgb++, p_buffer);
 +
-+    /* Fill rest with '0' */
++	/* Fill rest with '0' */
 +	memset(p_buffer, 0x00, RESET_BYTES);
 +
 +	length = (int) p_buffer - (int) state->buffer + RESET_BYTES;
 +
 +	/* Setup DMA engine */
-+    issue_dma(state, state->buffer, length);
++	issue_dma(state, state->buffer, length);
 +
 +	return count;
 +}
 +
 +
 +struct file_operations ws2812_fops = {
-+    .owner = THIS_MODULE,
-+    .llseek = NULL,
-+    .read = NULL,
-+    .write = ws2812_write,
-+    .open = ws2812_open,
-+    .release = NULL,
++	.owner = THIS_MODULE,
++	.llseek = NULL,
++	.read = NULL,
++	.write = ws2812_write,
++	.open = ws2812_open,
++	.release = NULL,
 +};
 +
 +/*
@@ -353,109 +354,120 @@
 + */
 +static int ws2812_probe(struct platform_device *pdev)
 +{
-+    int ret;
-+    struct device *dev = &pdev->dev;
-+    struct device_node *node = dev->of_node;
-+    struct ws2812_state * state;
-+    struct dma_slave_config cfg =
-+    {
-+        .src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES,
-+        .dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES,
-+        .slave_id = PWM_DMA_DREQ,
-+        .direction = DMA_MEM_TO_DEV,
-+        .src_addr = 0,
-+    };
-+    struct resource *iomem;
++	int ret;
++	struct device *dev = &pdev->dev;
++	struct device_node *node = dev->of_node;
++	struct ws2812_state * state;
++	const __be32 *addr;
++	struct resource *res;
++	struct dma_slave_config cfg =
++	{
++		.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES,
++		.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES,
++		.slave_id = PWM_DMA_DREQ,
++		.direction = DMA_MEM_TO_DEV,
++		.src_addr = 0,
++	};
 +
-+    if(node == NULL)
-+    {
-+        pr_err("Require device tree entry\n");
-+        goto fail;
-+    }
++	if(node == NULL)
++	{
++		pr_err("Require device tree entry\n");
++		goto fail;
++	}
 +
-+    state = kmalloc(sizeof(struct ws2812_state), GFP_KERNEL);
-+    if (!state) {
-+        pr_err("Can't allocate state\n");
-+        goto fail;
-+    }
++	state = kmalloc(sizeof(struct ws2812_state), GFP_KERNEL);
++	if (!state) {
++		pr_err("Can't allocate state\n");
++		goto fail;
++	}
 +
-+    state->dev = dev;
-+    state->brightness = 255;
++	state->dev = dev;
++	state->brightness = 255;
 +
-+    // Create character device interface /dev/ws2812
-+    if(alloc_chrdev_region(&devid, 0, 1, "ws2812") < 0)
-+    {
-+        pr_err("Unable to create chrdev region");
-+        goto fail_malloc;
-+    }
-+    if((state->cl = class_create(THIS_MODULE, "ws2812")) == NULL)
-+    {
-+        unregister_chrdev_region(devid, 1);
-+        pr_err("Unable to create class ws2812");
-+        goto fail_chrdev;
-+    }
-+    if(device_create(state->cl, NULL, devid, NULL, "ws2812") == NULL)
-+    {
-+        class_destroy(state->cl);
-+        unregister_chrdev_region(devid, 1);
-+        pr_err("Unable to create device ws2812");
-+        goto fail_class;
-+    }
++	// Create character device interface /dev/ws2812
++	if(alloc_chrdev_region(&devid, 0, 1, "ws2812") < 0)
++	{
++		pr_err("Unable to create chrdev region");
++		goto fail_malloc;
++	}
++	if((state->cl = class_create(THIS_MODULE, "ws2812")) == NULL)
++	{
++		unregister_chrdev_region(devid, 1);
++		pr_err("Unable to create class ws2812");
++		goto fail_chrdev;
++	}
++	if(device_create(state->cl, NULL, devid, NULL, "ws2812") == NULL)
++	{
++		class_destroy(state->cl);
++		unregister_chrdev_region(devid, 1);
++		pr_err("Unable to create device ws2812");
++		goto fail_class;
++	}
 +
-+    state->cdev.owner = THIS_MODULE;
-+    cdev_init(&state->cdev, &ws2812_fops);
++	state->cdev.owner = THIS_MODULE;
++	cdev_init(&state->cdev, &ws2812_fops);
 +
-+    if(cdev_add(&state->cdev, devid, 1)) {
-+        pr_err("CDEV failed\n");
-+        goto fail_device;
-+    }
++	if(cdev_add(&state->cdev, devid, 1)) {
++		pr_err("CDEV failed\n");
++		goto fail_device;
++	}
 +
-+    platform_set_drvdata(pdev, state);
++	platform_set_drvdata(pdev, state);
 +
-+    /* get parameters from device tree */
-+    of_property_read_u32(node,
-+                 "rpi,invert",
-+                 &state->invert);
-+    of_property_read_u32(node,
-+                 "rpi,num_leds",
-+                 &state->num_leds);
++	/* get parameters from device tree */
++	of_property_read_u32(node,
++	                     "rpi,invert",
++	                     &state->invert);
++	of_property_read_u32(node,
++	                     "rpi,num_leds",
++	                     &state->num_leds);
 +
-+    state->pixbuf = kmalloc(state->num_leds * sizeof(int), GFP_KERNEL);
-+    if(state->pixbuf == NULL)
-+    {
++	state->pixbuf = kmalloc(state->num_leds * sizeof(int), GFP_KERNEL);
++	if(state->pixbuf == NULL)
++	{
 +		pr_err("Failed to allocate internal buffer\n");
 +		goto fail_cdev;
 +	}
 +
-+    iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+    state->ioaddr = devm_ioremap_resource(dev, iomem);
-+    if (IS_ERR(state->ioaddr)) {
-+        goto fail_pixbuf;
-+    }
-+	pr_err("iomem->start = 0x%x\n", iomem->start);
-+    state->phys_addr = iomem->start + BCM2835_VCMMU_SHIFT;
++	/* base address in dma-space */
++	addr = of_get_address(node, 0, NULL, NULL);
++	if (!addr) {
++		dev_err(dev, "could not get DMA-register address - not using dma mode\n");
++		goto fail_pixbuf;
++	}
++	state->phys_addr = be32_to_cpup(addr);
++	pr_err("bus_addr = 0x%x\n", state->phys_addr);
 +
-+    state->buffer = kmalloc(state->num_leds * BYTES_PER_LED + RESET_BYTES, GFP_KERNEL);
-+    if(state->buffer == NULL)
-+    {
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	state->ioaddr = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(state->ioaddr)) {
++                pr_err("Failed to get register resource\n");
++		goto fail_pixbuf;
++	}
++
++	pr_err("ioaddr = 0x%x\n", (int) state->ioaddr);
++
++	state->buffer = kmalloc(state->num_leds * BYTES_PER_LED + RESET_BYTES, GFP_KERNEL);
++	if(state->buffer == NULL)
++	{
 +		pr_err("Failed to allocate internal buffer\n");
 +		goto fail_pixbuf;
 +	}
 +
-+    state->dma_chan = dma_request_slave_channel(dev, "pwm_dma");
-+    if(state->dma_chan == NULL)
-+    {
-+        pr_err("Failed to request DMA channel");
-+        goto fail_buffer;
-+    }
++	state->dma_chan = dma_request_slave_channel(dev, "pwm_dma");
++	if(state->dma_chan == NULL)
++	{
++		pr_err("Failed to request DMA channel");
++		goto fail_buffer;
++	}
 +
-+    /* request a DMA channel */
-+    cfg.dst_addr = state->phys_addr + PWM_FIFO1;
-+    ret = dmaengine_slave_config(state->dma_chan, &cfg);
-+    if (state->dma_chan < 0) {
-+        pr_err("Can't allocate DMA channel\n");
-+        goto fail_dma_init;
-+    }
++	/* request a DMA channel */
++	cfg.dst_addr = state->phys_addr + PWM_FIFO1;
++	ret = dmaengine_slave_config(state->dma_chan, &cfg);
++	if (state->dma_chan < 0) {
++		pr_err("Can't allocate DMA channel\n");
++		goto fail_dma_init;
++	}
 +	pwm_init(state);
 +
 +	// Enable the LED power
@@ -463,61 +475,61 @@
 +
 +	clear_leds(state);
 +
-+    return 0;
++	return 0;
 +fail_dma_init:
-+    dma_release_channel(state->dma_chan);
++	dma_release_channel(state->dma_chan);
 +fail_buffer:
 +	kfree(state->buffer);
 +fail_pixbuf:
-+    kfree(state->pixbuf);
++	kfree(state->pixbuf);
 +fail_cdev:
-+    cdev_del(&state->cdev);
++	cdev_del(&state->cdev);
 +fail_device:
-+    device_destroy(state->cl, devid);
++	device_destroy(state->cl, devid);
 +fail_class:
-+    class_destroy(state->cl);
++	class_destroy(state->cl);
 +fail_chrdev:
-+    unregister_chrdev_region(devid, 1);
++	unregister_chrdev_region(devid, 1);
 +fail_malloc:
-+    kfree(state);
++	kfree(state);
 +fail:
 +
-+    return -1;
++	return -1;
 +}
 +
 +
 +static int ws2812_remove(struct platform_device *pdev)
 +{
-+    struct ws2812_state *state = platform_get_drvdata(pdev);
++	struct ws2812_state *state = platform_get_drvdata(pdev);
 +
-+    platform_set_drvdata(pdev, NULL);
++	platform_set_drvdata(pdev, NULL);
 +
-+    dma_release_channel(state->dma_chan);
-+    kfree(state->buffer);
-+    kfree(state->pixbuf);
-+    cdev_del(&state->cdev);
-+    device_destroy(state->cl, devid);
-+    class_destroy(state->cl);
-+    unregister_chrdev_region(devid, 1);
-+    kfree(state);
++	dma_release_channel(state->dma_chan);
++	kfree(state->buffer);
++	kfree(state->pixbuf);
++	cdev_del(&state->cdev);
++	device_destroy(state->cl, devid);
++	class_destroy(state->cl);
++	unregister_chrdev_region(devid, 1);
++	kfree(state);
 +
-+    return 0;
++	return 0;
 +}
 +
 +static const struct of_device_id ws2812_match[] = {
-+    { .compatible = "rpi,ws2812" },
-+    { }
++	{ .compatible = "rpi,ws2812" },
++	{ }
 +};
 +MODULE_DEVICE_TABLE(of, ws2812_match);
 +
 +static struct platform_driver ws2812_driver = {
-+    .probe      = ws2812_probe,
-+    .remove     = ws2812_remove,
-+    .driver     = {
-+        .name       = DRIVER_NAME,
-+        .owner      = THIS_MODULE,
-+        .of_match_table = ws2812_match,
-+    },
++	.probe      = ws2812_probe,
++	.remove     = ws2812_remove,
++	.driver     = {
++	.name       = DRIVER_NAME,
++	.owner      = THIS_MODULE,
++	.of_match_table = ws2812_match,
++	},
 +};
 +module_platform_driver(ws2812_driver);
 +
