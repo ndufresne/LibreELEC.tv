@@ -1,0 +1,192 @@
+--- a/arch/arm/boot/dts/overlays/slice-overlay.dts	2016-10-13 18:12:48.315475910 +0100
++++ b/arch/arm/boot/dts/overlays/slice-overlay.dts	2016-10-11 20:03:25.771789531 +0100
+@@ -2,6 +2,8 @@
+ /dts-v1/;
+ /plugin/;
+ 
++#include "dt-bindings/clock/bcm2835.h"
++
+ / {
+   compatible = "brcm,bcm2708";
+ 
+@@ -114,9 +116,8 @@
+     target = <&sound>;
+     __overlay__ {
+       compatible = "fiveninjas,slice";
+-      reg = <0x20101070 0x11>,
+-            <0x20101104 0x05>,
+-            <0x20102500 0x04>;
++      clocks = <&cprman BCM2835_CLOCK_GP0>;
++      clock-names = "gp0";
+       pinctrl-names = "default";
+       i2s-controller = <&i2s>;
+       status = "okay";
+--- a/sound/soc/bcm/slice.c	2016-10-13 18:12:48.395475914 +0100
++++ b/sound/soc/bcm/slice.c	2016-10-12 21:51:13.996085447 +0100
+@@ -19,6 +19,7 @@
+  #include <linux/platform_device.h>
+ 
+  #include <linux/io.h>
++ #include <linux/clk.h>
+ 
+  #include <sound/core.h>
+  #include <sound/pcm.h>
+@@ -28,75 +29,13 @@
+ 
+  #include "../codecs/cs4265.h"
+ 
+- static void __iomem *aper_base;
+- static void __iomem *apll_base;
+- static void __iomem *a2w_base;
+-
+- #define CM_PLLA  (apll_base)
+- #define A2W_APER (a2w_base)
++struct clk * gp0_clock;
+ 
+  static int snd_slice_init(struct snd_soc_pcm_runtime *rtd)
+  {
+  	return 0;
+  }
+ 
+- #define BCM2708_CLK_PASSWD		(0x5a000000)
+- #define BCM2708_CLK_MASH(v)		((v) << 9)
+- #define BCM2708_CLK_FLIP		BIT(8)
+- #define BCM2708_CLK_BUSY		BIT(7)
+- #define BCM2708_CLK_KILL		BIT(5)
+- #define BCM2708_CLK_ENAB		BIT(4)
+- #define BCM2708_CLK_SRC(v)		(v)
+-
+- #define BCM2708_CLK_LOADMASK            BIT(6)
+- #define BCM2708_CLK_HOLDMASK            BIT(7)
+- #define BCM2708_CLK_CHENB               BIT(8)
+-
+- void set_aper(int div)
+- {
+-    if ( div == 0 ) {
+-       writel(BCM2708_CLK_PASSWD | (readl(CM_PLLA) & ~BCM2708_CLK_LOADMASK)
+-                          | BCM2708_CLK_HOLDMASK, CM_PLLA);
+-       // This line removes the channel enable and resets the divisor to 0
+-       // and disables the bypass clock
+-       writel(BCM2708_CLK_PASSWD | BCM2708_CLK_CHENB, A2W_APER);
+-       return;
+-    }
+-
+-    // To save time reading status bits from a2w regs we perform the same
+-    // actions for starting a channel and changing a channel
+-    // First we enable the channel and set the divisor
+-    writel(BCM2708_CLK_PASSWD | div, A2W_APER);
+-
+-    // Now load the divisor
+-    writel(BCM2708_CLK_PASSWD | readl(CM_PLLA) | BCM2708_CLK_LOADMASK, CM_PLLA);
+-    writel(BCM2708_CLK_PASSWD | (readl(CM_PLLA) & ~BCM2708_CLK_LOADMASK), CM_PLLA);
+-
+-    // Now remove the hold (does nothing if already running)
+-    writel(BCM2708_CLK_PASSWD | (readl(CM_PLLA) & ~BCM2708_CLK_HOLDMASK), CM_PLLA);
+- }
+-
+-
+- static void set_gp0div(unsigned int val)
+- {
+-   int timeout = 1000;
+-
+-   // First stop the clock
+-   writel(BCM2708_CLK_PASSWD | (readl(aper_base) & ~BCM2708_CLK_ENAB), aper_base);
+-
+-   // Wait until it is not busy
+-   while (--timeout && (readl(aper_base) & BCM2708_CLK_BUSY));
+-
+-   if (timeout) {
+-     writel(val | BCM2708_CLK_PASSWD, aper_base + 4);
+-     writel(readl(aper_base) | BCM2708_CLK_PASSWD | BCM2708_CLK_ENAB, aper_base);
+-     printk(KERN_ERR "New clock set");
+-   }
+-   else
+-     printk(KERN_ERR "Failed waiting for clock to stop");
+- }
+-
+-
+  static int snd_slice_hw_params(struct snd_pcm_substream *substream,
+  				       struct snd_pcm_hw_params *params)
+  {
+@@ -148,19 +87,14 @@
+  	// Source is 1,806,336,000
+  	// /4 /40 - 1128960
+  	// /7 /21 - 1228800
+- 	if (sysclk == 12288000) {
+- 		set_aper(0);
+- 		set_aper(7);
+- 		set_gp0div(0x15000);
+- 		printk(KERN_ERR "Setting hw_params, GP0_CTL=0x%x GP0_DIV=0x%x\n", readl(aper_base), readl(aper_base+0x4));
+- 	} else {
+- 		set_aper(0);
+- 		set_aper(4);
+- 		set_gp0div(0x28000);
+- 		printk(KERN_ERR "Setting hw_params, GP0_CTL=0x%x GP0_DIV=0x%x\n", readl(aper_base), readl(aper_base+0x4));
+-  	}
++	clk_disable_unprepare(gp0_clock);
+ 
+- 	printk(KERN_ERR "A2W_APER = 0x%x", readl(A2W_APER));
++	err = clk_set_rate(gp0_clock, sysclk);
++	if(err < 0)
++		pr_err("Failed to set clock rate for gp0 clock\n");
++
++	if((ret = clk_prepare_enable(gp0_clock)) < 0)
++		pr_err("Failed to enable clock\n");
+ 
+  	dev_err(codec->dev, "Set sampling frequency %d, using sysclk %d\n", rate, sysclk);
+ 
+@@ -194,7 +128,7 @@
+  static int snd_slice_params_fixup(struct snd_soc_pcm_runtime *rtd,
+              struct snd_pcm_hw_params *params)
+  {
+- printk(KERN_ERR "snd_slice_params_fixup called\n");
++     printk(KERN_ERR "snd_slice_params_fixup called\n");
+      /* force 32 bit */
+      params_set_format(params, SNDRV_PCM_FORMAT_S32_LE);
+      return 0;
+@@ -262,7 +196,6 @@
+  static int snd_slice_probe(struct platform_device *pdev)
+  {
+  	int ret = 0;
+- 	struct resource *mem;
+  	snd_slice.dev = &pdev->dev;
+ 
+  	if (pdev->dev.of_node) {
+@@ -290,20 +223,23 @@
+  		goto snd_soc_register_card_failed;
+  	}
+ 
+- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+- 	aper_base = devm_ioremap_resource(&pdev->dev, mem);
+- 	if (IS_ERR(aper_base))
+- 		return PTR_ERR(aper_base);
+-
+- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+- 	apll_base = devm_ioremap_resource(&pdev->dev, mem);
+- 	if (IS_ERR(apll_base))
+- 		return PTR_ERR(apll_base);
+-
+- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+- 	a2w_base = devm_ioremap_resource(&pdev->dev, mem);
+- 	if (IS_ERR(a2w_base))
+- 		return PTR_ERR(a2w_base);
++	gp0_clock = devm_clk_get(&pdev->dev, "gp0");
++	if (IS_ERR(gp0_clock)) {
++		pr_err("Failed to get gp0 clock\n");
++		return PTR_ERR(gp0_clock);
++	}
++
++	ret = clk_set_rate(gp0_clock, 12288000);
++	if (ret) {
++		pr_err("Failed to set the GP0 clock rate\n");
++		return ret;
++	}
++
++	ret = clk_prepare_enable(gp0_clock);
++	if (ret) {
++		pr_err("Failed to turn on gp0 clock: %d\n", ret);
++		return ret;
++	}
+ 
+  	return 0;
+ 
