@@ -89,18 +89,8 @@
 
     }; // pins_cm
 
-    clock_routing {
-      vco@PLLA { freq = <1806336000>; }; // 1.806336GHz
-      chan@APER { div = <2>; };
-      clock@GPCLK0 { pll = "PLLA"; chan = "APER"; };
-      clock@H264 { pll = "PLLC"; chan = "CCORE0"; };
-      clock@ISP { pll = "PLLC"; chan = "CCORE0"; };
-      clock@V3D { pll = "PLLC"; chan = "CCORE0"; };
-    }; // clock_routing
-
     clock_setup {
       clock@PWM    { freq = < 2400000>; }; // LEDS PWM CLOCK
-      clock@GPCLK0 { freq = <12288000>; }; // PCM_MCLK
       clock@GPCLK1 { freq = <25000000>; }; // ETH_CLK
     }; // clock_setup
 
