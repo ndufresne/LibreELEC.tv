@@ -16,34 +16,27 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="newt"
-PKG_VERSION="0.52.19"
-PKG_REV="1"
+PKG_NAME="valgrind"
+PKG_VERSION="3.12.0"
+PKG_REV="0"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="https://fedorahosted.org/newt/"
-PKG_URL="https://fedorahosted.org/releases/n/e/newt/$PKG_NAME-$PKG_VERSION.tar.gz"
-PKG_DEPENDS_TARGET="toolchain slang popt"
-PKG_SECTION="tools"
-PKG_SHORTDESC="newt: A programming library for color text mode, widget based user interfaces"
-PKG_LONGDESC="Newt is a programming library for color text mode, widget based user interfaces. Newt can be used to add stacked windows, entry widgets, checkboxes, radio buttons, labels, plain text fields, scrollbars, etc., to text mode user interfaces. Newt is based on the S-Lang library."
+PKG_SITE="http://valgrind.org/"
+PKG_URL="http://valgrind.org/downloads/$PKG_NAME-$PKG_VERSION.tar.bz2"
+PKG_DEPENDS_TARGET="toolchain"
+PKG_SECTION="debug"
+PKG_SHORTDESC="A tool to help find memory-management problems in programs"
+PKG_LONGDESC="A tool to help find memory-management problems in programs"
 
 PKG_IS_ADDON="no"
-PKG_AUTORECONF="yes"
+PKG_AUTORECONF="no"
 
-PKG_CONFIGURE_OPTS_TARGET="--disable-nls \
-                           --without-python \
-                           --without-tcl"
+if [ "$TARGET_ARCH" = "arm" ]; then
+  PKG_CONFIGURE_OPTS_TARGET="--enable-only32bit"
+elif [ "$TARGET_ARCH" = "aarch64" -o "$TARGET_ARCH" = "x86_64" ]; then
+  PKG_CONFIGURE_OPTS_TARGET="--enable-only64bit"
+fi
 
 pre_configure_target() {
- # newt fails to build in subdirs
- cd $ROOT/$PKG_BUILD
- rm -rf .$TARGET_NAME
+  strip_lto
 }
-
-pre_configure_host() {
- # newt fails to build in subdirs
- cd $ROOT/$PKG_BUILD
- rm -rf .$HOST_NAME
-}
-

@@ -1,7 +1,6 @@
-#!/bin/sh
 ################################################################################
 #      This file is part of LibreELEC - https://libreelec.tv
-#      Copyright (C) 2009-2016 Lukas Rusak (lrusak@libreelec.tv)
+#      Copyright (C) 2016 Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,13 +16,20 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-. /etc/profile
+import subprocess
+import xbmc
+import xbmcaddon
 
-oe_setup_addon service.hyperion
 
-if [ ! -f "$ADDON_HOME/hyperion.config.json" ]; then
-  mkdir -p $ADDON_HOME
-  cp $ADDON_DIR/config/hyperion.config.json.sample $ADDON_HOME/hyperion.config.json
-fi
+class Monitor(xbmc.Monitor):
 
-exec hyperiond $ADDON_HOME/hyperion.config.json
+   def __init__(self, *args, **kwargs):
+      xbmc.Monitor.__init__(self)
+      self.id = xbmcaddon.Addon().getAddonInfo('id')
+
+   def onSettingsChanged(self):
+      subprocess.call(['systemctl', 'restart', self.id])
+
+
+if __name__ == '__main__':
+   Monitor().waitForAbort()
