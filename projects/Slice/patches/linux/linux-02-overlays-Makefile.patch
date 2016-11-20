@@ -1,11 +1,19 @@
---- a/arch/arm/boot/dts/overlays/Makefile	2016-10-01 08:57:18.587961262 +0100
-+++ b/arch/arm/boot/dts/overlays/Makefile	2016-10-01 09:28:00.697469994 +0100
-@@ -101,6 +101,8 @@ dtbo-$(RPI_DT_OVERLAYS) += vga666.dtbo
- dtbo-$(RPI_DT_OVERLAYS) += w1-gpio.dtbo
- dtbo-$(RPI_DT_OVERLAYS) += w1-gpio-pullup.dtbo
- dtbo-$(RPI_DT_OVERLAYS) += wittypi.dtbo
-+dtbo-$(RPI_DT_OVERLAYS) += ws2812.dtbo
-+dtbo-$(RPI_DT_OVERLAYS) += slice.dtbo
-
+--- a/arch/arm/boot/dts/overlays/Makefile	2016-11-20 10:09:17.074206193 +0000
++++ b/arch/arm/boot/dts/overlays/Makefile	2016-11-20 16:37:12.333587131 +0000
+@@ -86,13 +86,15 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
+ 	spi2-1cs.dtbo \
+ 	spi2-2cs.dtbo \
+ 	spi2-3cs.dtbo \
++       slice.dtbo \
+ 	tinylcd35.dtbo \
+ 	uart1.dtbo \
+ 	vc4-kms-v3d.dtbo \
+ 	vga666.dtbo \
+ 	w1-gpio.dtbo \
+ 	w1-gpio-pullup.dtbo \
+-	wittypi.dtbo
++	wittypi.dtbo \
++       ws2812.dtbo
+ 
  targets += dtbs dtbs_install
  targets += $(dtbo-y)
