@@ -231,7 +231,7 @@
 + };
 +
 + static const struct snd_soc_pcm_stream snd_slice_params = {
-+          .formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_S24_LE,
++          .formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S16_LE,
 + };
 +
 + static struct snd_soc_dai_link snd_slice_dai[] = {
