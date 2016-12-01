@@ -16,25 +16,30 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="inputstream.rtmp"
-PKG_VERSION="55437ac"
-PKG_LICENSE="GPL"
-PKG_SITE="http://www.kodi.tv"
-PKG_URL="https://github.com/notspiff/inputstream.rtmp/archive/$PKG_VERSION.tar.gz"
-PKG_DEPENDS_TARGET="toolchain kodi-platform rtmpdump"
-PKG_SECTION=""
-PKG_SHORTDESC="inputstream.rtmp"
-PKG_LONGDESC="inputstream.rtmp"
+PKG_NAME="icu"
+PKG_VERSION="57.1"
+PKG_REV="1"
+PKG_ARCH="any"
+PKG_LICENSE="Custom"
+PKG_SITE="http://www.icu-project.org"
+PKG_URL="http://download.icu-project.org/files/${PKG_NAME}4c/${PKG_VERSION}/${PKG_NAME}4c-${PKG_VERSION//./_}-src.tgz"
+PKG_SOURCE_DIR="icu"
+PKG_DEPENDS_TARGET="toolchain icu:host"
+PKG_SECTION="textproc"
+PKG_SHORTDESC="International Components for Unicode library"
+PKG_LONGDESC="International Components for Unicode library"
 
-PKG_IS_ADDON="yes"
+PKG_IS_ADDON="no"
+PKG_AUTORECONF="no"
 
-PKG_CMAKE_OPTS_TARGET="-DCMAKE_MODULE_PATH=$SYSROOT_PREFIX/usr/lib/kodi \
-                       -DCMAKE_PREFIX_PATH=$SYSROOT_PREFIX/usr"
+PKG_CONFIGURE_OPTS_HOST="--enable-static --disable-shared"
 
-addon() {
-  mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/
-  cp -R $PKG_BUILD/.install_pkg/usr/share/kodi/addons/$PKG_NAME/* $ADDON_BUILD/$PKG_ADDON_ID/
+PKG_CONFIGURE_OPTS_TARGET="--enable-static \
+                           --disable-shared \
+                           --with-cross-build=$ROOT/$PKG_BUILD/.$HOST_NAME"
 
-  ADDONSO=$(xmlstarlet sel -t -v "/addon/extension/@library_linux" $ADDON_BUILD/$PKG_ADDON_ID/addon.xml)
-  cp -L $PKG_BUILD/.install_pkg/usr/lib/kodi/addons/$PKG_NAME/$ADDONSO $ADDON_BUILD/$PKG_ADDON_ID/
+PKG_CONFIGURE_SCRIPT="source/configure"
+
+post_makeinstall_target() {
+  rm -rf $INSTALL
 }

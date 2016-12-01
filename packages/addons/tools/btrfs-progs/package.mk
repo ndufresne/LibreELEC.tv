@@ -16,25 +16,36 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="inputstream.rtmp"
-PKG_VERSION="55437ac"
+PKG_NAME="btrfs-progs"
+PKG_VERSION="4.8.4"
+PKG_REV="100"
+PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="http://www.kodi.tv"
-PKG_URL="https://github.com/notspiff/inputstream.rtmp/archive/$PKG_VERSION.tar.gz"
-PKG_DEPENDS_TARGET="toolchain kodi-platform rtmpdump"
-PKG_SECTION=""
-PKG_SHORTDESC="inputstream.rtmp"
-PKG_LONGDESC="inputstream.rtmp"
+PKG_SITE="https://btrfs.wiki.kernel.org/index.php/Main_Page"
+PKG_URL="https://github.com/kdave/btrfs-progs/archive/v$PKG_VERSION.tar.gz"
+PKG_DEPENDS_TARGET="toolchain util-linux zlib lzo"
+PKG_SECTION="tools"
+PKG_SHORTDESC="tools for the btrfs filesystem"
+PKG_LONGDESC="tools for the btrfs filesystem"
+PKG_AUTORECONF="no"
 
 PKG_IS_ADDON="yes"
+PKG_ADDON_NAME="BTRFS Tools"
+PKG_ADDON_TYPE="xbmc.python.script"
 
-PKG_CMAKE_OPTS_TARGET="-DCMAKE_MODULE_PATH=$SYSROOT_PREFIX/usr/lib/kodi \
-                       -DCMAKE_PREFIX_PATH=$SYSROOT_PREFIX/usr"
+PKG_CONFIGURE_OPTS_TARGET="--disable-backtrace \
+                           --disable-documentation \
+                           --disable-convert"
+
+pre_configure_target() {
+  ./autogen.sh
+}
+
+makeinstall_target() {
+  :
+}
 
 addon() {
-  mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/
-  cp -R $PKG_BUILD/.install_pkg/usr/share/kodi/addons/$PKG_NAME/* $ADDON_BUILD/$PKG_ADDON_ID/
-
-  ADDONSO=$(xmlstarlet sel -t -v "/addon/extension/@library_linux" $ADDON_BUILD/$PKG_ADDON_ID/addon.xml)
-  cp -L $PKG_BUILD/.install_pkg/usr/lib/kodi/addons/$PKG_NAME/$ADDONSO $ADDON_BUILD/$PKG_ADDON_ID/
+  mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/bin/
+    cp -P $(get_build_dir btrfs-progs)/{btrfs,btrfsck,btrfstune,btrfs-zero-log,fsck.btrfs,mkfs.btrfs} $ADDON_BUILD/$PKG_ADDON_ID/bin
 }
