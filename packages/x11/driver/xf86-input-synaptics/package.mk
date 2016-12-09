@@ -16,26 +16,19 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="libgdiplus"
-PKG_VERSION="4.2"
-PKG_REV="0"
+PKG_NAME="xf86-input-synaptics"
+PKG_VERSION="1.9.0"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="https://github.com/mono/libgdiplus"
-PKG_URL="https://github.com/mono/libgdiplus/archive/$PKG_VERSION.tar.gz"
-PKG_DEPENDS_TARGET="toolchain giflib libjpeg-turbo tiff libXext libexif glib cairo"
-PKG_SECTION="tools"
-PKG_SHORTDESC="libgiplus"
-PKG_LONGDESC="An Open Source implementation of the GDI+ API"
+PKG_SITE="http://lists.freedesktop.org/mailman/listinfo/xorg"
+PKG_URL="http://xorg.freedesktop.org/archive/individual/driver/$PKG_NAME-$PKG_VERSION.tar.bz2"
+PKG_DEPENDS_TARGET="toolchain libXi"
+PKG_SECTION="x11/driver"
+PKG_SHORTDESC="Synaptics touchpad driver for X.Org."
+PKG_LONGDESC="Synaptics touchpad driver for X.Org."
 
 PKG_IS_ADDON="no"
-
 PKG_AUTORECONF="yes"
-PKG_CONFIGURE_OPTS_TARGET="--enable-shared \
-                           --with-libgif   \
-                           --with-libjpeg  \
-                           --with-libtiff"
 
-makeinstall_target() {
-  make install DESTDIR=$INSTALL
-}
+PKG_CONFIGURE_OPTS_TARGET="--with-xorg-module-dir=$XORG_PATH_MODULES"
