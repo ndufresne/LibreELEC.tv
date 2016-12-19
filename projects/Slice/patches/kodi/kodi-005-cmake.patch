@@ -1,0 +1,21 @@
+--- a/xbmc/windows/CMakeLists.txt	2016-12-16 18:23:18.000000000 +0000
++++ b/xbmc/windows/CMakeLists.txt	2016-12-19 07:49:12.604004180 +0000
+@@ -9,7 +9,8 @@ set(SOURCES GUIMediaWindow.cpp
+             GUIWindowSplash.cpp
+             GUIWindowStartup.cpp
+             GUIWindowSystemInfo.cpp
+-            GUIWindowWeather.cpp)
++            GUIWindowWeather.cpp
++            readpng.c)
+ 
+ set(HEADERS GUIMediaWindow.h
+             GUIWindowDebugInfo.h
+@@ -22,6 +23,7 @@ set(HEADERS GUIMediaWindow.h
+             GUIWindowSplash.h
+             GUIWindowStartup.h
+             GUIWindowSystemInfo.h
+-            GUIWindowWeather.h)
++            GUIWindowWeather.h
++            readpng.h)
+ 
+ core_add_library(windows)
