@@ -16,23 +16,34 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="dtc"
-PKG_VERSION="1.4.2"
+PKG_NAME="media_build"
+PKG_VERSION="2016-12-28"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="https://git.kernel.org/cgit/utils/dtc/dtc.git"
-PKG_URL="https://git.kernel.org/cgit/utils/dtc/dtc.git/snapshot/$PKG_VERSION.tar.xz"
-PKG_SOURCE_DIR="$PKG_VERSION"
-PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="tools"
-PKG_SHORTDESC="The Device Tree Compiler"
-PKG_LONGDESC="The Device Tree Compiler"
+PKG_SITE="https://github.com/crazycat69/linux_media"
+PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_DEPENDS_TARGET="toolchain linux"
+PKG_BUILD_DEPENDS_TARGET="toolchain linux"
+PKG_SECTION="driver"
+PKG_SHORTDESC="DVB drivers that replace the version shipped with the kernel"
+PKG_LONGDESC="DVB drivers that replace the version shipped with the kernel"
+PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
 
-PKG_MAKE_OPTS_TARGET="dtc"
+pre_make_target() {
+  export KERNEL_VER=$(get_module_dir)
+  export LDFLAGS=""
+}
+
+make_target() {
+  cd media_build
+  make dir DIR=../media
+  make VER=$KERNEL_VER SRCDIR=$(kernel_path) allyesconfig
+  make VER=$KERNEL_VER SRCDIR=$(kernel_path)
+}
 
 makeinstall_target() {
-  mkdir -p $INSTALL/usr/bin
-    cp -P $ROOT/$PKG_BUILD/dtc $INSTALL/usr/bin
+  mkdir -p $INSTALL/usr/lib/modules/$KERNEL_VER/updates
+  find $ROOT/$PKG_BUILD/media_build/v4l/ -name \*.ko -exec cp {} $INSTALL/usr/lib/modules/$KERNEL_VER/updates \;
 }
