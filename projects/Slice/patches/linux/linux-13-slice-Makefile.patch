@@ -1,15 +1,18 @@
---- a/sound/soc/bcm/Makefile	2016-10-24 08:57:16.805712924 +0100
-+++ b/sound/soc/bcm/Makefile	2016-10-24 08:59:51.541235893 +0100
-@@ -26,6 +26,7 @@ snd-soc-digidac1-soundcard-objs := digid
- snd-soc-dionaudio-loco-objs := dionaudio_loco.o
- snd-soc-allo-piano-dac-objs := allo-piano-dac.o
- snd-soc-pisound-objs := pisound.o
+--- a/sound/soc/bcm/Makefile	2017-03-03 07:34:03.637483313 +0000
++++ b/sound/soc/bcm/Makefile	2017-03-04 06:40:57.984535876 +0000
+@@ -22,6 +22,7 @@ snd-soc-rpi-proto-objs := rpi-proto.o
+ snd-soc-iqaudio-dac-objs := iqaudio-dac.o
+ snd-soc-iqaudio-digi-objs := iqaudio_digi.o
+ snd-soc-raspidac3-objs := raspidac3.o
 +snd-soc-slice-objs := slice.o
- 
- obj-$(CONFIG_SND_BCM2708_SOC_ADAU1977_ADC) += snd-soc-adau1977-adc.o
- obj-$(CONFIG_SND_BCM2708_SOC_HIFIBERRY_DAC) += snd-soc-hifiberry-dac.o
-@@ -44,3 +45,4 @@ obj-$(CONFIG_SND_DIGIDAC1_SOUNDCARD) +=
- obj-$(CONFIG_SND_BCM2708_SOC_DIONAUDIO_LOCO) += snd-soc-dionaudio-loco.o
- obj-$(CONFIG_SND_BCM2708_SOC_ALLO_PIANO_DAC) += snd-soc-allo-piano-dac.o
- obj-$(CONFIG_SND_PISOUND) += snd-soc-pisound.o
+ snd-soc-audioinjector-pi-soundcard-objs := audioinjector-pi-soundcard.o
+ snd-soc-digidac1-soundcard-objs := digidac1-soundcard.o
+ snd-soc-dionaudio-loco-objs := dionaudio_loco.o
+@@ -43,6 +44,7 @@ obj-$(CONFIG_SND_BCM2708_SOC_RPI_PROTO)
+ obj-$(CONFIG_SND_BCM2708_SOC_IQAUDIO_DAC) += snd-soc-iqaudio-dac.o
+ obj-$(CONFIG_SND_BCM2708_SOC_IQAUDIO_DIGI) += snd-soc-iqaudio-digi.o
+ obj-$(CONFIG_SND_BCM2708_SOC_RASPIDAC3) += snd-soc-raspidac3.o
 +obj-$(CONFIG_SND_BCM2708_SOC_SLICE) += snd-soc-slice.o
+ obj-$(CONFIG_SND_AUDIOINJECTOR_PI_SOUNDCARD) += snd-soc-audioinjector-pi-soundcard.o
+ obj-$(CONFIG_SND_DIGIDAC1_SOUNDCARD) += snd-soc-digidac1-soundcard.o
+ obj-$(CONFIG_SND_BCM2708_SOC_DIONAUDIO_LOCO) += snd-soc-dionaudio-loco.o
