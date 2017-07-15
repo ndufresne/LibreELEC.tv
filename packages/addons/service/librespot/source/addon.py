@@ -1,6 +1,6 @@
 ################################################################################
 #      This file is part of LibreELEC - https://libreelec.tv
-#      Copyright (C) 2016-present Team LibreELEC
+#      Copyright (C) 2017-present Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,21 +16,8 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="imagemagick"
-PKG_VERSION="7.0.5-7"
-PKG_LICENSE="http://www.imagemagick.org/script/license.php"
-PKG_SITE="http://www.imagemagick.org/"
-PKG_URL="https://github.com/ImageMagick/ImageMagick/archive/$PKG_VERSION.tar.gz"
-PKG_SOURCE_DIR="ImageMagick-$PKG_VERSION"
-PKG_DEPENDS_TARGET="toolchain libX11"
-PKG_LONGDESC="Software suite to create, edit, compose, or convert bitmap images"
+from default import addon as addon
 
-PKG_CONFIGURE_OPTS_TARGET="--enable-static \
-                           --enable-shared \
-                           --with-quantum-depth=8 \
-                           --enable-hdri=no \
-                           --disable-openmp"
 
-makeinstall_target() {
-  make install DESTDIR=$INSTALL
-}
+if __name__ == '__main__':
+   addon()

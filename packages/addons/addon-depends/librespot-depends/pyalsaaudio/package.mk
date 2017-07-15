@@ -1,6 +1,6 @@
 ################################################################################
 #      This file is part of LibreELEC - https://libreelec.tv
-#      Copyright (C) 2016-present Team LibreELEC
+#      Copyright (C) 2017-present Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,21 +16,23 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="imagemagick"
-PKG_VERSION="7.0.5-7"
-PKG_LICENSE="http://www.imagemagick.org/script/license.php"
-PKG_SITE="http://www.imagemagick.org/"
-PKG_URL="https://github.com/ImageMagick/ImageMagick/archive/$PKG_VERSION.tar.gz"
-PKG_SOURCE_DIR="ImageMagick-$PKG_VERSION"
-PKG_DEPENDS_TARGET="toolchain libX11"
-PKG_LONGDESC="Software suite to create, edit, compose, or convert bitmap images"
+PKG_NAME="pyalsaaudio"
+PKG_VERSION="0.8.4"
+PKG_LICENSE="PSF"
+PKG_SITE="http://larsimmisch.github.io/pyalsaaudio/"
+PKG_URL="https://files.pythonhosted.org/packages/source/${PKG_NAME:0:1}/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz"
+PKG_DEPENDS_TARGET="toolchain Python distutilscross:host alsa-lib"
+PKG_LONGDESC="ALSA bindings"
 
-PKG_CONFIGURE_OPTS_TARGET="--enable-static \
-                           --enable-shared \
-                           --with-quantum-depth=8 \
-                           --enable-hdri=no \
-                           --disable-openmp"
+make_target() {
+  export LDSHARED="$CC -shared"
+  export PYTHONXCPREFIX="$SYSROOT_PREFIX/usr"
+  python setup.py build --cross-compile
+}
 
 makeinstall_target() {
-  make install DESTDIR=$INSTALL
+  python setup.py install --root=$INSTALL --prefix=/usr
+  find $INSTALL/usr/lib -name "*.py" -exec rm -rf "{}" ";"
+  rm -rf $INSTALL/usr/lib/python*/site-packages/*.egg-info \
+         $INSTALL/usr/lib/python*/site-packages/*/tests
 }
