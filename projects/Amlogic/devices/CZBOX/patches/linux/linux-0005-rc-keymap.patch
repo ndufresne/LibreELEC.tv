@@ -1,0 +1,107 @@
+--- a/dev/null	2018-01-28 02:27:51.883409616 +0000
++++ b/drivers/media/rc/keymaps/rc-czbox.c	2018-01-28 02:27:51.883409616 +0000
+@@ -0,0 +1,84 @@
++/* rc-czbox.c - Keytable for CZBOX test remote
++ *
++ * Copyright (c) 2018 - Christian Hewitt <chewitt@libreelec.tv>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <media/rc-map.h>
++#include <linux/module.h>
++
++static struct rc_map_table czbox[] = {
++
++	{ 0x40c, KEY_POWER },
++	{ 0x44a, KEY_INFO },
++	{ 0x461, KEY_FAVORITES },
++	{ 0x401, KEY_1 },
++	{ 0x402, KEY_2 },
++	{ 0x403, KEY_3 },
++	{ 0x404, KEY_4 },
++	{ 0x405, KEY_5 },
++	{ 0x406, KEY_6 },
++	{ 0x407, KEY_7 },
++	{ 0x408, KEY_8 },
++	{ 0x409, KEY_9 },
++	{ 0x448, KEY_ZOOM },
++	{ 0x400, KEY_0 },
++	{ 0x441, KEY_EPG },
++	{ 0x412, KEY_CONTEXT_MENU },
++	{ 0x437, KEY_RECORD },
++	{ 0x430, KEY_PAUSE },
++	{ 0x41d, KEY_ZOOM },
++	{ 0x424, KEY_OK },
++	{ 0x410, KEY_UP },
++	{ 0x411, KEY_DOWN },
++	{ 0x415, KEY_LEFT },
++	{ 0x416, KEY_RIGHT },
++	{ 0x414, KEY_VOLUMEUP },
++	{ 0x417, KEY_VOLUMEDOWN },
++	{ 0x41f, KEY_BACK },
++	{ 0x40d, KEY_MUTE },
++	{ 0x40e, KEY_CHANNELUP },
++	{ 0x40a, KEY_CHANNELDOWN },
++	{ 0x432, KEY_REWIND },
++	{ 0x435, KEY_PLAYPAUSE },
++	{ 0x436, KEY_STOP },
++	{ 0x434, KEY_FORWARD },
++	{ 0x451, KEY_PREVIOUSSONG },
++	{ 0x43c, KEY_SUBTITLE },
++	{ 0x40f, KEY_LANGUAGE },
++	{ 0x450, KEY_NEXTSONG },
++	{ 0x46b, KEY_RED },
++	{ 0x46c, KEY_GREEN },
++	{ 0x46d, KEY_YELLOW },
++	{ 0x46e, KEY_BLUE },
++
++};
++
++static struct rc_map_list czbox_map = {
++	.map = {
++		.scan    = czbox,
++		.size    = ARRAY_SIZE(czbox),
++		.rc_type = RC_TYPE_RC5,
++		.name    = RC_MAP_CZBOX,
++	}
++};
++
++static int __init init_rc_map_czbox(void)
++{
++	return rc_map_register(&czbox_map);
++}
++
++static void __exit exit_rc_map_czbox(void)
++{
++	rc_map_unregister(&czbox_map);
++}
++
++module_init(init_rc_map_czbox)
++module_exit(exit_rc_map_czbox)
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Christian Hewitt <chewitt@libreelec.tv>");
+--- a/drivers/media/rc/keymaps/Makefile	2018-01-28 02:29:20.181211715 +0000
++++ b/drivers/media/rc/keymaps/Makefile	2018-01-28 02:29:46.761754224 +0000
+@@ -20,6 +20,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t
+ 			rc-budget-ci-old.o \
+ 			rc-cinergy-1400.o \
+ 			rc-cinergy.o \
++                        rc-czbox.o \
+ 			rc-delock-61959.o \
+ 			rc-dib0700-nec.o \
+ 			rc-dib0700-rc5.o \
+--- a/include/media/rc-map.h	2018-01-26 21:20:19.000000000 +0000
++++ b/include/media/rc-map.h	2018-01-28 03:39:03.514470368 +0000
+@@ -111,6 +111,7 @@ void rc_map_init(void);
+ #define RC_MAP_BUDGET_CI_OLD             "rc-budget-ci-old"
+ #define RC_MAP_CINERGY_1400              "rc-cinergy-1400"
+ #define RC_MAP_CINERGY                   "rc-cinergy"
++#define RC_MAP_CZBOX                     "rc-czbox"
+ #define RC_MAP_DELOCK_61959              "rc-delock-61959"
+ #define RC_MAP_DIB0700_NEC_TABLE         "rc-dib0700-nec"
+ #define RC_MAP_DIB0700_RC5_TABLE         "rc-dib0700-rc5"

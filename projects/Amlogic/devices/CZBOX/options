@@ -1,0 +1,24 @@
+  # Kernel extra targets to build
+    KERNEL_UBOOT_EXTRA_TARGET="gxl_p231_2g_czbox.dtb"
+
+  # Amlogic IR remote support (yes / no)
+    AMREMOTE_SUPPORT="no"
+
+  # build and install driver addons (yes / no)
+    DRIVER_ADDONS_SUPPORT="no"
+
+  # additional drivers to install:
+  # for a list of additinoal drivers see packages/linux-drivers
+  # Space separated list is supported,
+  # e.g. ADDITIONAL_DRIVERS="DRIVER1 DRIVER2"
+    ADDITIONAL_DRIVERS="gpu-aml qca9377-aml"
+
+  # additional Firmware to use (dvb-firmware, misc-firmware, wlan-firmware)
+  # Space separated list is supported,
+  # e.g. FIRMWARE="dvb-firmware misc-firmware wlan-firmware"
+    FIRMWARE="brcmfmac_sdio-firmware-all-aml qca9377-firmware-aml"
+
+  # additional packages to install:
+  # Space separated list is supported,
+  # e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"
+    ADDITIONAL_PACKAGES+=" autoscript-amlogic"
