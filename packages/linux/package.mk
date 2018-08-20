@@ -34,6 +34,14 @@ case "$LINUX" in
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET aml-dtbtools:host"
     PKG_BUILD_PERF="no"
     ;;
+  amlogic-mainline)
+    PKG_VERSION="9db8d547502edbf1bdce12434ceeaa68ef3efadb" # 4.18.9
+    PKG_SHA256="4e5d5ed3944bc090fea2ea5371534778d8cba0587d3e61467c7b8eaff2474b7c"
+    PKG_URL="https://github.com/torvalds/linux/archive/$PKG_VERSION.tar.gz"
+    PKG_SOURCE_DIR="$PKG_NAME-$PKG_VERSION*"
+    PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET u-boot-tools-aml:host"
+    PKG_PATCH_DIRS="default"
+    ;;
   rockchip-4.4)
     PKG_VERSION="bca2464422eb8dd734f9218265dae256a82299be"
     PKG_SHA256="baaea04ca4a1b34e0bfce36bfcf74d65b06ae371e29fa2ef96d26327e55b690d"
