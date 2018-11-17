@@ -1,0 +1,45 @@
+From fb0f22cabc33ffacade1cc2c4111f81b75d412cd Mon Sep 17 00:00:00 2001
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Sun, 11 Nov 2018 08:39:57 -0800
+Subject: [PATCH 109/151] Fix an issue trying to get glxgears up? Shrug
+
+---
+ src/gallium/drivers/panfrost/midgard/midgard_compile.c | 7 ++++++-
+ src/gallium/drivers/panfrost/pan_screen.c              | 3 ---
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/src/gallium/drivers/panfrost/midgard/midgard_compile.c b/src/gallium/drivers/panfrost/midgard/midgard_compile.c
+index 47b9663..bfd4ad7 100644
+--- a/src/gallium/drivers/panfrost/midgard/midgard_compile.c
++++ b/src/gallium/drivers/panfrost/midgard/midgard_compile.c
+@@ -1040,7 +1040,12 @@ emit_intrinsic(compiler_context *ctx, nir_intrinsic_instr *instr)
+                                  * uniform block */
+ 
+                                 void *entry = _mesa_hash_table_u64_search(ctx->uniform_nir_to_mdg, offset + 1);
+-                                assert(entry);
++
++                                /* XXX */
++                                if (!entry) {
++                                        printf("WARNING: Unknown uniform %d\n", offset);
++                                        break;
++                                }
+ 
+                                 uniform_offset = (uintptr_t) (entry) - 1;
+                                 uniform_offset += ctx->special_uniforms;
+diff --git a/src/gallium/drivers/panfrost/pan_screen.c b/src/gallium/drivers/panfrost/pan_screen.c
+index 7a35be3..7c4ed73 100644
+--- a/src/gallium/drivers/panfrost/pan_screen.c
++++ b/src/gallium/drivers/panfrost/pan_screen.c
+@@ -134,9 +134,6 @@ panfrost_get_param(struct pipe_screen *screen, enum pipe_cap param)
+         case PIPE_CAP_MAX_VERTEX_STREAMS:
+                 return 1;
+ 
+-        case PIPE_CAP_MAX_VERTEX_ATTRIB_STRIDE:
+-                return 2048;
+-
+         case PIPE_CAP_PRIMITIVE_RESTART:
+                 return 0; /* We don't understand this yet */
+ 
+-- 
+2.7.4
+

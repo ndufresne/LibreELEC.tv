@@ -1,0 +1,25 @@
+From 7dd9ed25d9aa3292abc3bb9bbb368fb968c21915 Mon Sep 17 00:00:00 2001
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Wed, 14 Nov 2018 21:03:28 -0800
+Subject: [PATCH 113/151] midgard: Fix error on latest mesa
+
+---
+ src/gallium/drivers/panfrost/midgard/midgard_compile.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gallium/drivers/panfrost/midgard/midgard_compile.c b/src/gallium/drivers/panfrost/midgard/midgard_compile.c
+index 2a8e3a6..e8f3913 100644
+--- a/src/gallium/drivers/panfrost/midgard/midgard_compile.c
++++ b/src/gallium/drivers/panfrost/midgard/midgard_compile.c
+@@ -571,7 +571,7 @@ optimise_nir(nir_shader *nir)
+         } while (progress);
+ 
+         /* Lower mods */
+-        NIR_PASS(progress, nir, nir_lower_to_source_mods);
++        NIR_PASS(progress, nir, nir_lower_to_source_mods, nir_lower_all_source_mods);
+         NIR_PASS(progress, nir, nir_copy_prop);
+         NIR_PASS(progress, nir, nir_opt_dce);
+ 
+-- 
+2.7.4
+

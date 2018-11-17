@@ -1,0 +1,273 @@
+From 4073be68c4a5f8a917c94c432dabb0b36d156caf Mon Sep 17 00:00:00 2001
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date: Tue, 4 Dec 2018 08:35:00 +0100
+Subject: [PATCH 136/151] WIP: panfrost: Use renderonly to create scanout
+ resources and import them into Mali
+
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
+ src/gallium/drivers/panfrost/pan_context.c | 54 +++++++++++++++++----------
+ src/gallium/drivers/panfrost/pan_context.h | 35 ++++++++++++++++++
+ src/gallium/drivers/panfrost/pan_screen.c  | 59 +++++++++++++++++++++++++-----
+ 3 files changed, 120 insertions(+), 28 deletions(-)
+
+diff --git a/src/gallium/drivers/panfrost/pan_context.c b/src/gallium/drivers/panfrost/pan_context.c
+index bb62bfe..12855b9 100644
+--- a/src/gallium/drivers/panfrost/pan_context.c
++++ b/src/gallium/drivers/panfrost/pan_context.c
+@@ -328,7 +328,7 @@ panfrost_is_scanout(struct panfrost_context *ctx)
+ static void
+ panfrost_new_frag_framebuffer(struct panfrost_context *ctx)
+ {
+-        mali_ptr framebuffer = ctx->framebuffer.gpu;
++        mali_ptr framebuffer = ((struct panfrost_resource *) ctx->pipe_framebuffer.cbufs[0]->texture)->gpu[0];
+         int stride;
+ 
+         /* The default is upside down from OpenGL's perspective. Plus, for scanout we supply our own framebuffer / stride */
+@@ -945,7 +945,7 @@ panfrost_fragment_job(struct panfrost_context *ctx)
+                         ctx->fragment_fbd.unk3 |= MALI_MFBD_EXTRA;
+                         ctx->fragment_extra.unk = 0x420;
+                         ctx->fragment_extra.checksum_stride = rsrc->checksum_stride;
+-                        ctx->fragment_extra.checksum = /*rsrc->checksum_slab.gpu*/ctx->framebuffer.gpu + (ctx->scanout_stride) * rsrc->base.height0;
++                        ctx->fragment_extra.checksum = rsrc->gpu[0] + (ctx->scanout_stride) * rsrc->base.height0;
+                 }
+         }
+ 
+@@ -1451,7 +1451,7 @@ panfrost_submit_frame(struct panfrost_context *ctx, bool flush_immediate)
+         /* XXX: flush_immediate was causing lock-ups wrt readpixels in dEQP. Investigate. */
+ 
+         base_external_resource framebuffer[] = {
+-                {ctx->framebuffer.gpu | BASE_EXT_RES_ACCESS_EXCLUSIVE},
++                {.ext_resource = ((struct panfrost_resource *) ctx->pipe_framebuffer.cbufs[0]->texture)->gpu[0] | (BASE_EXT_RES_ACCESS_SHARED & LOCAL_PAGE_LSB)},
+         };
+ 
+         int vt_atom = allocate_atom();
+@@ -2192,13 +2192,37 @@ panfrost_resource_create_front(struct pipe_screen *screen,
+                         /* TODO: Mipmapped RTs */
+                         //assert(template->last_level == 0);
+ 
+-                        /* Allocate the framebuffer as its own slab of GPU-accessible memory */
+-                        struct panfrost_memory slab;
+-                        panfrost_allocate_slab(pscreen->any_context, &slab, (sz / 4096) + 1, false, 0, 0, 0);
+-
+-                        /* Make the resource out of the slab */
+-                        so->cpu[0] = slab.cpu;
+-                        so->gpu[0] = slab.gpu;
++                        if (template->bind & PIPE_BIND_SCANOUT) {
++                                struct pipe_resource scanout_templat = *template;
++                                struct renderonly_scanout *scanout;
++                                struct winsys_handle handle;
++
++                                /* TODO: align width0 and height0? */
++
++                                scanout = renderonly_scanout_for_resource(&scanout_templat,
++                                                                          pscreen->ro, &handle);
++                                if (!scanout)
++                                        return NULL;
++
++                                assert(handle.type == WINSYS_HANDLE_TYPE_FD);
++                                /* TODO: handle modifiers? */
++                                so = pan_resource(screen->resource_from_handle(screen, template,
++                                                                                 &handle,
++                                                                                 PIPE_HANDLE_USAGE_FRAMEBUFFER_WRITE));
++                                close(handle.handle);
++                                if (!so)
++                                        return NULL;
++
++                                so->scanout = scanout;
++                        } else {
++                                /* Allocate the framebuffer as its own slab of GPU-accessible memory */
++                                struct panfrost_memory slab;
++                                panfrost_allocate_slab(pscreen->any_context, &slab, (sz / 4096) + 1, false, 0, 0, 0);
++
++                                /* Make the resource out of the slab */
++                                so->cpu[0] = slab.cpu;
++                                so->gpu[0] = slab.gpu;
++                        }
+                 }
+         } else {
+                 /* TODO: For linear resources, allocate straight on the cmdstream for
+@@ -2337,21 +2361,13 @@ panfrost_set_framebuffer_state(struct pipe_context *pctx,
+                 if (!cb)
+                         continue;
+ 
+-                bool is_scanout = panfrost_is_scanout(ctx);
+-
+-                if (is_scanout) {
+-                        /* Lie to use our own */
+-                        ((struct panfrost_resource *) ctx->pipe_framebuffer.cbufs[i]->texture)->gpu[0] = ctx->framebuffer.gpu;
+-                        ctx->pipe_framebuffer.width = 2048;
+-                        ctx->pipe_framebuffer.height = 1280;
+-                }
+-
+                 ctx->vt_framebuffer = panfrost_emit_fbd(ctx);
+                 panfrost_attach_vt_framebuffer(ctx);
+                 panfrost_new_frag_framebuffer(ctx);
+                 panfrost_set_scissor(ctx);
+ 
+                 struct panfrost_resource *tex = ((struct panfrost_resource *) ctx->pipe_framebuffer.cbufs[i]->texture);
++                bool is_scanout = panfrost_is_scanout(ctx);
+ 
+                 if (!is_scanout && !tex->has_afbc) {
+                         /* The blob is aggressive about enabling AFBC. As such,
+diff --git a/src/gallium/drivers/panfrost/pan_context.h b/src/gallium/drivers/panfrost/pan_context.h
+index 28119e4..aa0cd00 100644
+--- a/src/gallium/drivers/panfrost/pan_context.h
++++ b/src/gallium/drivers/panfrost/pan_context.h
+@@ -270,9 +270,32 @@ struct panfrost_sampler_view {
+ 
+ struct sw_displaytarget;
+ 
++struct panfrost_bo {
++	//struct panfrost_device *dev;
++	uint32_t size;
++	uint32_t handle;
++	uint32_t name;
++	int32_t refcnt;
++	uint64_t iova;
++	void *map;
++	//const struct fd_bo_funcs *funcs;
++
++	enum {
++		NO_CACHE = 0,
++		BO_CACHE = 1,
++		RING_CACHE = 2,
++	} bo_reuse;
++
++	//struct list_head list;   /* bucket-list entry */
++	time_t free_time;        /* time when added to bucket-list */
++};
++
+ struct panfrost_resource {
+         struct pipe_resource base;
+ 
++        struct panfrost_bo *bo;
++        struct renderonly_scanout *scanout;
++
+         /* Address to the resource in question */
+ 
+         uint8_t *cpu[MAX_MIP_LEVELS];
+@@ -318,6 +341,18 @@ panfrost_context(struct pipe_context *pcontext)
+         return (struct panfrost_context *) pcontext;
+ }
+ 
++static inline struct panfrost_resource *
++pan_resource(struct pipe_resource *p)
++{
++   return (struct panfrost_resource *)p;
++}
++
++static inline struct panfrost_screen *
++pan_screen(struct pipe_screen *p)
++{
++   return (struct panfrost_screen *)p;
++}
++
+ struct pipe_context *
+ panfrost_create_context(struct pipe_screen *screen, void *priv, unsigned flags);
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_screen.c b/src/gallium/drivers/panfrost/pan_screen.c
+index 74d83a4..835ebb2 100644
+--- a/src/gallium/drivers/panfrost/pan_screen.c
++++ b/src/gallium/drivers/panfrost/pan_screen.c
+@@ -38,12 +38,17 @@
+ #include "draw/draw_context.h"
+ #include "state_tracker/winsys_handle.h"
+ 
++#include "drm_fourcc.h"
++
+ #include "pan_screen.h"
+ #include "pan_public.h"
+ 
+ #include "pan_context.h"
+ #include "midgard/midgard_compile.h"
+ 
++#include <panfrost-mali-base.h>
++#include <mali-kbase-ioctl.h>
++
+ static const char *
+ panfrost_get_name(struct pipe_screen *screen)
+ {
+@@ -668,15 +673,47 @@ panfrost_resource_destroy(struct pipe_screen *pscreen,
+ }
+ 
+ static struct pipe_resource *
+-panfrost_resource_from_handle(struct pipe_screen *screen,
++panfrost_resource_from_handle(struct pipe_screen *pscreen,
+                               const struct pipe_resource *templat,
+                               struct winsys_handle *whandle,
+                               unsigned usage)
+ {
+-        assert(0);
+-        return NULL;
+-}
++        struct panfrost_screen *screen = pan_screen(pscreen);
++        struct panfrost_resource *rsc;
++        struct pipe_resource *prsc;
++        int ret;
++
++        assert(whandle->type == WINSYS_HANDLE_TYPE_FD);
++
++        rsc = CALLOC_STRUCT(panfrost_resource);
++        if (!rsc)
++                return NULL;
++
++        prsc = &rsc->base;
++
++        *prsc = *templat;
++
++        pipe_reference_init(&prsc->reference, 1);
++        prsc->screen = pscreen;
+ 
++        union kbase_ioctl_mem_import framebuffer_import = {
++                .in = {
++                        .phandle = (uint64_t) (uintptr_t) &whandle->handle,
++                        .type = BASE_MEM_IMPORT_TYPE_UMM,
++                        .flags = BASE_MEM_PROT_CPU_RD |
++                                 BASE_MEM_PROT_CPU_WR |
++                                 BASE_MEM_PROT_GPU_RD |
++                                 BASE_MEM_PROT_GPU_WR |
++                                 BASE_MEM_IMPORT_SHARED,
++                }
++        };
++
++        ret = pandev_ioctl(screen->fd, KBASE_IOCTL_MEM_IMPORT, &framebuffer_import);
++
++        rsc->gpu[0] = mmap(NULL, framebuffer_import.out.va_pages * 4096, PROT_READ | PROT_WRITE, MAP_SHARED, screen->fd, framebuffer_import.out.gpu_va);
++
++        return prsc;
++}
+ 
+ static boolean
+ panfrost_resource_get_handle(struct pipe_screen *screen,
+@@ -686,18 +723,22 @@ panfrost_resource_get_handle(struct pipe_screen *screen,
+                              unsigned usage)
+ {
+         struct panfrost_resource *rsrc = (struct panfrost_resource *) pt;
++        struct renderonly_scanout *scanout = rsrc->scanout;
+ 
+         handle->stride = rsrc->stride;
+-
+-        /* TODO */
+-        assert (0);
++        handle->modifier = DRM_FORMAT_MOD_LINEAR;
+ 
+         if (handle->type == WINSYS_HANDLE_TYPE_SHARED) {
+                 printf("Missed shared handle\n");
+                 return FALSE;
+         } else if (handle->type == WINSYS_HANDLE_TYPE_KMS) {
+-                printf("Missed nonrenderonly KMS\n");
+-                return FALSE;
++                if (renderonly_get_handle(scanout, handle)) {
++                        return TRUE;
++                } else {
++                        printf("Missed nonrenderonly KMS handle\n");
++                        assert(0);
++                        return FALSE;
++                }
+         } else if (handle->type == WINSYS_HANDLE_TYPE_FD) {
+                 printf("Missed dmabuf\n");
+                 return FALSE;
+-- 
+2.7.4
+

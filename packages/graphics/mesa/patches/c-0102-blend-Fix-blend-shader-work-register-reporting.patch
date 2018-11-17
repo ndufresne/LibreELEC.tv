@@ -1,0 +1,25 @@
+From 5c3dbd14f367ddd73cdc75703117a854a96f78d7 Mon Sep 17 00:00:00 2001
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Sat, 10 Nov 2018 21:02:53 -0800
+Subject: [PATCH 102/151] blend: Fix blend shader work register reporting
+
+---
+ src/gallium/drivers/panfrost/pan_context.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gallium/drivers/panfrost/pan_context.c b/src/gallium/drivers/panfrost/pan_context.c
+index 9004233..d193ae7 100644
+--- a/src/gallium/drivers/panfrost/pan_context.c
++++ b/src/gallium/drivers/panfrost/pan_context.c
+@@ -1127,7 +1127,7 @@ panfrost_emit_for_draw(struct panfrost_context *ctx)
+                          * -existence- of a blend shader */
+ 
+                         assert(ctx->blend->blend_work_count >= 2);
+-                        blend_count |= ctx->blend->blend_work_count;
++                        blend_count |= MIN2(ctx->blend->blend_work_count, 3);
+                 } else {
+                         /* Otherwise, the bottom bit simply specifies if
+                          * blending (anything other than REPLACE) is enabled */
+-- 
+2.7.4
+

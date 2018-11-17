@@ -1,0 +1,84 @@
+From 3f79e73d0a87e1afabb6cd3bd25931ffffcbd226 Mon Sep 17 00:00:00 2001
+From: Qiang Yu <yuq825@gmail.com>
+Date: Mon, 10 Dec 2018 16:35:32 +0800
+Subject: [PATCH 068/151] lima: fix gp/pp mmu fault
+
+Some lima_ctx_buff is allocated conditionally for
+each draw like gp_uniform, pp_uniform and tex_desc.
+mmu fault will happen when:
+
+draw 1: tex_desc (i.e.) is allocated and added to
+  PP submit, draw is OK
+draw 2: no LIMA_CONTEXT_DIRTY_TEXTURES, so tex_desc
+  is unchanged, but not added to PP submit
+draw 3: LIMA_CONTEXT_DIRTY_TEXTURES, so original
+  tex_desc is freed and allocate a new one
+
+So draw 2 may get mmu fault because the tex_desc
+buffer is freed when its execution.
+
+Move submit add to lima_ctx_buff_va so that the
+buffer will be added whenever get used by GPU
+command stream.
+
+Signed-off-by: Qiang Yu <yuq825@gmail.com>
+---
+ src/gallium/drivers/lima/lima_context.c | 14 ++++++++------
+ src/gallium/drivers/lima/lima_context.h |  1 +
+ 2 files changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/src/gallium/drivers/lima/lima_context.c b/src/gallium/drivers/lima/lima_context.c
+index d23d667..ce0fbc4 100644
+--- a/src/gallium/drivers/lima/lima_context.c
++++ b/src/gallium/drivers/lima/lima_context.c
+@@ -49,7 +49,14 @@ lima_ctx_buff_va(struct lima_context *ctx, enum lima_ctx_buff buff)
+ {
+    struct lima_ctx_buff_state *cbs = ctx->buffer_state + buff;
+    struct lima_resource *res = lima_resource(cbs->res);
++
+    lima_bo_update(res->bo, false, true);
++
++   if (cbs->submit & LIMA_CTX_BUFF_SUBMIT_GP)
++      lima_submit_add_bo(ctx->gp_submit, res->bo, LIMA_SUBMIT_BO_READ);
++   if (cbs->submit & LIMA_CTX_BUFF_SUBMIT_PP)
++      lima_submit_add_bo(ctx->pp_submit, res->bo, LIMA_SUBMIT_BO_READ);
++
+    return res->bo->va + cbs->offset;
+ }
+ 
+@@ -70,6 +77,7 @@ lima_ctx_buff_alloc(struct lima_context *ctx, enum lima_ctx_buff buff,
+    void *ret = NULL;
+ 
+    cbs->size = align(size, 0x40);
++   cbs->submit = submit;
+ 
+    if (uploader)
+       u_upload_alloc(ctx->uploader, 0, cbs->size, 0x40, &cbs->offset,
+@@ -78,12 +86,6 @@ lima_ctx_buff_alloc(struct lima_context *ctx, enum lima_ctx_buff buff,
+       u_suballocator_alloc(ctx->suballocator, cbs->size, 0x10,
+                            &cbs->offset, &cbs->res);
+ 
+-   struct lima_resource *res = lima_resource(cbs->res);
+-   if (submit & LIMA_CTX_BUFF_SUBMIT_GP)
+-      lima_submit_add_bo(ctx->gp_submit, res->bo, LIMA_SUBMIT_BO_READ);
+-   if (submit & LIMA_CTX_BUFF_SUBMIT_PP)
+-      lima_submit_add_bo(ctx->pp_submit, res->bo, LIMA_SUBMIT_BO_READ);
+-
+    return ret;
+ }
+ 
+diff --git a/src/gallium/drivers/lima/lima_context.h b/src/gallium/drivers/lima/lima_context.h
+index 1d6c755..7e83d7d 100644
+--- a/src/gallium/drivers/lima/lima_context.h
++++ b/src/gallium/drivers/lima/lima_context.h
+@@ -137,6 +137,7 @@ struct lima_ctx_buff_state {
+    struct pipe_resource *res;
+    unsigned offset;
+    unsigned size;
++   unsigned submit;
+ };
+ 
+ struct lima_texture_stateobj {
+-- 
+2.7.4
+

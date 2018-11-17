@@ -1,0 +1,20 @@
+From e073d38c2d4e484277f41dbc774cec6c30aae35c Mon Sep 17 00:00:00 2001
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Tue, 6 Nov 2018 19:15:42 -0800
+Subject: [PATCH 080/151] Style script
+
+---
+ src/gallium/drivers/panfrost/astyle.sh | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 src/gallium/drivers/panfrost/astyle.sh
+
+diff --git a/src/gallium/drivers/panfrost/astyle.sh b/src/gallium/drivers/panfrost/astyle.sh
+new file mode 100644
+index 0000000..0d1f773
+--- /dev/null
++++ b/src/gallium/drivers/panfrost/astyle.sh
+@@ -0,0 +1 @@
++astyle --style=kr --indent=spaces=8 --break-blocks  --pad-oper --pad-comma --pad-header --align-pointer=name  --break-return-type -r '*.h'
+-- 
+2.7.4
+

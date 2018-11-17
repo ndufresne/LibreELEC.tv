@@ -1,0 +1,528 @@
+From a5cf09201387f6a78cde9e27a03ca6493fe55fdb Mon Sep 17 00:00:00 2001
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Tue, 6 Nov 2018 20:13:47 -0800
+Subject: [PATCH 083/151] MITify what I can
+
+---
+ src/gallium/drivers/panfrost/pan_allocate.c      | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_assemble.c      | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_blend_shaders.c | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_blend_shaders.h | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_blending.c      | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_blending.h      | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_context.c       | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_context.h       | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_nondrm.c        | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_nondrm.h        | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_public.h        | 27 ++++++++++++++++++++++--
+ src/gallium/drivers/panfrost/pan_slowfb.c        | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_slowfb.h        | 24 +++++++++++++++------
+ src/gallium/drivers/panfrost/pan_swizzle.h       | 24 +++++++++++++++------
+ 14 files changed, 246 insertions(+), 93 deletions(-)
+
+diff --git a/src/gallium/drivers/panfrost/pan_allocate.c b/src/gallium/drivers/panfrost/pan_allocate.c
+index 5eb0699..d6634df 100644
+--- a/src/gallium/drivers/panfrost/pan_allocate.c
++++ b/src/gallium/drivers/panfrost/pan_allocate.c
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_assemble.c b/src/gallium/drivers/panfrost/pan_assemble.c
+index fe26dca..e206643 100644
+--- a/src/gallium/drivers/panfrost/pan_assemble.c
++++ b/src/gallium/drivers/panfrost/pan_assemble.c
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_blend_shaders.c b/src/gallium/drivers/panfrost/pan_blend_shaders.c
+index 3a63db2..611be0e 100644
+--- a/src/gallium/drivers/panfrost/pan_blend_shaders.c
++++ b/src/gallium/drivers/panfrost/pan_blend_shaders.c
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_blend_shaders.h b/src/gallium/drivers/panfrost/pan_blend_shaders.h
+index 590a2f7..3d0f42f 100644
+--- a/src/gallium/drivers/panfrost/pan_blend_shaders.h
++++ b/src/gallium/drivers/panfrost/pan_blend_shaders.h
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_blending.c b/src/gallium/drivers/panfrost/pan_blending.c
+index 762e294..fd899fc 100644
+--- a/src/gallium/drivers/panfrost/pan_blending.c
++++ b/src/gallium/drivers/panfrost/pan_blending.c
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_blending.h b/src/gallium/drivers/panfrost/pan_blending.h
+index 9e00f7a..ac773fb 100644
+--- a/src/gallium/drivers/panfrost/pan_blending.h
++++ b/src/gallium/drivers/panfrost/pan_blending.h
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_context.c b/src/gallium/drivers/panfrost/pan_context.c
+index 67c0c5a..d45d029 100644
+--- a/src/gallium/drivers/panfrost/pan_context.c
++++ b/src/gallium/drivers/panfrost/pan_context.c
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_context.h b/src/gallium/drivers/panfrost/pan_context.h
+index 6c0ace3..f54c0a0 100644
+--- a/src/gallium/drivers/panfrost/pan_context.h
++++ b/src/gallium/drivers/panfrost/pan_context.h
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_nondrm.c b/src/gallium/drivers/panfrost/pan_nondrm.c
+index af2ab66..d128686 100644
+--- a/src/gallium/drivers/panfrost/pan_nondrm.c
++++ b/src/gallium/drivers/panfrost/pan_nondrm.c
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2017-2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ #include <stdio.h>
+diff --git a/src/gallium/drivers/panfrost/pan_nondrm.h b/src/gallium/drivers/panfrost/pan_nondrm.h
+index 7a93437..0a369d0 100644
+--- a/src/gallium/drivers/panfrost/pan_nondrm.h
++++ b/src/gallium/drivers/panfrost/pan_nondrm.h
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2017-2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_public.h b/src/gallium/drivers/panfrost/pan_public.h
+index 5cd7d05..c7e72f9 100644
+--- a/src/gallium/drivers/panfrost/pan_public.h
++++ b/src/gallium/drivers/panfrost/pan_public.h
+@@ -1,5 +1,28 @@
+-#ifndef SP_PUBLIC_H
+-#define SP_PUBLIC_H
++/*
++ * Copyright (C) 2018 Alyssa Rosenzweig
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
++ */
++
++#ifndef PAN_PUBLIC_H
++#define PAN_PUBLIC_H
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/src/gallium/drivers/panfrost/pan_slowfb.c b/src/gallium/drivers/panfrost/pan_slowfb.c
+index d3baa1d..dfd0f95 100644
+--- a/src/gallium/drivers/panfrost/pan_slowfb.c
++++ b/src/gallium/drivers/panfrost/pan_slowfb.c
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_slowfb.h b/src/gallium/drivers/panfrost/pan_slowfb.h
+index 43dbecc..2047102 100644
+--- a/src/gallium/drivers/panfrost/pan_slowfb.h
++++ b/src/gallium/drivers/panfrost/pan_slowfb.h
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+diff --git a/src/gallium/drivers/panfrost/pan_swizzle.h b/src/gallium/drivers/panfrost/pan_swizzle.h
+index 27bd9df..c94d98f 100644
+--- a/src/gallium/drivers/panfrost/pan_swizzle.h
++++ b/src/gallium/drivers/panfrost/pan_swizzle.h
+@@ -1,14 +1,24 @@
+ /*
+  * © Copyright 2018 Alyssa Rosenzweig
+  *
+- * This program is free software and is provided to you under the terms of the
+- * GNU General Public License version 2 as published by the Free Software
+- * Foundation, and any use by you of this program is subject to the terms
+- * of such GNU licence.
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
+  *
+- * A copy of the licence is included with the program, and can also be obtained
+- * from Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
+  *
+  */
+ 
+-- 
+2.7.4
+

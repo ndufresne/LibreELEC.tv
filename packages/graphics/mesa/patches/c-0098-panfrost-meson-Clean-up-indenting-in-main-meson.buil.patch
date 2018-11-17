@@ -1,0 +1,51 @@
+From 3af1b75a1812d76fac55ee9d65f9790077b26347 Mon Sep 17 00:00:00 2001
+From: Lyude Paul <lyude@redhat.com>
+Date: Sat, 10 Nov 2018 14:14:51 -0500
+Subject: [PATCH 098/151] panfrost/meson: Clean up indenting in main
+ meson.build
+
+Should be no functional changes
+---
+ src/gallium/drivers/panfrost/meson.build | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/src/gallium/drivers/panfrost/meson.build b/src/gallium/drivers/panfrost/meson.build
+index 08cc6d8..c0ccd20 100644
+--- a/src/gallium/drivers/panfrost/meson.build
++++ b/src/gallium/drivers/panfrost/meson.build
+@@ -62,7 +62,15 @@ libpanfrost = static_library(
+     dep_thread,
+     idep_nir
+   ],
+-  include_directories : [inc_common, inc_gallium_aux, inc_gallium, inc_include, inc_src, include_directories('midgard'), include_directories('include')],
++  include_directories : [
++    inc_common,
++    inc_gallium_aux,
++    inc_gallium,
++    inc_include,
++    inc_src,
++    include_directories('midgard'),
++    include_directories('include')
++  ],
+   c_args : [c_vis_args, c_msvc_compat_args],
+ )
+ 
+@@ -81,7 +89,14 @@ files_midgard = files(
+ midgard_compiler = executable(
+   'midgard_compiler',
+   [files_midgard, midgard_nir_algebraic_c],
+-  include_directories : [inc_common, inc_src, inc_include, inc_gallium, inc_gallium_aux, include_directories('midgard')],
++  include_directories : [
++    inc_common,
++    inc_src,
++    inc_include,
++    inc_gallium,
++    inc_gallium_aux,
++    include_directories('midgard')
++    ],
+   dependencies : [
+     dep_thread,
+     idep_nir
+-- 
+2.7.4
+

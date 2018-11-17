@@ -1,0 +1,226 @@
+From 15bf1a60a6c73d99a586066b5ab114e54cff7266 Mon Sep 17 00:00:00 2001
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date: Wed, 28 Nov 2018 10:26:16 +0100
+Subject: [PATCH 128/151] panfrost: Use renderonly.gpu_fd for /dev/mali0
+
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
+ src/gallium/drivers/panfrost/pan_context.c         | 30 ++++++++++++++++------
+ src/gallium/drivers/panfrost/pan_context.h         |  2 --
+ src/gallium/drivers/panfrost/pan_nondrm.c          |  6 +----
+ src/gallium/drivers/panfrost/pan_nondrm.h          |  2 +-
+ src/gallium/drivers/panfrost/pan_screen.c          | 10 ++++++++
+ src/gallium/drivers/panfrost/pan_screen.h          |  5 ++++
+ .../winsys/rockchip/drm/rockchip_drm_winsys.c      |  2 +-
+ 7 files changed, 40 insertions(+), 17 deletions(-)
+
+diff --git a/src/gallium/drivers/panfrost/pan_context.c b/src/gallium/drivers/panfrost/pan_context.c
+index 420968c..7f5eedc 100644
+--- a/src/gallium/drivers/panfrost/pan_context.c
++++ b/src/gallium/drivers/panfrost/pan_context.c
+@@ -1409,11 +1409,14 @@ int last_fragment_flushed = true;
+ static void
+ force_flush_fragment(struct panfrost_context *ctx)
+ {
++        struct pipe_context *gallium = (struct pipe_context *) ctx;
++        struct panfrost_screen *screen = panfrost_screen(gallium->screen);
++
+         if (!last_fragment_flushed) {
+                 uint8_t ev[/* 1 */ 4 + 4 + 8 + 8];
+ 
+                 do {
+-                        read(ctx->fd, ev, sizeof(ev));
++                        read(screen->fd, ev, sizeof(ev));
+                 } while (ev[4] != last_fragment_id);
+ 
+                 last_fragment_flushed = true;
+@@ -1425,6 +1428,9 @@ force_flush_fragment(struct panfrost_context *ctx)
+ static void
+ panfrost_submit_frame(struct panfrost_context *ctx, bool flush_immediate)
+ {
++        struct pipe_context *gallium = (struct pipe_context *) ctx;
++        struct panfrost_screen *screen = panfrost_screen(gallium->screen);
++
+         /* Edge case if screen is cleared and nothing else */
+         bool has_draws = ctx->draw_count > 0;
+ 
+@@ -1484,7 +1490,7 @@ panfrost_submit_frame(struct panfrost_context *ctx, bool flush_immediate)
+                 .stride = sizeof(struct base_jd_atom_v2),
+         };
+ 
+-        if (pandev_ioctl(ctx->fd, KBASE_IOCTL_JOB_SUBMIT, &submit))
++        if (pandev_ioctl(screen->fd, KBASE_IOCTL_JOB_SUBMIT, &submit))
+                 printf("Error submitting\n");
+ 
+         /* If visual, we can stall a frame */
+@@ -2699,6 +2705,8 @@ panfrost_allocate_slab(struct panfrost_context *ctx,
+                        int commit_count,
+                        int extent)
+ {
++        struct pipe_context *gallium = (struct pipe_context *) ctx;
++        struct panfrost_screen *screen = panfrost_screen(gallium->screen);
+         int flags = BASE_MEM_PROT_CPU_RD | BASE_MEM_PROT_CPU_WR |
+                     BASE_MEM_PROT_GPU_RD | BASE_MEM_PROT_GPU_WR;
+         int out_flags;
+@@ -2713,11 +2721,11 @@ panfrost_allocate_slab(struct panfrost_context *ctx,
+                 flags |= BASE_MEM_SAME_VA;
+ 
+         if (commit_count || extent)
+-                pandev_general_allocate(ctx->fd, pages,
++                pandev_general_allocate(screen->fd, pages,
+                                         commit_count,
+                                         extent, flags, &mem->gpu, &out_flags);
+         else
+-                pandev_standard_allocate(ctx->fd, pages, flags, &mem->gpu,
++                pandev_standard_allocate(screen->fd, pages, flags, &mem->gpu,
+                                          &out_flags);
+ 
+         mem->size = pages * 4096;
+@@ -2727,7 +2735,7 @@ panfrost_allocate_slab(struct panfrost_context *ctx,
+          */
+         if (mem->gpu == 0x41000) {
+                 if ((mem->cpu = mmap(NULL, mem->size, 3, 1,
+-                                     ctx->fd, mem->gpu)) == MAP_FAILED) {
++                                     screen->fd, mem->gpu)) == MAP_FAILED) {
+                         perror("mmap");
+                         abort();
+                 }
+@@ -2744,6 +2752,9 @@ panfrost_allocate_slab(struct panfrost_context *ctx,
+ static void
+ panfrost_setup_framebuffer(struct panfrost_context *ctx, int width, int height)
+ {
++        struct pipe_context *gallium = (struct pipe_context *) ctx;
++        struct panfrost_screen *screen = panfrost_screen(gallium->screen);
++
+         /* drisw rounds the stride */
+         int rw = 16.0 * (int) ceil((float) width / 16.0);
+ 
+@@ -2771,12 +2782,12 @@ panfrost_setup_framebuffer(struct panfrost_context *ctx, int width, int height)
+                 }
+         };
+ 
+-        pandev_ioctl(ctx->fd, KBASE_IOCTL_MEM_IMPORT, &framebuffer_import);
++        pandev_ioctl(screen->fd, KBASE_IOCTL_MEM_IMPORT, &framebuffer_import);
+ 
+         /* It feels like this mmap is backwards :p */
+         uint64_t gpu_addr = (uint64_t) mmap(NULL,
+                                             framebuffer_import.out.va_pages * 4096,
+-                                            3, 1, ctx->fd,
++                                            3, 1, screen->fd,
+                                             framebuffer_import.out.gpu_va);
+ 
+         ctx->framebuffer.gpu = gpu_addr;
+@@ -2791,7 +2802,10 @@ panfrost_setup_framebuffer(struct panfrost_context *ctx, int width, int height)
+ static void
+ panfrost_setup_hardware(struct panfrost_context *ctx)
+ {
+-        ctx->fd = pandev_open();
++        struct pipe_context *gallium = (struct pipe_context *) ctx;
++        struct panfrost_screen *screen = panfrost_screen(gallium->screen);
++
++        pandev_open(screen->fd);
+ 
+ #ifdef USE_SLOWFB
+         panfrost_setup_framebuffer(ctx, 2048, 1280);
+diff --git a/src/gallium/drivers/panfrost/pan_context.h b/src/gallium/drivers/panfrost/pan_context.h
+index 5f81f34..28119e4 100644
+--- a/src/gallium/drivers/panfrost/pan_context.h
++++ b/src/gallium/drivers/panfrost/pan_context.h
+@@ -79,8 +79,6 @@ struct panfrost_context {
+         /* Gallium context */
+         struct pipe_context base;
+ 
+-        /* TODO: DRM driver? */
+-        int fd;
+         struct pipe_framebuffer_state pipe_framebuffer;
+ 
+         /* The number of concurrent FBOs allowed depends on the number of rings used */
+diff --git a/src/gallium/drivers/panfrost/pan_nondrm.c b/src/gallium/drivers/panfrost/pan_nondrm.c
+index a9e0591..1cce6e0 100644
+--- a/src/gallium/drivers/panfrost/pan_nondrm.c
++++ b/src/gallium/drivers/panfrost/pan_nondrm.c
+@@ -78,12 +78,8 @@ pandev_standard_allocate(int fd, int va_pages, int flags,
+ }
+ 
+ int
+-pandev_open()
++pandev_open(int fd)
+ {
+-
+-        int fd = open("/dev/mali0", O_RDWR | O_CLOEXEC);
+-        assert(fd != -1);
+-
+ #ifdef USE_LEGACY_KERNEL
+         struct kbase_ioctl_version_check version = { .major = 11, .minor = 11 };
+         struct kbase_ioctl_set_flags set_flags = {};
+diff --git a/src/gallium/drivers/panfrost/pan_nondrm.h b/src/gallium/drivers/panfrost/pan_nondrm.h
+index 52110d1..874bf7e 100644
+--- a/src/gallium/drivers/panfrost/pan_nondrm.h
++++ b/src/gallium/drivers/panfrost/pan_nondrm.h
+@@ -32,7 +32,7 @@
+ #include <linux/ioctl.h>
+ #include "pan_slowfb.h"
+ 
+-int pandev_open(void);
++int pandev_open(int fd);
+ 
+ /* Calls used while replaying */
+ int pandev_raw_open(void);
+diff --git a/src/gallium/drivers/panfrost/pan_screen.c b/src/gallium/drivers/panfrost/pan_screen.c
+index 7c4ed73..74d83a4 100644
+--- a/src/gallium/drivers/panfrost/pan_screen.c
++++ b/src/gallium/drivers/panfrost/pan_screen.c
+@@ -714,6 +714,16 @@ panfrost_create_screen(int fd, struct renderonly *ro)
+         if (!screen)
+                 return NULL;
+ 
++        screen->fd = fd;
++        if (ro) {
++                screen->ro = renderonly_dup(ro);
++                if (!screen->ro) {
++                        fprintf(stderr, "Failed to dup renderonly object\n");
++                        free(screen);
++                        return NULL;
++                }
++        }
++
+         screen->base.destroy = panfrost_destroy_screen;
+ 
+         screen->base.get_name = panfrost_get_name;
+diff --git a/src/gallium/drivers/panfrost/pan_screen.h b/src/gallium/drivers/panfrost/pan_screen.h
+index d99ef1c..07c8c9e 100644
+--- a/src/gallium/drivers/panfrost/pan_screen.h
++++ b/src/gallium/drivers/panfrost/pan_screen.h
+@@ -33,11 +33,16 @@
+ 
+ #include "pipe/p_screen.h"
+ #include "pipe/p_defines.h"
++#include "renderonly/renderonly.h"
+ 
+ struct panfrost_context;
+ 
+ struct panfrost_screen {
+         struct pipe_screen base;
++
++        struct renderonly *ro;
++        int fd;
++
+         struct panfrost_context *any_context;
+ };
+ 
+diff --git a/src/gallium/winsys/rockchip/drm/rockchip_drm_winsys.c b/src/gallium/winsys/rockchip/drm/rockchip_drm_winsys.c
+index ce8d7db..108cb48 100644
+--- a/src/gallium/winsys/rockchip/drm/rockchip_drm_winsys.c
++++ b/src/gallium/winsys/rockchip/drm/rockchip_drm_winsys.c
+@@ -41,7 +41,7 @@ static struct pipe_screen *rockchip_screen_create_lima(int fd)
+        */
+       .create_for_resource = renderonly_create_kms_dumb_buffer_for_resource,
+       .kms_fd = fd,
+-      .gpu_fd = drmOpenWithType("lima", NULL, DRM_NODE_RENDER),
++      .gpu_fd = open("/dev/mali0", O_RDWR | O_CLOEXEC),
+    };
+ 
+    if (ro.gpu_fd < 0)
+-- 
+2.7.4
+

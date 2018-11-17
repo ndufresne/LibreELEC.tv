@@ -1,0 +1,24 @@
+From 499baebd228b3b59296ec59db89b3a1453a42ddf Mon Sep 17 00:00:00 2001
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date: Thu, 29 Nov 2018 09:28:21 +0100
+Subject: [PATCH 130/151] egl: include stddef.h
+
+---
+ src/egl/main/egldevice.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/egl/main/egldevice.h b/src/egl/main/egldevice.h
+index ddcdcd1..b9ca245 100644
+--- a/src/egl/main/egldevice.h
++++ b/src/egl/main/egldevice.h
+@@ -31,6 +31,7 @@
+ 
+ 
+ #include <stdbool.h>
++#include <stddef.h>
+ #include "egltypedefs.h"
+ 
+ 
+-- 
+2.7.4
+

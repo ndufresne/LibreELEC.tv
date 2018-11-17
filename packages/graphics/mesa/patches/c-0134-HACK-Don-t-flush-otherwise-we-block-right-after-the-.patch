@@ -1,0 +1,27 @@
+From 51a12e90edf54e399fb569d7cdfbf89980e3d5a1 Mon Sep 17 00:00:00 2001
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date: Tue, 4 Dec 2018 08:30:35 +0100
+Subject: [PATCH 134/151] HACK: Don't flush, otherwise we block right after the
+ first submit
+
+---
+ src/gallium/drivers/panfrost/pan_context.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/gallium/drivers/panfrost/pan_context.c b/src/gallium/drivers/panfrost/pan_context.c
+index 85e3280..0d631e9 100644
+--- a/src/gallium/drivers/panfrost/pan_context.c
++++ b/src/gallium/drivers/panfrost/pan_context.c
+@@ -1413,6 +1413,9 @@ force_flush_fragment(struct panfrost_context *ctx)
+         struct pipe_context *gallium = (struct pipe_context *) ctx;
+         struct panfrost_screen *screen = panfrost_screen(gallium->screen);
+ 
++        last_fragment_flushed = true;
++        return;
++
+         if (!last_fragment_flushed) {
+                 uint8_t ev[/* 1 */ 4 + 4 + 8 + 8];
+ 
+-- 
+2.7.4
+

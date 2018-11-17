@@ -1,0 +1,64 @@
+From dd0bee85c46ae0d4757a7a148e70f9eaf0887204 Mon Sep 17 00:00:00 2001
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Thu, 8 Nov 2018 19:57:36 -0800
+Subject: [PATCH 090/151] blend: Build a trivial blend shader on-demand
+
+---
+ src/gallium/drivers/panfrost/pan_blend_shaders.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/src/gallium/drivers/panfrost/pan_blend_shaders.c b/src/gallium/drivers/panfrost/pan_blend_shaders.c
+index be00a6c..f2eef21 100644
+--- a/src/gallium/drivers/panfrost/pan_blend_shaders.c
++++ b/src/gallium/drivers/panfrost/pan_blend_shaders.c
+@@ -88,7 +88,7 @@ panfrost_make_blend_shader(struct panfrost_context *ctx, struct panfrost_blend_s
+ 
+         /* Build the shader */
+ 
+-        nir_shader *shader = nir_shader_create(NULL, MESA_SHADER_FRAGMENT, NULL, NULL);
++        nir_shader *shader = nir_shader_create(NULL, MESA_SHADER_FRAGMENT, &midgard_nir_options, NULL);
+         nir_function *fn = nir_function_create(shader, "main");
+         nir_function_impl *impl = nir_function_impl_create(fn);
+ 
+@@ -110,11 +110,22 @@ panfrost_make_blend_shader(struct panfrost_context *ctx, struct panfrost_blend_s
+         b->cursor = nir_before_block(nir_start_block(impl));
+ 
+         /* Build a trivial blend shader */
+-        nir_store_var(b, c_out, nir_load_var(b, c_src), 0xFF);
++        nir_store_var(b, c_out, nir_fadd(b, nir_load_var(b, c_dst), nir_load_var(b, c_src)), 0xFF);
+ 
+         nir_print_shader(shader, stdout);
+ 
++        /* Compile the built shader */
++
++        midgard_program program;
++        midgard_compile_shader_nir(shader, &program, true);
++
++
+         /* Upload the shader */
++
++        int size = program.compiled.size;
++        uint8_t *dst = program.compiled.data;
++
++#if 0
+         midgard_program program = {
+                 .work_register_count = 3,
+                 .first_tag = 9,
+@@ -137,10 +148,13 @@ panfrost_make_blend_shader(struct panfrost_context *ctx, struct panfrost_blend_s
+                 for (int c = 0; c < 4; ++c)
+                         hot_color[c] = blend_color->color[c];
+         }
++#endif
+ 
+         *out = panfrost_upload(&ctx->shaders, dst, size, true) | program.first_tag;
+ 
+         /* We need to switch to shader mode */
+         cso->has_blend_shader = true;
+-        cso->blend_work_count = program.work_register_count;
++
++        /* At least two work registers are needed due to an encoding quirk */
++        cso->blend_work_count = MAX2(program.work_register_count, 2);
+ }
+-- 
+2.7.4
+

@@ -1,0 +1,24 @@
+From d81d7a66280324db3678ba7b9fd9dbfcba2770dd Mon Sep 17 00:00:00 2001
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Thu, 8 Nov 2018 20:00:51 -0800
+Subject: [PATCH 091/151] Remove superfluous T8XX
+
+---
+ src/gallium/drivers/panfrost/pan_context.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/gallium/drivers/panfrost/pan_context.h b/src/gallium/drivers/panfrost/pan_context.h
+index f54c0a0..5f81f34 100644
+--- a/src/gallium/drivers/panfrost/pan_context.h
++++ b/src/gallium/drivers/panfrost/pan_context.h
+@@ -26,7 +26,6 @@
+ #define __BUILDER_H__
+ 
+ #define BIT64
+-#define T8XX
+ #define MFBD
+ 
+ #define _LARGEFILE64_SOURCE 1
+-- 
+2.7.4
+

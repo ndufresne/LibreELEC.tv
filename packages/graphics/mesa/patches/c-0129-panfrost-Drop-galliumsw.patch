@@ -1,0 +1,51 @@
+From a28404a41980d82a6373fa7f735c127dce8db46a Mon Sep 17 00:00:00 2001
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date: Wed, 28 Nov 2018 10:27:52 +0100
+Subject: [PATCH 129/151] panfrost: Drop galliumsw
+
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
+ src/gallium/auxiliary/target-helpers/drm_helper.h |  2 +-
+ src/gallium/targets/dri/target.c                  | 12 +++++-------
+ 2 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/src/gallium/auxiliary/target-helpers/drm_helper.h b/src/gallium/auxiliary/target-helpers/drm_helper.h
+index 56c08f6..91b0b44 100644
+--- a/src/gallium/auxiliary/target-helpers/drm_helper.h
++++ b/src/gallium/auxiliary/target-helpers/drm_helper.h
+@@ -356,7 +356,7 @@ pipe_etna_create_screen(int fd, const struct pipe_screen_config *config)
+ 
+ #endif
+ 
+-#if 0
++#ifdef GALLIUM_PANFROST
+ #include "panfrost/drm/panfrost_drm_public.h"
+ 
+ struct pipe_screen *
+diff --git a/src/gallium/targets/dri/target.c b/src/gallium/targets/dri/target.c
+index cdb8d07..be11cbe 100644
+--- a/src/gallium/targets/dri/target.c
++++ b/src/gallium/targets/dri/target.c
+@@ -82,14 +82,12 @@ DEFINE_LOADER_DRM_ENTRYPOINT(pl111)
+ #endif
+ #endif
+ 
+-#if defined(GALLIUM_PANFROST)
+-const __DRIextension **__driDriverGetExtensions_panfrost(void);
++#if defined(GALLIUM_ROCKCHIP)
++DEFINE_LOADER_DRM_ENTRYPOINT(rockchip)
++#endif
+ 
+-PUBLIC const __DRIextension **__driDriverGetExtensions_panfrost(void)
+-{
+-   globalDriverAPI = &galliumsw_driver_api;
+-   return galliumsw_driver_extensions;
+-}
++#if defined(GALLIUM_PANFROST)
++DEFINE_LOADER_DRM_ENTRYPOINT(panfrost)
+ #endif
+ 
+ #if defined(GALLIUM_ETNAVIV)
+-- 
+2.7.4
+
