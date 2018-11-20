@@ -5,12 +5,9 @@
 PKG_NAME="u-boot"
 PKG_ARCH="arm aarch64"
 PKG_SITE="https://www.denx.de/wiki/U-Boot"
-PKG_SOURCE_DIR="u-boot-$PKG_VERSION*"
 PKG_DEPENDS_TARGET="toolchain dtc:host"
 PKG_LICENSE="GPL"
-PKG_SECTION="tools"
-PKG_SHORTDESC="u-boot: Universal Bootloader project"
-PKG_LONGDESC="Das U-Boot is a cross-platform bootloader for embedded systems, used as the default boot loader by several board vendors. It is intended to be easy to port and to debug, and runs on many supported architectures, including PPC, ARM, MIPS, x86, m68k, NIOS, and Microblaze."
+PKG_LONGDESC="Das U-Boot is a cross-platform bootloader for embedded systems."
 PKG_IS_KERNEL_PKG="yes"
 
 PKG_NEED_UNPACK="$PROJECT_DIR/$PROJECT/bootloader"
@@ -18,8 +15,8 @@ PKG_NEED_UNPACK="$PROJECT_DIR/$PROJECT/bootloader"
 
 case "$PROJECT" in
   Amlogic)
-    PKG_VERSION="2018.07-rc2"
-    PKG_SHA256="03bd17bd0cf1d74d2f49454ef90bf17764ae5340053007cbc6eb630cf7c54863"
+    PKG_VERSION="2018.09"
+    PKG_SHA256="839bf23cfe8ce613a77e583a60375179d0ad324e92c82fbdd07bebf0fd142268"
     PKG_URL="http://ftp.denx.de/pub/u-boot/u-boot-$PKG_VERSION.tar.bz2"
     ;;
   Rockchip)
@@ -59,20 +56,6 @@ makeinstall_target() {
 
     # Always install the update script
     find_file_path bootloader/update.sh && cp -av ${FOUND_PATH} $INSTALL/usr/share/bootloader
-
-    # Replace partition names in update.sh
-    if [ -f "$INSTALL/usr/share/bootloader/update.sh" ] ; then
-      sed -e "s/@BOOT_LABEL@/$DISTRO_BOOTLABEL/g" \
-          -e "s/@DISK_LABEL@/$DISTRO_DISKLABEL/g" \
-          -i $INSTALL/usr/share/bootloader/update.sh
-    fi
-
-    # Replace labels in boot.ini
-    if [ -f "$INSTALL/usr/share/bootloader/boot.ini" ] ; then
-      sed -e "s/@BOOT_LABEL@/$DISTRO_BOOTLABEL/g" \
-          -e "s/@DISK_LABEL@/$DISTRO_DISKLABEL/g" \
-          -i $INSTALL/usr/share/bootloader/boot.ini
-    fi
 
     # Always install the canupdate script
     if find_file_path bootloader/canupdate.sh; then

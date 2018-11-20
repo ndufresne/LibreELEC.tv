@@ -38,19 +38,19 @@ The SML-5442TW is an STB for a European Telco supporting terrestrial DVB-S
 broadcasts and IPTV/VOD services. The SML-5442TV is based on the Amlogic
 P231 reference design using the S905D chipset. Specification:
 
-- 2GB DDR3 RAM
-- 8GB eMMC storage
-- 10/100 Base-T Ethernet
-- 802.11 a/b/g/n/ac + BT 4.1 HS sdio wireless module (QCA9377)
-- 2x single colour and 1x dual colour LEDs on the front panel
-- 1x reset button on the front panel
-- HDMI 2.0 (4k@60p) video
-- Composite video + 2-channel audio output on 3.5mm jack
-- S/PDIF audio output
-- Single DVB-S tuner (AVL6762/MxL608)
-- 2x USB 2.0 ports
-- 1x micro SD card slot
-- UART pins (internal)
+2GB DDR3 RAM
+8GB eMMC storage
+10/100 Base-T Ethernet
+802.11 a/b/g/n/ac + BT 4.1 HS sdio wireless module (QCA9377)
+2x single colour and 1x dual colour LEDs on the front panel
+1x reset button on the front panel
+HDMI 2.0 (4k@60p) video
+Composite video + 2-channel audio output on 3.5mm jack
+S/PDIF audio output
+Single DVB-S tuner (AVL6762/MxL608)
+2x USB 2.0 ports
+1x micro SD card slot
+UART pins (internal)
 
 The QCA9377 module uses experimental ath10k-sdio support which is slowly
 being upstreamed. Bluez support requires out-of-tree patches and firmware
@@ -117,15 +117,13 @@ new file mode 100644
 index 0000000000000..80452e50958e9
 --- /dev/null
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-smartlabs-sml5442tw.dts
-@@ -0,0 +1,328 @@
+@@ -0,0 +1,327 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (c) 2016 Endless Computers, Inc.
 + * Author: Carlo Caione <carlo@endlessm.com>
-+ * Copyright (c) 2018 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
 + * Copyright (c) 2018 LibreELEC
-+ * Author: Christian Hewitt <chewitt@libreelec.tv>
++ * Author: Christian Hewitt <christianshewitt@gmail.com>
 + */
 +
 +/dts-v1/;
@@ -313,6 +311,7 @@ index 0000000000000..80452e50958e9
 +	status = "okay";
 +	phy-mode = "rmii";
 +	phy-handle = <&internal_phy>;
++	phy-supply = <&hdmi_5v>;
 +};
 +
 +/* This will enable the bluetooth module */
@@ -594,7 +593,7 @@ index 78437ec25135a..53d4f74170afd 100644
  			rc-norwood.o \
  			rc-npgtech.o \
  			rc-pctv-sedna.o \
-+                        rc-philips-rc242.o \
++			rc-philips-rc242.o \
  			rc-pinnacle-color.o \
  			rc-pinnacle-grey.o \
  			rc-pinnacle-pctv-hd.o \

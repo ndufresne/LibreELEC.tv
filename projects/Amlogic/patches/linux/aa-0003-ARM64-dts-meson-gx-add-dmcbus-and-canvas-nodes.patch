@@ -1,7 +1,7 @@
-From e4c19f493a541cd00df42c02ec8f544f9835cbe5 Mon Sep 17 00:00:00 2001
+From 300f09fe8d82abf97595b4fd4c56e482a76c7ce7 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
 Date: Fri, 20 Apr 2018 16:09:09 +0200
-Subject: [PATCH 3/5] ARM64: dts: meson-gx: add dmcbus and canvas nodes.
+Subject: [PATCH 3/9] ARM64: dts: meson-gx: add dmcbus and canvas nodes.
 
 DMC is a small memory region with various registers,
 including the ones needed for the canvas module.

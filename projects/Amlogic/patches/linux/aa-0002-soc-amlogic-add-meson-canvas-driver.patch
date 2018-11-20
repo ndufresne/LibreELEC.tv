@@ -1,7 +1,7 @@
-From 21c3e7d31208b0c4fb4a6c0a8c52e6820a40596a Mon Sep 17 00:00:00 2001
+From 8447d1b0b1f2ff0c4b192296a2ea23d18404b7b9 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
 Date: Fri, 20 Apr 2018 13:17:07 +0200
-Subject: [PATCH 2/5] soc: amlogic: add meson-canvas driver
+Subject: [PATCH 2/9] soc: amlogic: add meson-canvas driver
 
 Amlogic SoCs have a repository of 256 canvas which they use to
 describe pixel buffers.

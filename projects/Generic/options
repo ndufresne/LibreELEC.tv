@@ -49,7 +49,7 @@
 ################################################################################
 
   # Project CFLAGS
-    PROJECT_CFLAGS="-mmmx -msse -msse2 -mfpmath=sse"
+    PROJECT_CFLAGS=""
 
   # SquashFS compression method (gzip / lzo / xz / zstd)
     SQUASHFS_COMPRESSION="gzip"
@@ -97,4 +97,4 @@
   # driver addons to install:
   # for a list of additional drivers see packages/linux-driver-addons
   # Space separated list is supported,
-    DRIVER_ADDONS="crazycat digital_devices dvb-latest"
+    DRIVER_ADDONS="digital_devices dvb-latest"

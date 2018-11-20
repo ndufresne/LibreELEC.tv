@@ -1,7 +1,7 @@
-From f90364d6536903b0a1724fdeb980a1d9a4e27137 Mon Sep 17 00:00:00 2001
+From dc0e34d504483af379f5de9ceea8325c3482afe2 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 29 Aug 2018 15:17:22 +0200
-Subject: [PATCH 02/18] media: meson: add v4l2 m2m video decoder driver
+Subject: [PATCH 02/19] media: meson: add v4l2 m2m video decoder driver
 
 Amlogic SoCs feature a powerful video decoder unit able to
 decode many formats, with a performance of usually up to 4k60.
@@ -26,15 +26,15 @@ Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
  drivers/media/platform/meson/vdec/dos_regs.h      |   98 ++
  drivers/media/platform/meson/vdec/esparser.c      |  322 +++++++
  drivers/media/platform/meson/vdec/esparser.h      |   32 +
- drivers/media/platform/meson/vdec/vdec.c          | 1024 +++++++++++++++++++++
+ drivers/media/platform/meson/vdec/vdec.c          | 1034 +++++++++++++++++++++
  drivers/media/platform/meson/vdec/vdec.h          |  251 +++++
  drivers/media/platform/meson/vdec/vdec_1.c        |  231 +++++
  drivers/media/platform/meson/vdec/vdec_1.h        |   14 +
- drivers/media/platform/meson/vdec/vdec_helpers.c  |  412 +++++++++
+ drivers/media/platform/meson/vdec/vdec_helpers.c  |  412 ++++++++
  drivers/media/platform/meson/vdec/vdec_helpers.h  |   48 +
  drivers/media/platform/meson/vdec/vdec_platform.c |  101 ++
  drivers/media/platform/meson/vdec/vdec_platform.h |   30 +
- 16 files changed, 2805 insertions(+)
+ 16 files changed, 2815 insertions(+)
  create mode 100644 drivers/media/platform/meson/vdec/Makefile
  create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.c
  create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.h
@@ -51,7 +51,7 @@ Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
  create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.h
 
 diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 94c1fe0..810c797 100644
+index 54fe90a..6bffb0c 100644
 --- a/drivers/media/platform/Kconfig
 +++ b/drivers/media/platform/Kconfig
 @@ -482,6 +482,16 @@ config VIDEO_QCOM_VENUS
@@ -799,10 +799,10 @@ index 0000000..ff51fe7
 +#endif
 diff --git a/drivers/media/platform/meson/vdec/vdec.c b/drivers/media/platform/meson/vdec/vdec.c
 new file mode 100644
-index 0000000..8a7f809
+index 0000000..d8db52c
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec.c
-@@ -0,0 +1,1024 @@
+@@ -0,0 +1,1034 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
 + * Copyright (C) 2018 BayLibre, SAS
@@ -968,6 +968,7 @@ index 0000000..8a7f809
 +	struct amvdec_session *sess = vb2_get_drv_priv(q);
 +	const struct amvdec_format *fmt_out = sess->fmt_out;
 +	u32 output_size = amvdec_get_output_size(sess);
++	u32 buffers_total;
 +
 +	if (*num_planes) {
 +		switch (q->type) {
@@ -1020,10 +1021,20 @@ index 0000000..8a7f809
 +		default:
 +			return -EINVAL;
 +		}
-+		*num_buffers = min(max(*num_buffers, fmt_out->min_buffers),
-+				   fmt_out->max_buffers);
-+		/* The HW needs all buffers to be configured during startup */
-+		q->min_buffers_needed = *num_buffers;
++
++		buffers_total = q->num_buffers + *num_buffers;
++
++		if (buffers_total < fmt_out->min_buffers)
++			*num_buffers = fmt_out->min_buffers - q->num_buffers;
++		if (buffers_total > fmt_out->max_buffers)
++			*num_buffers = fmt_out->max_buffers - q->num_buffers;
++
++		/* We need to program the complete CAPTURE buffer list
++		 * in registers during start_streaming, and the firmwares
++		 * are free to choose any of them to write frames to. As such,
++		 * we need all of them to be queued into the driver
++		 */
++		q->min_buffers_needed = q->num_buffers + *num_buffers;
 +		break;
 +	default:
 +		return -EINVAL;
@@ -1194,9 +1205,9 @@ index 0000000..8a7f809
 +static int
 +vdec_querycap(struct file *file, void *fh, struct v4l2_capability *cap)
 +{
-+	strlcpy(cap->driver, "meson-vdec", sizeof(cap->driver));
-+	strlcpy(cap->card, "Amlogic Video Decoder", sizeof(cap->card));
-+	strlcpy(cap->bus_info, "platform:meson-vdec", sizeof(cap->bus_info));
++	strscpy(cap->driver, "meson-vdec", sizeof(cap->driver));
++	strscpy(cap->card, "Amlogic Video Decoder", sizeof(cap->card));
++	strscpy(cap->bus_info, "platform:meson-vdec", sizeof(cap->bus_info));
 +
 +	return 0;
 +}
@@ -1525,7 +1536,6 @@ index 0000000..8a7f809
 +	.vidioc_try_fmt_vid_out_mplane = vdec_try_fmt,
 +	.vidioc_reqbufs = v4l2_m2m_ioctl_reqbufs,
 +	.vidioc_querybuf = v4l2_m2m_ioctl_querybuf,
-+	.vidioc_create_bufs = v4l2_m2m_ioctl_create_bufs,
 +	.vidioc_prepare_buf = v4l2_m2m_ioctl_prepare_buf,
 +	.vidioc_qbuf = v4l2_m2m_ioctl_qbuf,
 +	.vidioc_expbuf = v4l2_m2m_ioctl_expbuf,
@@ -1781,7 +1791,7 @@ index 0000000..8a7f809
 +	core->dev_dec = dev;
 +	mutex_init(&core->lock);
 +
-+	strlcpy(vdev->name, "meson-video-decoder", sizeof(vdev->name));
++	strscpy(vdev->name, "meson-video-decoder", sizeof(vdev->name));
 +	vdev->release = video_device_release;
 +	vdev->fops = &vdec_fops;
 +	vdev->ioctl_ops = &vdec_ioctl_ops;
@@ -1829,7 +1839,7 @@ index 0000000..8a7f809
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/media/platform/meson/vdec/vdec.h b/drivers/media/platform/meson/vdec/vdec.h
 new file mode 100644
-index 0000000..c38a016
+index 0000000..4e8c3f1
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec.h
 @@ -0,0 +1,251 @@
@@ -2016,7 +2026,7 @@ index 0000000..c38a016
 + * @streamon_cap: stream on flag for capture queue
 + * @streamon_out: stream on flag for output queue
 + * @sequence_cap: capture sequence counter
-+ * @should_stop: flag set is userspacec signaled EOS via command
++ * @should_stop: flag set if userspace signaled EOS via command
 + *		 or empty buffer
 + * @keyframe_found: flag set once a keyframe has been parsed
 + * @canvas_alloc: array of all the canvas IDs allocated

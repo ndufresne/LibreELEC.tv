@@ -737,29 +737,6 @@ index 7f41e3b2121..d524fd29a6a 100644
  
  dequeue:
 
-From 45315b91c3890073e0616854b8da92421ca6a0a0 Mon Sep 17 00:00:00 2001
-From: Lukas Rusak <lorusak@gmail.com>
-Date: Mon, 11 Jun 2018 15:03:20 -0700
-Subject: [PATCH 5/6] [temp] only use a few capture buffers
-
----
- libavcodec/v4l2_m2m_dec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/libavcodec/v4l2_m2m_dec.c b/libavcodec/v4l2_m2m_dec.c
-index d524fd29a6a..6dd0de7ffcf 100644
---- a/libavcodec/v4l2_m2m_dec.c
-+++ b/libavcodec/v4l2_m2m_dec.c
-@@ -218,7 +218,7 @@ static av_cold int v4l2_decode_init(AVCodecContext *avctx)
- static const AVOption options[] = {
-     V4L_M2M_DEFAULT_OPTS,
-     { "num_capture_buffers", "Number of buffers in the capture context",
--        OFFSET(num_capture_buffers), AV_OPT_TYPE_INT, {.i64 = 20}, 20, INT_MAX, FLAGS },
-+        OFFSET(num_capture_buffers), AV_OPT_TYPE_INT, {.i64 = 8}, 2, INT_MAX, FLAGS },
-     { NULL},
- };
- 
-
 From 98f828fcb15f2bcec11a6b8f56ae808c4c1220c2 Mon Sep 17 00:00:00 2001
 From: Lukas Rusak <lorusak@gmail.com>
 Date: Sun, 17 Jun 2018 22:56:37 -0700

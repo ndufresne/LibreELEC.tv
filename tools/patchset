@@ -18,10 +18,10 @@ do_narmstrong(){
   rm projects/Amlogic/patches/linux/$SEQUENCE-* 2&>/dev/null
   cd ~/linux.narmstrong
   rm *.patch 2&>/dev/null
-  git checkout amlogic/v4.19/drm-overlay
-  git fetch origin amlogic/v4.19/drm-overlay
-  git reset --hard origin/amlogic/v4.19/drm-overlay
-  git format-patch --start-number 0001 94710cac0ef4ee177a63b5227664b38c95bbf703 # 4.18.0
+  git checkout amlogic/v4.20/drm-primary-scaling
+  git fetch origin amlogic/v4.20/drm-primary-scaling
+  git reset --hard origin/amlogic/v4.20/drm-primary-scaling
+  git format-patch --start-number 0001 84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d # 4.19.0
   for filename in *.patch; do mv "$filename" "$SEQUENCE-$filename"; done;
   mv *.patch $DIR/projects/Amlogic/patches/linux/
 
@@ -87,7 +87,7 @@ do_elyotna(){
   git checkout 4.19/v4l2-m2m-pr
   git fetch origin 4.19/v4l2-m2m-pr
   git reset --hard origin/4.19/v4l2-m2m-pr
-  git format-patch --start-number 0001 efbb45d80619d3441b3887e55c31569518baa05b # 4.19-rc4 + canvas
+  git format-patch --start-number 0001 19747104fac1f7da00394360719961e2d2d6e564 # 4.19-rc7 + canvas
   for filename in *.patch; do mv "$filename" "c-$filename"; done;
   mv *.patch $DIR/projects/Amlogic/patches/linux/
   cd $DIR
