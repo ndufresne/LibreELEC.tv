@@ -14,6 +14,9 @@
   # Additional kernel make parameters (for example to specify the u-boot loadaddress)
     KERNEL_MAKE_EXTRACMD=" dtbs"
 
+  # MALI GPU family (dvalin,gondol,midgard,utgard)
+    MALI_FAMILY="utgard"
+
   # additional packages to install:
   # Space separated list is supported,
   # e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"

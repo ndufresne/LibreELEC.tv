@@ -1,7 +1,7 @@
-From 6617c8b4fc806ebf5088a5de62a3db00cde2c70f Mon Sep 17 00:00:00 2001
+From e8c2fc5486040e129c68c4da588059a29ac844ab Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 10 Oct 2018 15:44:56 +0200
-Subject: [PATCH 08/19] meson: vdec: allow subscribing to
+Subject: [PATCH 08/23] meson: vdec: allow subscribing to
  V4L2_EVENT_SOURCE_CHANGE
 
 Flag MPEG1/MPEG2 as NO_SOURCE_CHANGE.

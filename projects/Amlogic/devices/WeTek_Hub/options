@@ -16,6 +16,12 @@
   # kernel image name
     KERNEL_NAME="kernel.img"
 
+  # MALI GPU family (dvalin,gondol,midgard,utgard)
+    MALI_FAMILY="utgard"
+
+  # additional drivers to install:
+    ADDITIONAL_DRIVERS="mali-utgard"
+
   # additional packages to install:
   # Space separated list is supported,
   # e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"

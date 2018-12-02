@@ -17,7 +17,7 @@ case "$DEVICE" in
     PKG_URL="https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/p212_fip_${PKG_VERSION}.tar.gz"
     PKG_SOURCE_DIR="fip"
     ;;
-  LaFrite|LePotato)
+  LaFrite|LePotato*)
     PKG_VERSION="20170606"
     PKG_SHA256="957c96037bcd792a4139cc33eded2f006d55a82c0c56ae69ef43bdcb76a255e2"
     PKG_URL="https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-cc_fip_${PKG_VERSION}.tar.gz"

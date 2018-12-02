@@ -1,7 +1,7 @@
-From 26176522c24681dcadaa93762186fefc2c559872 Mon Sep 17 00:00:00 2001
+From 8ce1ae219fdbc68400ef3d3d7af2656db266e813 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Thu, 4 Oct 2018 15:37:39 +0200
-Subject: [PATCH 07/19] media: videodev2: add V4L2_FMT_FLAG_NO_SOURCE_CHANGE
+Subject: [PATCH 07/23] media: videodev2: add V4L2_FMT_FLAG_NO_SOURCE_CHANGE
 
 When a v4l2 driver exposes V4L2_EVENT_SOURCE_CHANGE, some (usually
 OUTPUT) formats may not be able to trigger this event.

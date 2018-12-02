@@ -1,7 +1,7 @@
-From 570df9f342fc05a74b7cac5ecfc52f41cf646ced Mon Sep 17 00:00:00 2001
+From 49c630c5a6e0151d8c873f9bd8a8a87df979952b Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Tue, 23 Oct 2018 16:29:54 +0200
-Subject: [PATCH 17/19] meson: vdec: hevc: simplify integer ceiling
+Subject: [PATCH 17/23] meson: vdec: hevc: simplify integer ceiling
 
 ---
  drivers/media/platform/meson/vdec/codec_hevc.c | 9 ++-------

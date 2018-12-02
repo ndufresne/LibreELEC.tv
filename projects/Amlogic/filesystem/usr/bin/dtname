@@ -8,7 +8,11 @@ COMPATIBLE=$(cat /proc/device-tree/compatible | tr -d '\000' | sed -n -e 's/.*\(
 if [ -f /usr/sbin/fdtgrep ]; then
   case $COMPATIBLE in
     amlogic)
-      DTNAME=$(fdtgrep /flash/dtb.img | grep -m 1 compatible | awk -F '"' '{gsub("[,/-]","_"); print $2}')
+      if [ -f /flash/dtb.img ]; then
+        DTNAME=$(fdtgrep /flash/dtb.img | grep -m 1 compatible | awk -F '"' '{gsub("[,/-]","_"); print $2}')
+      else
+        DTNAME=$(grep dtb_name /flash/uEnv.ini | sed 's,dtb_name=/dtb/,,g' | sed 's,.dtb,,g')
+      fi
       echo "$DTNAME"
       ;;
     *)

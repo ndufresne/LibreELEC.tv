@@ -1,7 +1,7 @@
-From 76336f159c881dc9d06f5047287aaa4c5685e7d2 Mon Sep 17 00:00:00 2001
+From aa21732e4a79d5d11d547ebbd22499e40959ca52 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 29 Aug 2018 15:42:56 +0200
-Subject: [PATCH 09/19] media: meson: vdec: add H.264 decoding support
+Subject: [PATCH 09/23] media: meson: vdec: add H.264 decoding support
 
 Add support for V4L2_PIX_FMT_H264
 ---

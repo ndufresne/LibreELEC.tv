@@ -1,0 +1,57 @@
+From 55e8fa47cd0928c085e4badba32465dee0af630f Mon Sep 17 00:00:00 2001
+From: Philipp Kerling <pkerling@casix.org>
+Date: Sat, 10 Nov 2018 01:16:56 +0100
+Subject: [PATCH] [addons] Sort logged list of installed add-ons
+
+---
+ xbmc/addons/AddonManager.cpp | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/xbmc/addons/AddonManager.cpp b/xbmc/addons/AddonManager.cpp
+index 6fd677fcc309..51f4b92dbefa 100644
+--- a/xbmc/addons/AddonManager.cpp
++++ b/xbmc/addons/AddonManager.cpp
+@@ -20,7 +20,10 @@
+ #include "utils/URIUtils.h"
+ #include "utils/XMLUtils.h"
+ 
++#include <algorithm>
+ #include <array>
++#include <utility>
++#include <set>
+ 
+ using namespace XFILE;
+ 
+@@ -688,17 +691,28 @@ bool CAddonMgr::FindAddons()
+ 
+     //Sync with db
+     {
+-      std::set<std::string> installed;
++      std::set<std::pair<std::string, std::string>> installed;
+       cp_status_t status;
+       int n;
+       cp_plugin_info_t** cp_addons = cp_get_plugins_info(m_cp_context, &status, &n);
+       for (int i = 0; i < n; ++i)
+       {
+-        CLog::Log(LOGNOTICE, "ADDON: %s v%s installed", cp_addons[i]->identifier, cp_addons[i]->version);
+-        installed.insert(cp_addons[i]->identifier);
++        installed.emplace(cp_addons[i]->identifier, cp_addons[i]->version);
+       }
+       cp_release_info(m_cp_context, cp_addons);
+-      m_database.SyncInstalled(installed, m_systemAddons, m_optionalAddons);
++      // Log separately so list is sorted
++      for (const auto& installedAddon : installed)
++      {
++        CLog::Log(LOGNOTICE, "ADDON: {} v{} installed", installedAddon.first, installedAddon.second);
++      }
++
++      std::set<std::string> installedIdentifiers;
++      std::transform(
++          installed.cbegin(), installed.cend(),
++	  std::inserter(installedIdentifiers, installedIdentifiers.begin()),
++          [](const decltype(installed)::value_type& p) { return p.first; }
++      );
++      m_database.SyncInstalled(installedIdentifiers, m_systemAddons, m_optionalAddons);
+     }
+ 
+     // Reload caches

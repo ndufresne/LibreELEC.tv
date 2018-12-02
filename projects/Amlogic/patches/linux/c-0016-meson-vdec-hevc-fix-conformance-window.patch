@@ -1,7 +1,7 @@
-From cd7df8d69f175ba2945423db63836a43c023452a Mon Sep 17 00:00:00 2001
+From 01db4430c927d1cf6c222fdbecead943f61a40c4 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Tue, 23 Oct 2018 15:15:24 +0200
-Subject: [PATCH 16/19] meson: vdec: hevc: fix conformance window
+Subject: [PATCH 16/23] meson: vdec: hevc: fix conformance window
 
 Fixes issues with LibreElec playing bitstreams that implement a crop
 window

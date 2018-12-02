@@ -59,16 +59,16 @@ trap cleanup SIGINT
 
 # create an image
   echo
-  echo "image: creating file $(basename $DISK)..."
+  echo "image: creating $(basename $DISK)"
   dd if=/dev/zero of="$DISK" bs=1M count="$DISK_SIZE" conv=fsync >"$SAVE_ERROR" 2>&1 || show_error
 
 # write a disklabel
-  echo "image: creating $DISK_LABEL partition table..."
+  echo "image: creating $DISK_LABEL partition table"
   parted -s "$DISK" mklabel $DISK_LABEL
   sync
 
 # create part1
-  echo "image: creating part1..."
+  echo "image: creating part1"
   SYSTEM_PART_END=$(( $SYSTEM_PART_START + ($SYSTEM_SIZE * 1024 * 1024 / 512) - 1 ))
   if [ "$DISK_LABEL" = "gpt" ]; then
     parted -s "$DISK" -a min unit s mkpart system fat32 $SYSTEM_PART_START $SYSTEM_PART_END
@@ -80,7 +80,7 @@ trap cleanup SIGINT
   sync
 
 # create part2
-  echo "image: creating part2..."
+  echo "image: creating part2"
   STORAGE_PART_START=$(( $SYSTEM_PART_END + 1 ))
   STORAGE_PART_END=$(( $STORAGE_PART_START + ($STORAGE_SIZE * 1024 * 1024 / 512) - 1 ))
   if [ "$DISK_LABEL" = "gpt" ]; then
@@ -92,7 +92,7 @@ trap cleanup SIGINT
 
 if [ "$BOOTLOADER" = "syslinux" ]; then
   # write mbr
-    echo "image: writing mbr..."
+    echo "image: writing mbr"
     MBR="$TOOLCHAIN/share/syslinux/gptmbr.bin"
     if [ -n "$MBR" ]; then
       dd bs=440 count=1 conv=fsync,notrunc if="$MBR" of="$DISK" >"$SAVE_ERROR" 2>&1 || show_error
@@ -100,7 +100,7 @@ if [ "$BOOTLOADER" = "syslinux" ]; then
 fi
 
 # create filesystem on part1
-  echo "image: creating filesystem on part1..."
+  echo "image: creating filesystem on part1"
   OFFSET=$(( $SYSTEM_PART_START * 512 ))
   HEADS=4
   TRACKS=32
@@ -118,7 +118,7 @@ fi
 
 if [ "$BOOTLOADER" = "syslinux" ]; then
   # create bootloader configuration
-    echo "image: creating bootloader configuration..."
+    echo "image: creating bootloader configuration"
     cat << EOF > "$LE_TMP"/syslinux.cfg
 SAY Wait for installer to start or press <TAB> for more options (live, run)
 DEFAULT installer
@@ -241,6 +241,40 @@ EOF
     fi
 
     echo "image: copying files to part1..."
+    mcopy $TARGET_IMG/$IMAGE_NAME.kernel "::/$KERNEL_NAME"
+    mcopy $TARGET_IMG/$IMAGE_NAME.system ::/SYSTEM
+    mcopy $RELEASE_DIR/target/KERNEL.md5 "::/$KERNEL_NAME.md5"
+    mcopy $RELEASE_DIR/target/SYSTEM.md5 ::/SYSTEM.md5
+
+elif [ "$BOOTLOADER" = "u-boot" -a "$UBOOT_VERSION" = "chewitt" ]; then
+    echo ""
+
+  # create bootloader configuration
+    echo "mkimage: creating bootloader configuration"
+
+  # create extlinux files
+    mkdir -p "$LE_TMP"/extlinux
+    cat << EOF > "$LE_TMP"/extlinux/extlinux.conf
+LABEL $DISTRO
+  LINUX /$KERNEL_NAME
+  FDT /dtb/@@DEVICE_TREE@@
+  APPEND boot=UUID=$UUID_SYSTEM disk=UUID=$UUID_STORAGE quiet hdmitx=cecf $EXTRA_CMDLINE
+EOF
+
+  # copy extlinux files
+    echo "mkimage: copying extlinux files to part1"
+    mcopy -sv "$LE_TMP"/extlinux/extlinux.conf ::
+
+  # sed UUIDs
+    sed -i "s/@@UUID_SYSTEM@@/$UUID_SYSTEM/g" $RELEASE_DIR/3rdparty/bootloader/uEnv.ini
+    sed -i "s/@@UUID_STORAGE@@/$UUID_STORAGE/g" $RELEASE_DIR/3rdparty/bootloader/uEnv.ini
+
+  # copy autoscript and dtb files
+    echo "mkimage: copying dtb files to part1"
+    mcopy -sv $RELEASE_DIR/3rdparty/bootloader/* ::
+
+  # copy SYSTEM and KERNEL files
+    echo "mkimage: copying OS files to part1"
     mcopy $TARGET_IMG/$IMAGE_NAME.kernel "::/$KERNEL_NAME"
     mcopy $TARGET_IMG/$IMAGE_NAME.system ::/SYSTEM
     mcopy $RELEASE_DIR/target/KERNEL.md5 "::/$KERNEL_NAME.md5"

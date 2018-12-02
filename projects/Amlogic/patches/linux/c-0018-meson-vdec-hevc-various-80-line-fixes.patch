@@ -1,7 +1,7 @@
-From 5017122c70b84e4e177ff48c336039f253d7bb3b Mon Sep 17 00:00:00 2001
+From 2d83b9435d0d76a08185475d0f19d46f4e1c5b5b Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Tue, 23 Oct 2018 16:50:45 +0200
-Subject: [PATCH 18/19] meson: vdec: hevc: various 80+ line fixes
+Subject: [PATCH 18/23] meson: vdec: hevc: various 80+ line fixes
 
 ---
  drivers/media/platform/meson/vdec/codec_hevc.c | 42 +++++++++++++++++---------

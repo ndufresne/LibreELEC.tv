@@ -32,8 +32,8 @@ case "$LINUX" in
     PKG_BUILD_PERF="no"
     ;;
   amlogic-mainline)
-    PKG_VERSION="7d60775d1b74a99580a50dacf348e6c642f3bcfb" # 4.19.1
-    PKG_SHA256="0ad630dafd8fa5f5b474823f2590da5944d97637cb2cf76f1255aac8b3c3696a"
+    PKG_VERSION="7950eb316adf792283cac5743dfe5a11e74833dc" # 4.19.2
+    PKG_SHA256="55463d70aadd1f3f19804c5c473905923adb4a5e9704837d10f032041f989b87"
     PKG_URL="https://github.com/torvalds/linux/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_DIR="$PKG_NAME-$PKG_VERSION*"
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET u-boot-tools-aml:host"
@@ -112,6 +112,11 @@ post_patch() {
     sed -i -e "s|^CONFIG_ISCSI_BOOT_SYSFS=.*$|# CONFIG_ISCSI_BOOT_SYSFS is not set|" $PKG_BUILD/.config
     sed -i -e "s|^CONFIG_ISCSI_IBFT_FIND=.*$|# CONFIG_ISCSI_IBFT_FIND is not set|" $PKG_BUILD/.config
     sed -i -e "s|^CONFIG_ISCSI_IBFT=.*$|# CONFIG_ISCSI_IBFT is not set|" $PKG_BUILD/.config
+  fi
+
+  # disable lima support if not enabled
+  if [ ! "$GRAPHIC_DRIVERS" = lima ]; then
+    sed -i -e "s|^CONFIG_DRM_LIMA=.*$|# CONFIG_DRM_LIMA is not set|" $PKG_BUILD/.config
   fi
 
   # install extra dts files

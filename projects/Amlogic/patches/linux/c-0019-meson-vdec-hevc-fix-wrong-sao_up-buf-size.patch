@@ -1,7 +1,7 @@
-From 30a7d3fe02166fa2240860fb37756a6033bb01fe Mon Sep 17 00:00:00 2001
+From 480eb12f0897dc845eae200a290729bc009ba669 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Mon, 5 Nov 2018 09:53:22 +0100
-Subject: [PATCH 19/19] meson: vdec: hevc: fix wrong sao_up buf size.
+Subject: [PATCH 19/23] meson: vdec: hevc: fix wrong sao_up buf size.
 
 Also remove useless reg
 ---

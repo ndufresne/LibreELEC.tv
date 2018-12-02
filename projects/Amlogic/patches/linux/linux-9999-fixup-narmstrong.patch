@@ -1,0 +1,143 @@
+From 2e840285705afb7d60b02c3e79ef830b414b3c95 Mon Sep 17 00:00:00 2001
+From: Neil Armstrong <narmstrong@baylibre.com>
+Date: Tue, 20 Nov 2018 16:36:49 +0100
+Subject: [PATCH] fixup! drm/meson: Add YUV420 output support
+
+---
+ drivers/clk/meson/gxbb.c              |  2 +-
+ drivers/gpu/drm/meson/meson_dw_hdmi.c | 26 +++++++++++++++++++-------
+ drivers/gpu/drm/meson/meson_venc.c    |  3 ++-
+ drivers/gpu/drm/meson/meson_venc.h    |  1 +
+ 4 files changed, 23 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+index 30fbf8f1f190..aba59aa64d2b 100644
+--- a/drivers/clk/meson/gxbb.c
++++ b/drivers/clk/meson/gxbb.c
+@@ -219,7 +219,7 @@ static struct clk_regmap gxl_hdmi_pll_dco = {
+ 		.frac = {
+ 			.reg_off = HHI_HDMI_PLL_CNTL2,
+ 			.shift   = 0,
+-			.width   = 12,
++			.width   = 10,
+ 		},
+ 		.l = {
+ 			.reg_off = HHI_HDMI_PLL_CNTL,
+diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+index 952f017e9fb6..6df124c1bba5 100644
+--- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
++++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
+@@ -574,6 +574,7 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
+ 		   const struct drm_display_mode *mode)
+ {
+ 	struct meson_drm *priv = connector->dev->dev_private;
++	bool is_hdmi2_sink = connector->display_info.hdmi.scdc.supported;
+ 	unsigned int phy_freq;
+ 	unsigned int vclk_freq;
+ 	unsigned int venc_freq;
+@@ -588,10 +589,11 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
+ 		mode->vdisplay, mode->vsync_start,
+ 		mode->vsync_end, mode->vtotal, mode->type, mode->flags);
+ 
+-	/* If sink max TMDS clock < 340MHz, we reject the HDMI2.0 modes */
++	/* If sink does not support 540MHz, reject the non-420 HDMI2 modes */
+ 	if (mode->clock > 340000 &&
+ 	    connector->display_info.max_tmds_clock < 340000 &&
+-	    !drm_mode_is_420_only(&connector->display_info, mode))
++	    !drm_mode_is_420_only(&connector->display_info, mode) &&
++	    !drm_mode_is_420_also(&connector->display_info, mode))
+ 		return MODE_BAD;
+ 
+ 	/* Check against non-VIC supported modes */
+@@ -608,7 +610,9 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
+ 	vclk_freq = mode->clock;
+ 
+ 	/* For 420, pixel clock is half unlike venc clock */
+-	if (drm_mode_is_420_only(&connector->display_info, mode))
++	if (drm_mode_is_420_only(&connector->display_info, mode) ||
++	    (!is_hdmi2_sink &&
++	     drm_mode_is_420_also(&connector->display_info, mode)))
+ 		vclk_freq /= 2;
+ 
+ 	/* TMDS clock is pixel_clock * 10 */
+@@ -623,7 +627,9 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
+ 
+ 	/* VENC double pixels for 1080i, 720p and YUV420 modes */
+ 	if (meson_venc_hdmi_venc_repeat(vic) ||
+-	    drm_mode_is_420_only(&connector->display_info, mode))
++	    drm_mode_is_420_only(&connector->display_info, mode) ||
++	    (!is_hdmi2_sink &&
++	     drm_mode_is_420_also(&connector->display_info, mode)))
+ 		venc_freq *= 2;
+ 
+ 	vclk_freq = max(venc_freq, hdmi_freq);
+@@ -655,8 +661,11 @@ static int meson_venc_hdmi_encoder_atomic_check(struct drm_encoder *encoder,
+ 	struct meson_dw_hdmi *dw_hdmi = encoder_to_meson_dw_hdmi(encoder);
+ 	struct drm_display_info *info = &conn_state->connector->display_info;
+ 	struct drm_display_mode *mode = &crtc_state->mode;
++	bool is_hdmi2_sink =
++		conn_state->connector->display_info.hdmi.scdc.supported;
+ 
+-	if (drm_mode_is_420_only(info, mode)) {
++	if (drm_mode_is_420_only(info, mode) ||
++	    (!is_hdmi2_sink && drm_mode_is_420_also(info, mode))) {
+ 		dw_hdmi->input_bus_format = MEDIA_BUS_FMT_UYYVYY8_0_5X24;
+ 		dw_hdmi->output_bus_format = MEDIA_BUS_FMT_UYYVYY8_0_5X24;
+ 	} else {
+@@ -705,15 +714,18 @@ static void meson_venc_hdmi_encoder_mode_set(struct drm_encoder *encoder,
+ 	struct meson_drm *priv = dw_hdmi->priv;
+ 	int vic = drm_match_cea_mode(mode);
+ 	unsigned int ycrcb_map = MESON_VENC_MAP_CB_Y_CR;
++	bool yuv420_mode = false;
+ 
+ 	DRM_DEBUG_DRIVER("%d:\"%s\" vic %d\n",
+ 			 mode->base.id, mode->name, vic);
+ 
+-	if (dw_hdmi->input_bus_format == MEDIA_BUS_FMT_UYYVYY8_0_5X24)
++	if (dw_hdmi->input_bus_format == MEDIA_BUS_FMT_UYYVYY8_0_5X24) {
+ 		ycrcb_map = MESON_VENC_MAP_CR_Y_CB;
++		yuv420_mode = true;
++	}
+ 
+ 	/* VENC + VENC-DVI Mode setup */
+-	meson_venc_hdmi_mode_set(priv, vic, ycrcb_map, mode);
++	meson_venc_hdmi_mode_set(priv, vic, ycrcb_map, yuv420_mode, mode);
+ 
+ 	/* VCLK Set clock */
+ 	dw_hdmi_set_vclk(dw_hdmi, mode);
+diff --git a/drivers/gpu/drm/meson/meson_venc.c b/drivers/gpu/drm/meson/meson_venc.c
+index 233912cc1e41..ab72ddda242d 100644
+--- a/drivers/gpu/drm/meson/meson_venc.c
++++ b/drivers/gpu/drm/meson/meson_venc.c
+@@ -957,6 +957,7 @@ EXPORT_SYMBOL_GPL(meson_venc_hdmi_venc_repeat);
+ 
+ void meson_venc_hdmi_mode_set(struct meson_drm *priv, int vic,
+ 			      unsigned int ycrcb_map,
++			      bool yuv420_mode,
+ 			      struct drm_display_mode *mode)
+ {
+ 	union meson_hdmi_venc_mode *vmode = NULL;
+@@ -1507,7 +1508,7 @@ void meson_venc_hdmi_mode_set(struct meson_drm *priv, int vic,
+ 		       (mode->flags & DRM_MODE_FLAG_PHSYNC ? 1 << 2 : 0) |
+ 		       (mode->flags & DRM_MODE_FLAG_PVSYNC ? 1 << 3 : 0) |
+ 		       (ycrcb_map << 5) |
+-		       (venc_repeat ? 1 << 8 : 0) |
++		       (venc_repeat || yuv420_mode ? 1 << 8 : 0) |
+ 		       (hdmi_repeat ? 1 << 12 : 0),
+ 		       priv->io_base + _REG(VPU_HDMI_SETTING));
+ 
+diff --git a/drivers/gpu/drm/meson/meson_venc.h b/drivers/gpu/drm/meson/meson_venc.h
+index 8b239a1a1841..5580bf38e381 100644
+--- a/drivers/gpu/drm/meson/meson_venc.h
++++ b/drivers/gpu/drm/meson/meson_venc.h
+@@ -80,6 +80,7 @@ void meson_venci_cvbs_mode_set(struct meson_drm *priv,
+ 			       struct meson_cvbs_enci_mode *mode);
+ void meson_venc_hdmi_mode_set(struct meson_drm *priv, int vic,
+ 			      unsigned int ycrcb_map,
++			      bool yuv420_mode,
+ 			      struct drm_display_mode *mode);
+ unsigned int meson_venci_get_field(struct meson_drm *priv);
+ 
+-- 
+2.19.1
+

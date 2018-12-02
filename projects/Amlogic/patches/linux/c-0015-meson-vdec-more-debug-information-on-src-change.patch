@@ -1,7 +1,7 @@
-From 1dad50b30aa8e310d48b6b378f4284b33ea28242 Mon Sep 17 00:00:00 2001
+From 3e244a51c1632585f767a0e107df73a214e8d9ba Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Tue, 23 Oct 2018 15:15:12 +0200
-Subject: [PATCH 15/19] meson: vdec: more debug information on src change
+Subject: [PATCH 15/23] meson: vdec: more debug information on src change
 
 ---
  drivers/media/platform/meson/vdec/vdec_helpers.c | 7 +++++--

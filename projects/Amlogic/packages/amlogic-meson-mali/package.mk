@@ -14,21 +14,21 @@ PKG_SECTION="graphics"
 PKG_SHORTDESC="amlogic-meson-mali: Wayland/GBM OpenGLES libraries for Mali GPUs in Amlogic SoCs"
 PKG_TOOLCHAIN="manual"
 
-  case $MALI_FAMILY in
-    dvalin)
+  case $PROJECT-$MALI_FAMILY in
+    Amlogic-dvalin)
       PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET minigbm"
       LIB_MALI="dvalin/r12p0"
       LIB_GBM="minigbm"
       ;;
-    gondul)
+    Amlogic-gondul)
       PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET minigbm"
       LIB_MALI="gondul/r12p0"
       LIB_GBM="minigbm"
       ;;
-    midguard)
+    Amlogic-midgard|Rockchip-midgard)
       LIB_MALI="t86x/r14p0"
       ;;
-    utgard|*)
+    Amlogic-utgard)
       LIB_MALI="m450/r7p0"
       ;;
   esac

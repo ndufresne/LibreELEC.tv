@@ -1,7 +1,7 @@
-From 1fc6b61ff58beaeef4645f51cf6a2ddb1310e86a Mon Sep 17 00:00:00 2001
+From 6ae0a8080f56e334bd00717f014b7cf88708fbc3 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 29 Aug 2018 16:01:55 +0200
-Subject: [PATCH 10/19] media: meson: vdec: add MPEG4 decoding support
+Subject: [PATCH 10/23] media: meson: vdec: add MPEG4 decoding support
 
 Add support for V4L2_PIX_FMT_MPEG4, V4L2_PIX_FMT_XVID and
 V4L2_PIX_FMT_H.263

@@ -1,7 +1,7 @@
-From 9dd4539abfcaa8f40ba54783a2d90b37133043c0 Mon Sep 17 00:00:00 2001
+From e0db12e0c6075b257d482c7d98296c35f85dc7bf Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Sun, 21 Oct 2018 15:15:26 +0200
-Subject: [PATCH 13/19] media: meson: vdec: add support for V4L2_PIX_FMT_AM21C
+Subject: [PATCH 13/23] media: meson: vdec: add support for V4L2_PIX_FMT_AM21C
 
 Support the lossless framebuffer compression format.
 ---
