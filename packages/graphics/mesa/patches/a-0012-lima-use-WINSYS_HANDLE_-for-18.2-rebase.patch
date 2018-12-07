@@ -1,7 +1,7 @@
-From c76afeac35b76e33973303ac74c91b3a28a69f3f Mon Sep 17 00:00:00 2001
+From 985636e73ba8e7f27bb9d54da39e6241c799b5d9 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Mon, 30 Jul 2018 15:57:38 +0800
-Subject: [PATCH 12/52] lima: use WINSYS_HANDLE_* for 18.2 rebase
+Subject: [PATCH 12/59] lima: use WINSYS_HANDLE_* for 18.2 rebase
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

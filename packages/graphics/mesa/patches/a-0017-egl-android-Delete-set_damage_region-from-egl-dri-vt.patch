@@ -1,7 +1,7 @@
-From d92ad72de0ca8ae9fa5c2aafcb258b8ba07ca6d2 Mon Sep 17 00:00:00 2001
+From e5a52f6cfb409811a9a1e442569c220fde4b8fa4 Mon Sep 17 00:00:00 2001
 From: Harish Krupo <harish.krupo.kps@intel.com>
 Date: Wed, 4 Jul 2018 18:22:58 +0530
-Subject: [PATCH 17/52] egl/android: Delete set_damage_region from egl dri vtbl
+Subject: [PATCH 17/59] egl/android: Delete set_damage_region from egl dri vtbl
 
 The intension of the KHR_partial_update was not to send the damage back
 to the platform but to send the damage to the driver to ensure that the
@@ -25,7 +25,7 @@ Signed-off-by: Harish Krupo <harish.krupo.kps@intel.com>
  9 files changed, 1 insertion(+), 65 deletions(-)
 
 diff --git a/src/egl/drivers/dri2/egl_dri2.c b/src/egl/drivers/dri2/egl_dri2.c
-index 60eb356..6103518 100644
+index 2f72d76..1028b2e 100644
 --- a/src/egl/drivers/dri2/egl_dri2.c
 +++ b/src/egl/drivers/dri2/egl_dri2.c
 @@ -1667,7 +1667,7 @@ dri2_set_damage_region(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surf,
@@ -38,7 +38,7 @@ index 60eb356..6103518 100644
  
  static EGLBoolean
 diff --git a/src/egl/drivers/dri2/egl_dri2.h b/src/egl/drivers/dri2/egl_dri2.h
-index f8001ec..627f287 100644
+index 93b06a0..e2c064a 100644
 --- a/src/egl/drivers/dri2/egl_dri2.h
 +++ b/src/egl/drivers/dri2/egl_dri2.h
 @@ -118,10 +118,6 @@ struct dri2_egl_display_vtbl {
@@ -80,7 +80,7 @@ index a664677..44d7d21 100644
  dri2_fallback_query_buffer_age(_EGLDriver *drv, _EGLDisplay *dpy,
                                 _EGLSurface *surf)
 diff --git a/src/egl/drivers/dri2/platform_android.c b/src/egl/drivers/dri2/platform_android.c
-index 03ec383..11ab329 100644
+index 102c58e..eb061cd 100644
 --- a/src/egl/drivers/dri2/platform_android.c
 +++ b/src/egl/drivers/dri2/platform_android.c
 @@ -666,43 +666,6 @@ droid_swap_buffers(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *draw)
@@ -174,10 +174,10 @@ index bfc8fb9..e5f5a22 100644
     .copy_buffers = dri2_fallback_copy_buffers,
     .query_buffer_age = dri2_fallback_query_buffer_age,
 diff --git a/src/egl/drivers/dri2/platform_wayland.c b/src/egl/drivers/dri2/platform_wayland.c
-index 2ce3729..e867841 100644
+index 2f53e5c..49b2a17 100644
 --- a/src/egl/drivers/dri2/platform_wayland.c
 +++ b/src/egl/drivers/dri2/platform_wayland.c
-@@ -1253,7 +1253,6 @@ static const struct dri2_egl_display_vtbl dri2_wl_display_vtbl = {
+@@ -1261,7 +1261,6 @@ static const struct dri2_egl_display_vtbl dri2_wl_display_vtbl = {
     .swap_buffers = dri2_wl_swap_buffers,
     .swap_buffers_with_damage = dri2_wl_swap_buffers_with_damage,
     .swap_buffers_region = dri2_fallback_swap_buffers_region,

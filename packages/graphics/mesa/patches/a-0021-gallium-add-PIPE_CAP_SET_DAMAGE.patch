@@ -1,7 +1,7 @@
-From 53ad3938d34a8f032471e0ac823574b84aac5d87 Mon Sep 17 00:00:00 2001
+From f629b5fce65686dfcb0dd8b2f929a6eedfccfd8b Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sun, 5 Aug 2018 19:10:47 +0800
-Subject: [PATCH 21/52] gallium: add PIPE_CAP_SET_DAMAGE
+Subject: [PATCH 21/59] gallium: add PIPE_CAP_SET_DAMAGE
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---
@@ -181,7 +181,7 @@ index c0a9e51..f3a2a71 100644
  
     case PIPE_CAP_VENDOR_ID:
 diff --git a/src/gallium/drivers/v3d/v3d_screen.c b/src/gallium/drivers/v3d/v3d_screen.c
-index de9ce32..892825b 100644
+index db72456..705db49 100644
 --- a/src/gallium/drivers/v3d/v3d_screen.c
 +++ b/src/gallium/drivers/v3d/v3d_screen.c
 @@ -273,6 +273,7 @@ v3d_screen_get_param(struct pipe_screen *pscreen, enum pipe_cap param)

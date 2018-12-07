@@ -1,0 +1,25 @@
+From 3fa8fe7a83c02e42798089ee42f83226ce4127ff Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Sun, 25 Nov 2018 18:42:40 +0100
+Subject: [PATCH] VideoLayerBridgeDRMPRIME: unmap previous buffer when current
+ buffer is reused
+
+---
+ .../VideoRenderers/HwDecRender/VideoLayerBridgeDRMPRIME.cpp   | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/VideoLayerBridgeDRMPRIME.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/VideoLayerBridgeDRMPRIME.cpp
+index e1cc7a28b738..1e7acae2c195 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/VideoLayerBridgeDRMPRIME.cpp
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/VideoLayerBridgeDRMPRIME.cpp
+@@ -164,6 +164,10 @@ void CVideoLayerBridgeDRMPRIME::UpdateVideoPlane()
+   if (!m_buffer || !m_buffer->m_fb_id)
+     return;
+ 
++  // release the buffer that is no longer presented on screen
++  Release(m_prev_buffer);
++  m_prev_buffer = nullptr;
++
+   struct plane* plane = m_DRM->GetVideoPlane();
+   m_DRM->AddProperty(plane, "FB_ID", m_buffer->m_fb_id);
+   m_DRM->AddProperty(plane, "CRTC_ID", m_DRM->GetCrtc()->crtc->crtc_id);

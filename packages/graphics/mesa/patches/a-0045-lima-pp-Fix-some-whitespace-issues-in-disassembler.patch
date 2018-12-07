@@ -1,7 +1,7 @@
-From 84d75cf60d3ad60cf89d87a655f60a7d7f905c17 Mon Sep 17 00:00:00 2001
+From 3dd4d13d0737f9bbe35a95a747d24da6c952dfb8 Mon Sep 17 00:00:00 2001
 From: Andreas Baierl <ichgeh@imkreisrum.de>
 Date: Mon, 5 Nov 2018 18:01:27 +0100
-Subject: [PATCH 45/52] lima/pp: Fix some whitespace issues in disassembler
+Subject: [PATCH 45/59] lima/pp: Fix some whitespace issues in disassembler
 
 ---
  src/gallium/drivers/lima/ir/pp/disasm.c | 6 ++----

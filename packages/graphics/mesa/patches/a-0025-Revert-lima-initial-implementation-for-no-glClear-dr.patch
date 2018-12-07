@@ -1,7 +1,7 @@
-From cc6194fe86dac54d91ddbd70737042f6a19c178c Mon Sep 17 00:00:00 2001
+From 154ff9b1c96f3d1fc759be168cf60b7186db99a5 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Wed, 15 Aug 2018 16:05:21 +0800
-Subject: [PATCH 25/52] Revert "lima: initial implementation for no glClear
+Subject: [PATCH 25/59] Revert "lima: initial implementation for no glClear
  draw"
 
 This reverts commit 659d7a5332b5a2afade91cfbc17d2b0a965d84b2.

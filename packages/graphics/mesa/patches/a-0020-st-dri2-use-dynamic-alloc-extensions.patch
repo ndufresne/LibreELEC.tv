@@ -1,7 +1,7 @@
-From 5344d6bc289b50fce652d90d1832163d69756c46 Mon Sep 17 00:00:00 2001
+From 21e6f0fc8a3fe728fa743eeeca6019372463d41c Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sun, 5 Aug 2018 10:36:14 +0800
-Subject: [PATCH 20/52] st/dri2: use dynamic alloc extensions
+Subject: [PATCH 20/59] st/dri2: use dynamic alloc extensions
 
 When optional extension increases, use static extension
 is not good. This is for the following adding another
@@ -13,10 +13,10 @@ Signed-off-by: Qiang Yu <yuq825@gmail.com>
  1 file changed, 12 insertions(+), 18 deletions(-)
 
 diff --git a/src/gallium/state_trackers/dri/dri2.c b/src/gallium/state_trackers/dri/dri2.c
-index 2ac3220..5f50de3 100644
+index 2411a36..14e6970 100644
 --- a/src/gallium/state_trackers/dri/dri2.c
 +++ b/src/gallium/state_trackers/dri/dri2.c
-@@ -2057,20 +2057,6 @@ static const __DRIextension *dri_screen_extensions[] = {
+@@ -2063,20 +2063,6 @@ static const __DRIextension *dri_screen_extensions[] = {
     NULL
  };
  
@@ -37,7 +37,7 @@ index 2ac3220..5f50de3 100644
  /**
   * This is the driver specific part of the createNewScreen entry point.
   *
-@@ -2084,12 +2070,21 @@ dri2_init_screen(__DRIscreen * sPriv)
+@@ -2090,12 +2076,21 @@ dri2_init_screen(__DRIscreen * sPriv)
     struct pipe_screen *pscreen = NULL;
     const struct drm_conf_ret *throttle_ret;
     const struct drm_conf_ret *dmabuf_ret;
@@ -60,7 +60,7 @@ index 2ac3220..5f50de3 100644
     screen->sPriv = sPriv;
     screen->fd = sPriv->fd;
     (void) mtx_init(&screen->opencl_func_mutex, mtx_plain);
-@@ -2138,11 +2133,10 @@ dri2_init_screen(__DRIscreen * sPriv)
+@@ -2144,11 +2139,10 @@ dri2_init_screen(__DRIscreen * sPriv)
     }
  
     if (pscreen->get_param(pscreen, PIPE_CAP_DEVICE_RESET_STATUS_QUERY)) {

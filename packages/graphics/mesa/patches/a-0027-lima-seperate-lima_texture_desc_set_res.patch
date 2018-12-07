@@ -1,7 +1,7 @@
-From 6afdaef30689ea15bf000d011d696f8eea0371a3 Mon Sep 17 00:00:00 2001
+From 62712ce5fbb17c0270443d9e42106ac5c9d31807 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 16 Aug 2018 22:21:30 +0800
-Subject: [PATCH 27/52] lima: seperate lima_texture_desc_set_res
+Subject: [PATCH 27/59] lima: seperate lima_texture_desc_set_res
 
 For reused by reload FB as texture.
 

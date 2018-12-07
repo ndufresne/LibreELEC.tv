@@ -1,7 +1,7 @@
 From c5e8d8b7fa21746e7b2342b33baec7669457e402 Mon Sep 17 00:00:00 2001
 From: Simon Shields <simon@lineageos.org>
 Date: Sat, 13 Jan 2018 14:17:26 +1100
-Subject: [PATCH 01/41] ARM: dts: add gpu node to exynos4
+Subject: [PATCH 01/44] ARM: dts: add gpu node to exynos4
 
 v2 (Qiang Yu):
   add vender string to exynos4 mali gpu

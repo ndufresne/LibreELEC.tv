@@ -2,9 +2,9 @@
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.nestopia"
-PKG_VERSION="1aeffc63891f0f87fad2ccc468a2e39786b796be"
-PKG_SHA256="29777d8281db476d15289b0109a13c48069c00ba28c064adb52e76eff6451fd0"
-PKG_REV="108"
+PKG_VERSION="ee66d2dcbb06f8ad1c50764780986d6def01856a"
+PKG_SHA256="0f8fcb323e33a524f803deb8dc58c3417693b903105912974020c55083e3ccc6"
+PKG_REV="110"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.nestopia"

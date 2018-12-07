@@ -1,7 +1,7 @@
-From 0b05cb78b1fca40c23f760197628a4397c5734fe Mon Sep 17 00:00:00 2001
+From e37f4a072c120d217850a55c8510f6971b3570f7 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 15 Nov 2018 16:02:54 +0800
-Subject: [PATCH 51/52] meson: add lima related build
+Subject: [PATCH 51/59] meson: add lima related build
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---
@@ -24,7 +24,7 @@ Signed-off-by: Qiang Yu <yuq825@gmail.com>
  create mode 100644 src/gallium/winsys/sun4i/drm/meson.build
 
 diff --git a/meson.build b/meson.build
-index cbf88b5..94d64ba 100644
+index ca5538c..cb01769 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -132,7 +132,8 @@ if _drivers.contains('auto')

@@ -1,7 +1,7 @@
-From 6b12621b262572c993d2e5fc2787f19170f81290 Mon Sep 17 00:00:00 2001
+From 98d9217530ab9031f03a0e2763bb0e733f20acd3 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 28 Jun 2018 09:55:15 +0800
-Subject: [PATCH 14/52] egl,glx: query dri integer to expose
+Subject: [PATCH 14/59] egl,glx: query dri integer to expose
  EGL/GLX_EXT_buffer_age
 
 Add __DRI2_RENDERER_EXPOSE_BUFFER_AGE dri integer query for
@@ -47,7 +47,7 @@ index c32cdd3..046965f 100644
  struct __DRI2rendererQueryExtensionRec {
     __DRIextension base;
 diff --git a/src/egl/drivers/dri2/egl_dri2.c b/src/egl/drivers/dri2/egl_dri2.c
-index c302479..60eb356 100644
+index da7d8b9..2f72d76 100644
 --- a/src/egl/drivers/dri2/egl_dri2.c
 +++ b/src/egl/drivers/dri2/egl_dri2.c
 @@ -749,6 +749,9 @@ dri2_setup_screen(_EGLDisplay *disp)
@@ -61,7 +61,7 @@ index c302479..60eb356 100644
  
  void
 diff --git a/src/egl/drivers/dri2/platform_android.c b/src/egl/drivers/dri2/platform_android.c
-index ac4fc56..03ec383 100644
+index 5c4e5ae..102c58e 100644
 --- a/src/egl/drivers/dri2/platform_android.c
 +++ b/src/egl/drivers/dri2/platform_android.c
 @@ -1444,7 +1444,6 @@ dri2_initialize_android(_EGLDriver *drv, _EGLDisplay *disp)
@@ -88,10 +88,10 @@ index 35bc4b5..cfe8fa7 100644
  #ifdef HAVE_WAYLAND_PLATFORM
     dri2_dpy->device_name = loader_get_device_name_for_fd(dri2_dpy->fd);
 diff --git a/src/egl/drivers/dri2/platform_wayland.c b/src/egl/drivers/dri2/platform_wayland.c
-index 83df0a8..2ce3729 100644
+index 15eeee5..2f53e5c 100644
 --- a/src/egl/drivers/dri2/platform_wayland.c
 +++ b/src/egl/drivers/dri2/platform_wayland.c
-@@ -1456,8 +1456,6 @@ dri2_initialize_wayland_drm(_EGLDriver *drv, _EGLDisplay *disp)
+@@ -1464,8 +1464,6 @@ dri2_initialize_wayland_drm(_EGLDriver *drv, _EGLDisplay *disp)
     if (!dri2_dpy->is_different_gpu)
        disp->Extensions.WL_create_wayland_buffer_from_image = EGL_TRUE;
  
@@ -171,10 +171,10 @@ index 882c498..b56139f 100644
        return driQueryRendererIntegerCommon(psp, param, value);
     }
 diff --git a/src/mesa/drivers/dri/i965/intel_screen.c b/src/mesa/drivers/dri/i965/intel_screen.c
-index cb35741..b76869b 100644
+index 0dd75cb..1783e17 100644
 --- a/src/mesa/drivers/dri/i965/intel_screen.c
 +++ b/src/mesa/drivers/dri/i965/intel_screen.c
-@@ -1531,6 +1531,9 @@ brw_query_renderer_integer(__DRIscreen *dri_screen,
+@@ -1539,6 +1539,9 @@ brw_query_renderer_integer(__DRIscreen *dri_screen,
     case __DRI2_RENDERER_HAS_FRAMEBUFFER_SRGB:
        value[0] = 1;
        return 0;

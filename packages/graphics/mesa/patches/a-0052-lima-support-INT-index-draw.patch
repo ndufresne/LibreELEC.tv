@@ -1,7 +1,7 @@
-From 096a0d0511d008834b29d25187d75a6e0f729f81 Mon Sep 17 00:00:00 2001
+From ea3db57c41d2892395ed8dd3b040e437e1dd2c99 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 15 Nov 2018 17:37:20 +0800
-Subject: [PATCH 52/52] lima: support INT index draw
+Subject: [PATCH 52/59] lima: support INT index draw
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

@@ -1,7 +1,7 @@
-From ea381618c8ee4f57d0eb0303941b99e8073c05f3 Mon Sep 17 00:00:00 2001
+From 9ae0f451dae8327730ad35f9cc511d83765181fb Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Mon, 10 Sep 2018 15:41:37 +0800
-Subject: [PATCH 38/52] lima: fix mtx_lock: Assertion `mtx != NULL' failed
+Subject: [PATCH 38/59] lima: fix mtx_lock: Assertion `mtx != NULL' failed
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

@@ -1,7 +1,7 @@
-From f7a4c9e26c162a2b483c94c7004a40871af14df0 Mon Sep 17 00:00:00 2001
+From d6019a32d519833d1c12fa0bbbb08a0350d2fc29 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 28 Jun 2018 10:17:39 +0800
-Subject: [PATCH 15/52] gallium: add PIPE_CAP_BUFFER_AGE
+Subject: [PATCH 15/59] gallium: add PIPE_CAP_BUFFER_AGE
 
 For gallium drivers to expose EGL/GLX_EXT_buffer_age.
 
@@ -197,7 +197,7 @@ index 084f55d..c0a9e51 100644
  
     /* MSAA support
 diff --git a/src/gallium/drivers/v3d/v3d_screen.c b/src/gallium/drivers/v3d/v3d_screen.c
-index cae6cc3..de9ce32 100644
+index 2f08479..db72456 100644
 --- a/src/gallium/drivers/v3d/v3d_screen.c
 +++ b/src/gallium/drivers/v3d/v3d_screen.c
 @@ -110,6 +110,7 @@ v3d_screen_get_param(struct pipe_screen *pscreen, enum pipe_cap param)

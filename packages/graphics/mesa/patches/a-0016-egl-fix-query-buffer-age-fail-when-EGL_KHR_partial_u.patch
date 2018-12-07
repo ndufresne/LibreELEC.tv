@@ -1,7 +1,7 @@
-From b6f77727f387cb66078bb0877c2dd864d5ccf517 Mon Sep 17 00:00:00 2001
+From 4235c8e4787b3e340a3dde5868579d6aca6deb0f Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 28 Jun 2018 15:50:12 +0800
-Subject: [PATCH 16/52] egl: fix query buffer age fail when
+Subject: [PATCH 16/59] egl: fix query buffer age fail when
  EGL_KHR_partial_update
 
 When no EGL_EXT_buffer_age but has EGL_KHR_partial_update,

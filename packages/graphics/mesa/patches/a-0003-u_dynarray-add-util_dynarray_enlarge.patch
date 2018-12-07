@@ -1,7 +1,7 @@
-From bdfe0084287087caca70d36f20bac852ee3bec67 Mon Sep 17 00:00:00 2001
+From d5d36cce12b2cce8e70ba1b554bdb9fd36528150 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Mon, 19 Feb 2018 21:44:44 +0800
-Subject: [PATCH 03/52] u_dynarray: add util_dynarray_enlarge
+Subject: [PATCH 03/59] u_dynarray: add util_dynarray_enlarge
 
 This is for the case that user only know a max size
 it wants to append to the array and enlarge the array

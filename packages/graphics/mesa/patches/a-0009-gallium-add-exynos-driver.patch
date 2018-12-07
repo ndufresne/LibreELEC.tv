@@ -1,7 +1,7 @@
-From 1a0f16f9685f0c2968d8294606b8b7d6227e94f0 Mon Sep 17 00:00:00 2001
+From 4a3a741566aada1ea6044ce81fc625f7d2f8b21e Mon Sep 17 00:00:00 2001
 From: Simon Shields <simon@lineageos.org>
 Date: Fri, 27 Jul 2018 17:21:26 +0800
-Subject: [PATCH 09/52] gallium: add exynos driver
+Subject: [PATCH 09/59] gallium: add exynos driver
 
 A mesa driver for exynos is defined which will call into lima when 3D
 rendering is requested from it.
@@ -98,10 +98,10 @@ index 9dee651..7abf2a9 100644
  
  ACLOCAL_AMFLAGS = -I m4
 diff --git a/configure.ac b/configure.ac
-index 6a7a380..0e612f0 100644
+index 0269a64..2a862b0 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1366,7 +1366,7 @@ GALLIUM_DRIVERS_DEFAULT="r300,r600,svga,swrast"
+@@ -1377,7 +1377,7 @@ GALLIUM_DRIVERS_DEFAULT="r300,r600,svga,swrast"
  AC_ARG_WITH([gallium-drivers],
      [AS_HELP_STRING([--with-gallium-drivers@<:@=DIRS...@:>@],
          [comma delimited Gallium drivers list, e.g.
@@ -110,7 +110,7 @@ index 6a7a380..0e612f0 100644
          @<:@default=r300,r600,svga,swrast@:>@])],
      [with_gallium_drivers="$withval"],
      [with_gallium_drivers="$GALLIUM_DRIVERS_DEFAULT"])
-@@ -2810,6 +2810,9 @@ if test -n "$with_gallium_drivers"; then
+@@ -2822,6 +2822,9 @@ if test -n "$with_gallium_drivers"; then
          xsun4i)
              HAVE_GALLIUM_SUN4I=yes
              ;;
@@ -120,7 +120,7 @@ index 6a7a380..0e612f0 100644
          *)
              AC_MSG_ERROR([Unknown Gallium driver: $driver])
              ;;
-@@ -2851,6 +2854,10 @@ if test "x$HAVE_GALLIUM_LIMA" != xyes -a "x$HAVE_GALLIUM_SUN4I" = xyes  ; then
+@@ -2863,6 +2866,10 @@ if test "x$HAVE_GALLIUM_LIMA" != xyes -a "x$HAVE_GALLIUM_SUN4I" = xyes  ; then
      AC_MSG_ERROR([Building with sun4i requires lima])
  fi
  
@@ -131,7 +131,7 @@ index 6a7a380..0e612f0 100644
  detect_old_buggy_llvm() {
      dnl llvm-config may not give the right answer when llvm is a built as a
      dnl single shared library, so we must work the library name out for
-@@ -2960,6 +2967,7 @@ AM_CONDITIONAL(HAVE_GALLIUM_VC4, test "x$HAVE_GALLIUM_VC4" = xyes)
+@@ -2972,6 +2979,7 @@ AM_CONDITIONAL(HAVE_GALLIUM_VC4, test "x$HAVE_GALLIUM_VC4" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_VIRGL, test "x$HAVE_GALLIUM_VIRGL" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_LIMA, test "x$HAVE_GALLIUM_LIMA" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_SUN4I, test "x$HAVE_GALLIUM_SUN4I" = xyes)
@@ -139,7 +139,7 @@ index 6a7a380..0e612f0 100644
  
  AM_CONDITIONAL(HAVE_GALLIUM_STATIC_TARGETS, test "x$enable_shared_pipe_drivers" = xno)
  
-@@ -3105,6 +3113,7 @@ AC_CONFIG_FILES([Makefile
+@@ -3117,6 +3125,7 @@ AC_CONFIG_FILES([Makefile
                   src/gallium/drivers/virgl/Makefile
                   src/gallium/drivers/lima/Makefile
                   src/gallium/drivers/sun4i/Makefile
@@ -147,7 +147,7 @@ index 6a7a380..0e612f0 100644
                   src/gallium/state_trackers/clover/Makefile
                   src/gallium/state_trackers/dri/Makefile
                   src/gallium/state_trackers/glx/xlib/Makefile
-@@ -3156,6 +3165,7 @@ AC_CONFIG_FILES([Makefile
+@@ -3168,6 +3177,7 @@ AC_CONFIG_FILES([Makefile
                   src/gallium/winsys/virgl/vtest/Makefile
                   src/gallium/winsys/lima/drm/Makefile
                   src/gallium/winsys/sun4i/drm/Makefile

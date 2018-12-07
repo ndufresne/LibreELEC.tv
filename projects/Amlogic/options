@@ -76,7 +76,7 @@
     OPENGL="no"
 
   # OpenGL-ES implementation to use (no / bcm2835-driver / gpu-viv-bin-mx6q / opengl-meson)
-    OPENGLES="amlogic-meson-mali"
+    OPENGLES="libmali"
 
   # include uvesafb support (yes / no)
     UVESAFB_SUPPORT="no"
@@ -93,7 +93,7 @@
     GRAPHIC_DRIVERS="meson"
 
   # KODI Player implementation to use (default / bcm2835-driver / libfslvpuwrap / libamcodec)
-    KODIPLAYER_DRIVER="amlogic-meson-mali"
+    KODIPLAYER_DRIVER="libmali"
 
   # Modules to install in initramfs for early boot
     INITRAMFS_MODULES=""

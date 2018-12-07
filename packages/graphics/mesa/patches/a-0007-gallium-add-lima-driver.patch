@@ -1,7 +1,7 @@
-From 01dd415c412ff8f41a15796d64162a6f3492dd74 Mon Sep 17 00:00:00 2001
+From 3bc788d0b32aac7725f2b8e5bf1857720656e202 Mon Sep 17 00:00:00 2001
 From: Lima Project Developers <dri-devel@lists.freedesktop.org>
 Date: Fri, 27 Jul 2018 14:41:19 +0800
-Subject: [PATCH 07/52] gallium: add lima driver
+Subject: [PATCH 07/59] gallium: add lima driver
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -198,10 +198,10 @@ index 9e27db0..46fb3c3 100644
  	include/GL/wglext.h \
  	include/HaikuGL \
 diff --git a/configure.ac b/configure.ac
-index 864dcae..bdcd625 100644
+index 64c0350..e7e3b56 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1366,7 +1366,7 @@ GALLIUM_DRIVERS_DEFAULT="r300,r600,svga,swrast"
+@@ -1377,7 +1377,7 @@ GALLIUM_DRIVERS_DEFAULT="r300,r600,svga,swrast"
  AC_ARG_WITH([gallium-drivers],
      [AS_HELP_STRING([--with-gallium-drivers@<:@=DIRS...@:>@],
          [comma delimited Gallium drivers list, e.g.
@@ -210,7 +210,7 @@ index 864dcae..bdcd625 100644
          @<:@default=r300,r600,svga,swrast@:>@])],
      [with_gallium_drivers="$withval"],
      [with_gallium_drivers="$GALLIUM_DRIVERS_DEFAULT"])
-@@ -2803,6 +2803,10 @@ if test -n "$with_gallium_drivers"; then
+@@ -2815,6 +2815,10 @@ if test -n "$with_gallium_drivers"; then
                  require_basic_egl "virgl"
              fi
              ;;
@@ -221,7 +221,7 @@ index 864dcae..bdcd625 100644
          *)
              AC_MSG_ERROR([Unknown Gallium driver: $driver])
              ;;
-@@ -2947,6 +2951,7 @@ AM_CONDITIONAL(HAVE_GALLIUM_SWRAST, test "x$HAVE_GALLIUM_SOFTPIPE" = xyes -o \
+@@ -2959,6 +2963,7 @@ AM_CONDITIONAL(HAVE_GALLIUM_SWRAST, test "x$HAVE_GALLIUM_SOFTPIPE" = xyes -o \
  AM_CONDITIONAL(HAVE_GALLIUM_V3D, test "x$HAVE_GALLIUM_V3D" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_VC4, test "x$HAVE_GALLIUM_VC4" = xyes)
  AM_CONDITIONAL(HAVE_GALLIUM_VIRGL, test "x$HAVE_GALLIUM_VIRGL" = xyes)
@@ -229,7 +229,7 @@ index 864dcae..bdcd625 100644
  
  AM_CONDITIONAL(HAVE_GALLIUM_STATIC_TARGETS, test "x$enable_shared_pipe_drivers" = xno)
  
-@@ -3090,6 +3095,7 @@ AC_CONFIG_FILES([Makefile
+@@ -3102,6 +3107,7 @@ AC_CONFIG_FILES([Makefile
                   src/gallium/drivers/v3d/Makefile
                   src/gallium/drivers/vc4/Makefile
                   src/gallium/drivers/virgl/Makefile
@@ -237,7 +237,7 @@ index 864dcae..bdcd625 100644
                   src/gallium/state_trackers/clover/Makefile
                   src/gallium/state_trackers/dri/Makefile
                   src/gallium/state_trackers/glx/xlib/Makefile
-@@ -3139,6 +3145,7 @@ AC_CONFIG_FILES([Makefile
+@@ -3151,6 +3157,7 @@ AC_CONFIG_FILES([Makefile
                   src/gallium/winsys/vc4/drm/Makefile
                   src/gallium/winsys/virgl/drm/Makefile
                   src/gallium/winsys/virgl/vtest/Makefile

@@ -1,7 +1,7 @@
 From 0b09ee5dccb2203a0a5a77797f166d8c1952442c Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Tue, 19 Jun 2018 13:51:17 +0800
-Subject: [PATCH 35/41] drm/fourcc: add ARM tiled format modifier
+Subject: [PATCH 35/44] drm/fourcc: add ARM tiled format modifier
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

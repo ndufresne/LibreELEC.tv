@@ -1,7 +1,7 @@
-From e031beb92576b8763f571fc9e4a709cd1bbfaa8c Mon Sep 17 00:00:00 2001
+From c747971b68254b4dabfb8d084b89a073ab1f368d Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Tue, 21 Aug 2018 21:50:57 +0800
-Subject: [PATCH 28/52] lima: reload FB tile buffer when glFlush without
+Subject: [PATCH 28/59] lima: reload FB tile buffer when glFlush without
  glClear
 
 This is the reload implementation of this use case.

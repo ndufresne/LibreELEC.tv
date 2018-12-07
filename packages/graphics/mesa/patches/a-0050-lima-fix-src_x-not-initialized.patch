@@ -1,7 +1,7 @@
-From 925558e55c08c013809a0e19cc97e3c934bf88e4 Mon Sep 17 00:00:00 2001
+From cf8dedf7150bce37fd6e55d3c045c4752eb11f71 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 15 Nov 2018 15:09:13 +0800
-Subject: [PATCH 50/52] lima: fix src_x not initialized
+Subject: [PATCH 50/59] lima: fix src_x not initialized
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

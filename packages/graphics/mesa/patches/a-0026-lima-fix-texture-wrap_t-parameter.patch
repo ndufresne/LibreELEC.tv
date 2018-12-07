@@ -1,7 +1,7 @@
-From 28ee2e859cffd750836d3ce171b0ce68ce9db643 Mon Sep 17 00:00:00 2001
+From 3005ed034aaf2d5c516c9c1921e648597182471f Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 16 Aug 2018 21:54:48 +0800
-Subject: [PATCH 26/52] lima: fix texture wrap_t parameter
+Subject: [PATCH 26/59] lima: fix texture wrap_t parameter
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

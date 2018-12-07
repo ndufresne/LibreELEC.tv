@@ -1,7 +1,7 @@
-From 2a0944953c13b60ca480bbc4f4cd64ecdaa6ce30 Mon Sep 17 00:00:00 2001
+From 1ba24d6ca3f67bec2f0c64e891aa481ea68303c0 Mon Sep 17 00:00:00 2001
 From: Erico Nunes <nunes.erico@gmail.com>
 Date: Mon, 3 Sep 2018 21:41:38 +0200
-Subject: [PATCH 31/52] lima/ir: print name of unsupported nir_op
+Subject: [PATCH 31/59] lima/ir: print name of unsupported nir_op
 
 lima ppir and gpir often hit unsupported alu nir_op instructions at this
 stage of development. Printing the raw nir_op is not very helpful, since

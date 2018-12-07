@@ -1,7 +1,7 @@
-From ae6efff33f4f2e252928a5654699610c92bca57d Mon Sep 17 00:00:00 2001
+From 6eb802b9fe219745e85299f64730e1557ace59ab Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Tue, 14 Aug 2018 22:28:21 +0800
-Subject: [PATCH 13/52] lima: is_format_supported changed in 18.2
+Subject: [PATCH 13/59] lima: is_format_supported changed in 18.2
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

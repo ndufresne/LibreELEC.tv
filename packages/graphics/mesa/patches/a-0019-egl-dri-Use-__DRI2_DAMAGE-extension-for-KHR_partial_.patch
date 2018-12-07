@@ -1,7 +1,7 @@
-From 798e770972e67ee3e877422cdaeb0d6c63aa2b7a Mon Sep 17 00:00:00 2001
+From bf26dd888c18be82f5f346616d4c1ca5549309c3 Mon Sep 17 00:00:00 2001
 From: Harish Krupo <harish.krupo.kps@intel.com>
 Date: Sat, 7 Jul 2018 22:56:18 +0530
-Subject: [PATCH 19/52] egl/dri: Use __DRI2_DAMAGE extension for
+Subject: [PATCH 19/59] egl/dri: Use __DRI2_DAMAGE extension for
  KHR_partial_update
 
 Use the DRI2 interface callback to pass the damage rects to
@@ -17,7 +17,7 @@ Signed-off-by: Harish Krupo <harish.krupo.kps@intel.com>
  2 files changed, 43 insertions(+), 4 deletions(-)
 
 diff --git a/src/egl/drivers/dri2/egl_dri2.c b/src/egl/drivers/dri2/egl_dri2.c
-index 6103518..8cde7af 100644
+index 1028b2e..8bbd0a7 100644
 --- a/src/egl/drivers/dri2/egl_dri2.c
 +++ b/src/egl/drivers/dri2/egl_dri2.c
 @@ -427,6 +427,7 @@ static const struct dri2_extension_match optional_core_extensions[] = {
@@ -116,7 +116,7 @@ index 6103518..8cde7af 100644
  
  static EGLBoolean
 diff --git a/src/egl/drivers/dri2/egl_dri2.h b/src/egl/drivers/dri2/egl_dri2.h
-index 627f287..47c1c24 100644
+index e2c064a..0aa99815 100644
 --- a/src/egl/drivers/dri2/egl_dri2.h
 +++ b/src/egl/drivers/dri2/egl_dri2.h
 @@ -171,6 +171,7 @@ struct dri2_egl_display

@@ -1,7 +1,7 @@
-From a67c21c21d240a73a2d2a26caa7e58760b3af913 Mon Sep 17 00:00:00 2001
+From d0099cce9c90556306c44c925299819868d3a536 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Fri, 12 Oct 2018 17:49:17 +0800
-Subject: [PATCH 40/52] lima: fix texture layout setting
+Subject: [PATCH 40/59] lima: fix texture layout setting
 
 regression:
 6afdaef306 lima: seperate lima_texture_desc_set_res

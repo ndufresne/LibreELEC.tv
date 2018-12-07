@@ -32,6 +32,7 @@ devices = {
     'LePotato_lima' : { 'LePotato_lima' : { 'dtb' : 'meson-gxl-s905x-libretech-cc.dtb', 'config' : 'libretech-cc_defconfig' }, },
     'Khadas_VIM2' : { 'Khadas_VIM2' : { 'dtb' : 'meson-gxm-khadas-vim2.dtb', 'config' : 'khadas-vim_defconfig' }, },
     'Khadas_VIM2_mesa' : { 'Khadas_VIM2_mesa' : { 'dtb' : 'meson-gxm-khadas-vim2.dtb', 'config' : 'khadas-vim_defconfig' }, },
+    'Khadas_VIM2_x11' : { 'Khadas_VIM2_x11' : { 'dtb' : 'meson-gxm-khadas-vim2.dtb', 'config' : 'khadas-vim_defconfig' }, },
     'NanoPi_K2' : { 'NanoPi_K2' : { 'dtb' : 'meson-gxbb-nanopi-k2.dtb', 'config' : 'nanopi-k2_defconfig' }, },
   },
   'Rockchip' : {

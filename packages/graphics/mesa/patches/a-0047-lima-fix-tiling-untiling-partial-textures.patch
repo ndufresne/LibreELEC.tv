@@ -1,7 +1,7 @@
-From 093b96111f93d710babc658e7f8b40339166378f Mon Sep 17 00:00:00 2001
+From 812a47675b49bcc815c6dc43fdb236b976b86173 Mon Sep 17 00:00:00 2001
 From: Vasily Khoruzhick <anarsoul@gmail.com>
 Date: Mon, 12 Nov 2018 10:26:31 -0800
-Subject: [PATCH 47/52] lima: fix tiling/untiling partial textures
+Subject: [PATCH 47/59] lima: fix tiling/untiling partial textures
 
 staging size is smaller than actual texture, so we need to take it
 into account.
