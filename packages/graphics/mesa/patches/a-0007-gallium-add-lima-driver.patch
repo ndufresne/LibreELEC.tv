@@ -1,7 +1,7 @@
 From 3bc788d0b32aac7725f2b8e5bf1857720656e202 Mon Sep 17 00:00:00 2001
 From: Lima Project Developers <dri-devel@lists.freedesktop.org>
 Date: Fri, 27 Jul 2018 14:41:19 +0800
-Subject: [PATCH 07/59] gallium: add lima driver
+Subject: [PATCH 07/63] gallium: add lima driver
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit

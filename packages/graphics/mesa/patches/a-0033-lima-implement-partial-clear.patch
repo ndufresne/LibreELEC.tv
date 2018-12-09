@@ -1,7 +1,7 @@
 From f9703815a211753b53d9ee320d5401a118579324 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Wed, 5 Sep 2018 18:09:28 +0800
-Subject: [PATCH 33/59] lima: implement partial clear
+Subject: [PATCH 33/63] lima: implement partial clear
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

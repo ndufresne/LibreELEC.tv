@@ -1,7 +1,7 @@
 From 13795a66c362ec21293a880d3eea776176f56560 Mon Sep 17 00:00:00 2001
 From: Neil Armstrong <narmstrong@baylibre.com>
 Date: Fri, 27 Jul 2018 17:36:22 +0800
-Subject: [PATCH 10/59] gallium: add meson driver
+Subject: [PATCH 10/63] gallium: add meson driver
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---

@@ -1,7 +1,7 @@
 From fcb35bf333fbbe5dcefa916a49f23e0d0825aa56 Mon Sep 17 00:00:00 2001
 From: Connor Abbott <cwabbott0@gmail.com>
 Date: Sun, 4 Nov 2018 18:46:05 +0100
-Subject: [PATCH 44/59] lima/gp: Add a disassembler
+Subject: [PATCH 44/63] lima/gp: Add a disassembler
 
 Unlike the pp disassembler, the syntax here is significantly different
 from the old open-gpu-tools disassembler. Instead of printing

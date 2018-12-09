@@ -2,7 +2,7 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="qca-firmware"
-PKG_VERSION="50f9e1a"
+PKG_VERSION="50f9e1ad99c89c6f19b0d21368394434525c0767"
 PKG_SHA256="18333079e07abdea85400f14dac15a11f2683106dd768e6ae6ec0008d34e7eda"
 PKG_ARCH="arm aarch64"
 PKG_LICENSE="BSD-3c"

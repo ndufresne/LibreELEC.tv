@@ -1,7 +1,7 @@
 From f629b5fce65686dfcb0dd8b2f929a6eedfccfd8b Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sun, 5 Aug 2018 19:10:47 +0800
-Subject: [PATCH 21/59] gallium: add PIPE_CAP_SET_DAMAGE
+Subject: [PATCH 21/63] gallium: add PIPE_CAP_SET_DAMAGE
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

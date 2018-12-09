@@ -1,7 +1,7 @@
 From fa903c8077bbf7e406126ff2746afd9bac3d9d6c Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Fri, 5 Oct 2018 19:37:00 +0800
-Subject: [PATCH 39/59] lima: fix LIMA_DUMP_COMMAND_STREAM fail
+Subject: [PATCH 39/63] lima: fix LIMA_DUMP_COMMAND_STREAM fail
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

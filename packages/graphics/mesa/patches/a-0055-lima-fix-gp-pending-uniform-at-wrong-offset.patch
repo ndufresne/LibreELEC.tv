@@ -1,7 +1,7 @@
 From bd8248d6901bb27d1e0b19badd3ea7915b3c61ac Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 29 Nov 2018 10:41:24 +0800
-Subject: [PATCH 55/59] lima: fix gp pending uniform at wrong offset
+Subject: [PATCH 55/63] lima: fix gp pending uniform at wrong offset
 
 When running glxgears, the nir uniform num is 11.
 Mesa align it to 12 with some pad bytes when set

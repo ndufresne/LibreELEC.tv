@@ -1,7 +1,7 @@
 From b3780109d48cf81d6962ff46a5ac9d4b6c654b75 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 15 Nov 2018 22:02:29 +0800
-Subject: [PATCH 53/59] lima: in case index_size is an expression
+Subject: [PATCH 53/63] lima: in case index_size is an expression
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

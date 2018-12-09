@@ -1,7 +1,7 @@
 From 4bff75d7f343fbe6199d8bfb843c27e3283bfa37 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 29 Nov 2018 20:31:20 +0800
-Subject: [PATCH 56/59] lima/ppir: add nir_op_fsqrt support
+Subject: [PATCH 56/63] lima/ppir: add nir_op_fsqrt support
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

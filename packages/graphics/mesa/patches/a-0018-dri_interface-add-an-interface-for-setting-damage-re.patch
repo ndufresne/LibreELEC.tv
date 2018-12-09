@@ -1,7 +1,7 @@
 From bb730f26bd684fc810c1ab02a225ddd97323c2e3 Mon Sep 17 00:00:00 2001
 From: Harish Krupo <harish.krupo.kps@intel.com>
 Date: Wed, 4 Jul 2018 18:22:59 +0530
-Subject: [PATCH 18/59] dri_interface: add an interface for setting damage
+Subject: [PATCH 18/63] dri_interface: add an interface for setting damage
  region
 
 Implementors of this interface provide ability to render only

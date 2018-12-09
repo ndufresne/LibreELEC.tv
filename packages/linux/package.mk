@@ -32,8 +32,8 @@ case "$LINUX" in
     PKG_BUILD_PERF="no"
     ;;
   amlogic-mainline)
-    PKG_VERSION="96db90800c06d3fe3fa08eb6222fe201286bb778" # 4.19.6
-    PKG_SHA256="28b2319bd5103a4b8d3ef85eb762439d95abd44aebdb298390b255c983de764f"
+    PKG_VERSION="61c68f2a2af0f3dc531053524f980a7875e24e7d" # 4.19.7
+    PKG_SHA256="4a2b1a8bc2cdf32504d21ed2f35079c7771dbdc0a8bf0c966f6553be39069f72"
     PKG_URL="https://github.com/torvalds/linux/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_DIR="$PKG_NAME-$PKG_VERSION*"
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET u-boot-tools-aml:host"
@@ -309,10 +309,6 @@ makeinstall_init() {
 
 post_install() {
   mkdir -p $INSTALL/$(get_full_firmware_dir)/
-    ln -sf /storage/.config/firmware/ $INSTALL/$(get_full_firmware_dir)/updates
-
-  # bluez looks in /etc/firmware/
-    ln -sf /$(get_full_firmware_dir)/ $INSTALL/etc/firmware
 
   # regdb and signature is now loaded as firmware by 4.15+
     if grep -q ^CONFIG_CFG80211_REQUIRE_SIGNED_REGDB= $PKG_BUILD/.config; then

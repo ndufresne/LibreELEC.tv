@@ -1,7 +1,7 @@
 From 67e63fc3f55ceb25ae430acc5529f2bc8f47b436 Mon Sep 17 00:00:00 2001
 From: Heiko Stuebner <heiko@sntech.de>
 Date: Fri, 27 Jul 2018 17:46:16 +0800
-Subject: [PATCH 11/59] gallium: add rockchip driver
+Subject: [PATCH 11/63] gallium: add rockchip driver
 
 A mesa driver for rockchip is defined which will call into lima when 3D
 rendering is requested from it.

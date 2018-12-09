@@ -1,7 +1,7 @@
 From 353fc758156744813eb2140f08e16cc865428fb7 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 6 Sep 2018 20:21:53 +0800
-Subject: [PATCH 36/59] lima: use VS_CMD for vs command stream construction
+Subject: [PATCH 36/63] lima: use VS_CMD for vs command stream construction
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

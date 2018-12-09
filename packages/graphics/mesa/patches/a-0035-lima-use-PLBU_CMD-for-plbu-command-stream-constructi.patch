@@ -1,7 +1,7 @@
 From 496b7427993b653de7a2e3d81875c259416e0c21 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 6 Sep 2018 17:12:02 +0800
-Subject: [PATCH 35/59] lima: use PLBU_CMD for plbu command stream construction
+Subject: [PATCH 35/63] lima: use PLBU_CMD for plbu command stream construction
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

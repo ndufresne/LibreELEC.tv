@@ -1,7 +1,7 @@
 From e5a52f6cfb409811a9a1e442569c220fde4b8fa4 Mon Sep 17 00:00:00 2001
 From: Harish Krupo <harish.krupo.kps@intel.com>
 Date: Wed, 4 Jul 2018 18:22:58 +0530
-Subject: [PATCH 17/59] egl/android: Delete set_damage_region from egl dri vtbl
+Subject: [PATCH 17/63] egl/android: Delete set_damage_region from egl dri vtbl
 
 The intension of the KHR_partial_update was not to send the damage back
 to the platform but to send the damage to the driver to ensure that the

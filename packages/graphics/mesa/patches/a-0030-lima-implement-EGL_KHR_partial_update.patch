@@ -1,7 +1,7 @@
 From 346c62e8f1c10e32e57e5b5fb29c2cf2962de7bd Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sun, 2 Sep 2018 19:03:35 +0800
-Subject: [PATCH 30/59] lima: implement EGL_KHR_partial_update
+Subject: [PATCH 30/63] lima: implement EGL_KHR_partial_update
 
 Method is only pick pp stream for damaged region,
 so that fb outside damage region don't need reload.

@@ -1,7 +1,7 @@
 From 2af044a5915ac86607276bd3025198a11aa2a554 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sun, 11 Nov 2018 17:42:31 +0800
-Subject: [PATCH 48/59] lima: fix multi triangle index draw hang
+Subject: [PATCH 48/63] lima: fix multi triangle index draw hang
 
 Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---

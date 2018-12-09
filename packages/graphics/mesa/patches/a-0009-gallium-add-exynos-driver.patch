@@ -1,7 +1,7 @@
 From 4a3a741566aada1ea6044ce81fc625f7d2f8b21e Mon Sep 17 00:00:00 2001
 From: Simon Shields <simon@lineageos.org>
 Date: Fri, 27 Jul 2018 17:21:26 +0800
-Subject: [PATCH 09/59] gallium: add exynos driver
+Subject: [PATCH 09/63] gallium: add exynos driver
 
 A mesa driver for exynos is defined which will call into lima when 3D
 rendering is requested from it.

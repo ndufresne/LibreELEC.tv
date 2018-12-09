@@ -1,7 +1,7 @@
 From 78e6724fea25299db9d6150b7649fd02b3571955 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Sun, 5 Aug 2018 20:17:48 +0800
-Subject: [PATCH 22/59] st/dri2: add optional dri2DamageExtension
+Subject: [PATCH 22/63] st/dri2: add optional dri2DamageExtension
 
 Enable dri2DamageExtension according to
 PIPE_CAP_SET_DAMAGE.
