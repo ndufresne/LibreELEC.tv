@@ -1,3 +1,5 @@
+#!/bin bash
+
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
@@ -18,13 +20,13 @@
     esac
   fi
 
-# mount $BOOT_ROOT r/w
+# mount $BOOT_ROOT rw
   mount -o remount,rw $BOOT_ROOT
 
 # update device tree
 mv $BOOT_ROOT/dtb $BOOT_ROOT/dtb_old
 cp -R $UPDATE_DIR/.tmp/*/3rdparty/instboot/dtb $BOOT_ROOT
 
-# mount $BOOT_ROOT r/o
+# mount $BOOT_ROOT ro
   sync
   mount -o remount,ro $BOOT_ROOT
