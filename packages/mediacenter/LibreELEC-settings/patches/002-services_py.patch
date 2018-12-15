@@ -1,16 +1,16 @@
 --- a/src/resources/lib/modules/services.py
 +++ b/src/resources/lib/modules/services.py
-@@ -56,6 +56,9 @@
+@@ -55,6 +55,9 @@
+     OPT_SSH_NOPASSWD = None
      AVAHI_DAEMON = None
      CRON_DAEMON = None
-     OPENVFD_DAEMON = None
 +    EMMC_INSTALL = "/flash/install2emmc.sh"
 +    EMMC_DDBR_BACKUP = "/flash/ddbr-backup.sh"
 +    EMMC_DDBR_RESTORE = "/flash/ddbr-restore.sh"
      menu = {'4': {
          'name': 32001,
          'menuLoader': 'load_menu',
-@@ -295,6 +298,37 @@
+@@ -279,6 +282,37 @@
                              },
                          },
                      },
@@ -48,7 +48,7 @@
                  }
  
              self.oe = oeMain
-@@ -532,6 +566,63 @@
+@@ -504,6 +538,63 @@
              self.oe.set_busy(0)
              self.oe.dbg_log('services::initialize_cron', 'ERROR: (%s)' % repr(e), 4)
  

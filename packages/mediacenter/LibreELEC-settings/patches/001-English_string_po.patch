@@ -1,6 +1,6 @@
 --- a/language/English/strings.po
 +++ b/language/English/strings.po
-@@ -911,3 +911,33 @@
+@@ -899,3 +899,33 @@
  msgctxt "#32399"
  msgid "Public"
  msgstr ""

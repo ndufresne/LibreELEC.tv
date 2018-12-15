@@ -27,7 +27,7 @@ devices = {
     'P212' : { 'P212' : { 'dtb' : 'meson-gxl-s905x-p212.dtb', 'config' : 'p212_defconfig' }, },
     'LaFrite' : { 'LaFrite' : { 'dtb' : 'meson-gxl-s805x-p241.dtb', 'config' : 'libretech-cc_defconfig' }, },
     'LePotato' : { 'LePotato' : { 'dtb' : 'meson-gxl-s905x-libretech-cc.dtb', 'config' : 'libretech-cc_defconfig' }, },
-    'Khadas_VIM' : { 'Khadas_VIM' : { 'dtb' : 'meson-gxl-s905x-khadas-vim.dtb', 'config' : 'khadas-vim_def config' }, },
+    'Khadas_VIM' : { 'Khadas_VIM' : { 'dtb' : 'meson-gxl-s905x-khadas-vim.dtb', 'config' : 'khadas-vim_defconfig' }, },
     'Khadas_VIM_lima' : { 'Khadas_VIM_lima' : { 'dtb' : 'meson-gxl-s905x-khadas-vim.dtb', 'config' : 'khadas-vim_defconfig' }, },
     'LePotato_lima' : { 'LePotato_lima' : { 'dtb' : 'meson-gxl-s905x-libretech-cc.dtb', 'config' : 'libretech-cc_defconfig' }, },
     'Khadas_VIM2' : { 'Khadas_VIM2' : { 'dtb' : 'meson-gxm-khadas-vim2.dtb', 'config' : 'khadas-vim_defconfig' }, },
