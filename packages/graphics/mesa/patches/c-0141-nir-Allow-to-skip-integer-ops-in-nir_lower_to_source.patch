@@ -1,0 +1,195 @@
+From 6f4a6c53ae1b364670539c70b65f4b833f781c40 Mon Sep 17 00:00:00 2001
+From: Gert Wollny <gert.wollny@collabora.com>
+Date: Mon, 12 Nov 2018 09:17:34 +0100
+Subject: [PATCH 141/151] nir: Allow to skip integer ops in
+ nir_lower_to_source_mods
+
+Some hardware supports source mods only for float operations. Make it
+possible to skip lowering to source mods in these cases.
+
+v2: use option flags instead of a boolean (Jason Ekstrand)
+
+Signed-off-by: Gert Wollny <gert.wollny@collabora.com>
+Reviewed-by: Jason Ekstrand <jason@jlekstrand.net>
+---
+ src/compiler/nir/nir.h                      | 10 +++-
+ src/compiler/nir/nir_lower_to_source_mods.c | 78 ++++++++++++++++++-----------
+ src/intel/compiler/brw_nir.c                |  2 +-
+ 3 files changed, 58 insertions(+), 32 deletions(-)
+
+diff --git a/src/compiler/nir/nir.h b/src/compiler/nir/nir.h
+index d3b0a06..933ed5e 100644
+--- a/src/compiler/nir/nir.h
++++ b/src/compiler/nir/nir.h
+@@ -2999,7 +2999,15 @@ typedef struct nir_lower_bitmap_options {
+ void nir_lower_bitmap(nir_shader *shader, const nir_lower_bitmap_options *options);
+ 
+ bool nir_lower_atomics_to_ssbo(nir_shader *shader, unsigned ssbo_offset);
+-bool nir_lower_to_source_mods(nir_shader *shader);
++
++typedef enum  {
++   nir_lower_int_source_mods = 1 << 0,
++   nir_lower_float_source_mods = 1 << 1,
++   nir_lower_all_source_mods = (1 << 2) - 1
++} nir_lower_to_source_mods_flags;
++
++
++bool nir_lower_to_source_mods(nir_shader *shader, nir_lower_to_source_mods_flags options);
+ 
+ bool nir_lower_gs_intrinsics(nir_shader *shader);
+ 
+diff --git a/src/compiler/nir/nir_lower_to_source_mods.c b/src/compiler/nir/nir_lower_to_source_mods.c
+index 077ca53..657bf8a 100644
+--- a/src/compiler/nir/nir_lower_to_source_mods.c
++++ b/src/compiler/nir/nir_lower_to_source_mods.c
+@@ -34,7 +34,8 @@
+  */
+ 
+ static bool
+-nir_lower_to_source_mods_block(nir_block *block)
++nir_lower_to_source_mods_block(nir_block *block,
++                               nir_lower_to_source_mods_flags options)
+ {
+    bool progress = false;
+ 
+@@ -58,10 +59,14 @@ nir_lower_to_source_mods_block(nir_block *block)
+ 
+          switch (nir_alu_type_get_base_type(nir_op_infos[alu->op].input_types[i])) {
+          case nir_type_float:
++            if (!(options & nir_lower_float_source_mods))
++               continue;
+             if (parent->op != nir_op_fmov)
+                continue;
+             break;
+          case nir_type_int:
++            if (!(options & nir_lower_int_source_mods))
++               continue;
+             if (parent->op != nir_op_imov)
+                continue;
+             break;
+@@ -97,33 +102,41 @@ nir_lower_to_source_mods_block(nir_block *block)
+          progress = true;
+       }
+ 
+-      switch (alu->op) {
+-      case nir_op_fsat:
+-         alu->op = nir_op_fmov;
+-         alu->dest.saturate = true;
+-         break;
+-      case nir_op_ineg:
+-         alu->op = nir_op_imov;
+-         alu->src[0].negate = !alu->src[0].negate;
+-         break;
+-      case nir_op_fneg:
+-         alu->op = nir_op_fmov;
+-         alu->src[0].negate = !alu->src[0].negate;
+-         break;
+-      case nir_op_iabs:
+-         alu->op = nir_op_imov;
+-         alu->src[0].abs = true;
+-         alu->src[0].negate = false;
+-         break;
+-      case nir_op_fabs:
+-         alu->op = nir_op_fmov;
+-         alu->src[0].abs = true;
+-         alu->src[0].negate = false;
+-         break;
+-      default:
+-         break;
++      if (options & nir_lower_float_source_mods) {
++         switch (alu->op) {
++         case nir_op_fsat:
++            alu->op = nir_op_fmov;
++            alu->dest.saturate = true;
++            break;
++         case nir_op_fneg:
++            alu->op = nir_op_fmov;
++            alu->src[0].negate = !alu->src[0].negate;
++            break;
++         case nir_op_fabs:
++            alu->op = nir_op_fmov;
++            alu->src[0].abs = true;
++            alu->src[0].negate = false;
++            break;
++         default:
++            break;
++         }
+       }
+ 
++      if (options & nir_lower_int_source_mods) {
++         switch (alu->op) {
++         case nir_op_ineg:
++            alu->op = nir_op_imov;
++            alu->src[0].negate = !alu->src[0].negate;
++            break;
++         case nir_op_iabs:
++            alu->op = nir_op_imov;
++            alu->src[0].abs = true;
++            alu->src[0].negate = false;
++            break;
++         default:
++            break;
++         }
++      }
+       /* We've covered sources.  Now we're going to try and saturate the
+        * destination if we can.
+        */
+@@ -136,6 +149,9 @@ nir_lower_to_source_mods_block(nir_block *block)
+           nir_type_float)
+          continue;
+ 
++      if (!(options & nir_lower_float_source_mods))
++         continue;
++
+       if (!list_empty(&alu->dest.dest.ssa.if_uses))
+          continue;
+ 
+@@ -185,12 +201,13 @@ nir_lower_to_source_mods_block(nir_block *block)
+ }
+ 
+ static bool
+-nir_lower_to_source_mods_impl(nir_function_impl *impl)
++nir_lower_to_source_mods_impl(nir_function_impl *impl,
++                              nir_lower_to_source_mods_flags options)
+ {
+    bool progress = false;
+ 
+    nir_foreach_block(block, impl) {
+-      progress |= nir_lower_to_source_mods_block(block);
++      progress |= nir_lower_to_source_mods_block(block, options);
+    }
+ 
+    if (progress)
+@@ -201,13 +218,14 @@ nir_lower_to_source_mods_impl(nir_function_impl *impl)
+ }
+ 
+ bool
+-nir_lower_to_source_mods(nir_shader *shader)
++nir_lower_to_source_mods(nir_shader *shader,
++                         nir_lower_to_source_mods_flags options)
+ {
+    bool progress = false;
+ 
+    nir_foreach_function(function, shader) {
+       if (function->impl) {
+-         progress |= nir_lower_to_source_mods_impl(function->impl);
++         progress |= nir_lower_to_source_mods_impl(function->impl, options);
+       }
+    }
+ 
+diff --git a/src/intel/compiler/brw_nir.c b/src/intel/compiler/brw_nir.c
+index cf5a4a9..eb37f73 100644
+--- a/src/intel/compiler/brw_nir.c
++++ b/src/intel/compiler/brw_nir.c
+@@ -793,7 +793,7 @@ brw_postprocess_nir(nir_shader *nir, const struct brw_compiler *compiler,
+ 
+    OPT(nir_opt_algebraic_late);
+ 
+-   OPT(nir_lower_to_source_mods);
++   OPT(nir_lower_to_source_mods, nir_lower_all_source_mods);
+    OPT(nir_copy_prop);
+    OPT(nir_opt_dce);
+    OPT(nir_opt_move_comparisons);
+-- 
+2.7.4
+

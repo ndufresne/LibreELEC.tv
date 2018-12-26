@@ -1,0 +1,24 @@
+From 4224ca550f6ddf3d32d2deae107f0b7c3d2b61ee Mon Sep 17 00:00:00 2001
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Fri, 9 Nov 2018 17:38:35 -0800
+Subject: [PATCH 095/151] midgard: Use vectorization opt
+
+---
+ src/gallium/drivers/panfrost/midgard/midgard_compile.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/gallium/drivers/panfrost/midgard/midgard_compile.c b/src/gallium/drivers/panfrost/midgard/midgard_compile.c
+index 70f7fcf..fc9d81f 100644
+--- a/src/gallium/drivers/panfrost/midgard/midgard_compile.c
++++ b/src/gallium/drivers/panfrost/midgard/midgard_compile.c
+@@ -545,6 +545,7 @@ optimise_nir(nir_shader *nir)
+ 
+                 NIR_PASS(progress, nir, nir_copy_prop);
+                 NIR_PASS(progress, nir, nir_opt_dce);
++                NIR_PASS(progress, nir, nir_opt_vectorize);
+                 NIR_PASS(progress, nir, nir_opt_dead_cf);
+                 NIR_PASS(progress, nir, nir_opt_cse);
+                 NIR_PASS(progress, nir, nir_opt_peephole_select, 64);
+-- 
+2.7.4
+

@@ -1,0 +1,30 @@
+From a9081887659df06d34577408e5dbcbe452a219ad Mon Sep 17 00:00:00 2001
+From: Neil Armstrong <narmstrong@baylibre.com>
+Date: Fri, 14 Dec 2018 12:57:17 +0000
+Subject: [PATCH 148/151] Drop TODO prints
+
+---
+ src/gallium/drivers/panfrost/pan_context.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/gallium/drivers/panfrost/pan_context.c b/src/gallium/drivers/panfrost/pan_context.c
+index 7e555ed..4a284ec 100644
+--- a/src/gallium/drivers/panfrost/pan_context.c
++++ b/src/gallium/drivers/panfrost/pan_context.c
+@@ -2775,13 +2775,11 @@ panfrost_allocate_slab(struct panfrost_context *ctx,
+ static void
+ panfrost_flush_resource(struct pipe_context *pctx, struct pipe_resource *prsc)
+ {
+-        fprintf(stderr, "TODO %s\n", __func__);
+ }
+ 
+ static void
+ panfrost_invalidate_resource(struct pipe_context *pctx, struct pipe_resource *prsc)
+ {
+-        fprintf(stderr, "TODO %s\n", __func__);
+ }
+ 
+ static void
+-- 
+2.7.4
+

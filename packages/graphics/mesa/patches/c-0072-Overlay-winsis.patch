@@ -1,0 +1,231 @@
+From 00f4550e8eb184ed9c36611690b8ae34dd737619 Mon Sep 17 00:00:00 2001
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Sun, 21 Oct 2018 15:00:47 -0700
+Subject: [PATCH 072/151] Overlay winsis
+
+---
+ src/gallium/winsys/panfrost/drm/Android.mk         | 33 +++++++++++++++++
+ src/gallium/winsys/panfrost/drm/Makefile.am        | 33 +++++++++++++++++
+ src/gallium/winsys/panfrost/drm/Makefile.sources   |  3 ++
+ src/gallium/winsys/panfrost/drm/meson.build        | 29 +++++++++++++++
+ .../winsys/panfrost/drm/panfrost_drm_public.h      | 33 +++++++++++++++++
+ .../winsys/panfrost/drm/panfrost_drm_winsys.c      | 41 ++++++++++++++++++++++
+ 6 files changed, 172 insertions(+)
+ create mode 100644 src/gallium/winsys/panfrost/drm/Android.mk
+ create mode 100644 src/gallium/winsys/panfrost/drm/Makefile.am
+ create mode 100644 src/gallium/winsys/panfrost/drm/Makefile.sources
+ create mode 100644 src/gallium/winsys/panfrost/drm/meson.build
+ create mode 100644 src/gallium/winsys/panfrost/drm/panfrost_drm_public.h
+ create mode 100644 src/gallium/winsys/panfrost/drm/panfrost_drm_winsys.c
+
+diff --git a/src/gallium/winsys/panfrost/drm/Android.mk b/src/gallium/winsys/panfrost/drm/Android.mk
+new file mode 100644
+index 0000000..af5813d
+--- /dev/null
++++ b/src/gallium/winsys/panfrost/drm/Android.mk
+@@ -0,0 +1,33 @@
++# Copyright (C) 2014 Emil Velikov <emil.l.velikov@gmail.com>
++#
++# Permission is hereby granted, free of charge, to any person obtaining a
++# copy of this software and associated documentation files (the "Software"),
++# to deal in the Software without restriction, including without limitation
++# the rights to use, copy, modify, merge, publish, distribute, sublicense,
++# and/or sell copies of the Software, and to permit persons to whom the
++# Software is furnished to do so, subject to the following conditions:
++#
++# The above copyright notice and this permission notice shall be included
++# in all copies or substantial portions of the Software.
++#
++# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++# DEALINGS IN THE SOFTWARE.
++
++LOCAL_PATH := $(call my-dir)
++
++# get C_SOURCES
++include $(LOCAL_PATH)/Makefile.sources
++
++include $(CLEAR_VARS)
++
++LOCAL_SRC_FILES := $(C_SOURCES)
++
++LOCAL_MODULE := libmesa_winsys_vc4
++
++include $(GALLIUM_COMMON_MK)
++include $(BUILD_STATIC_LIBRARY)
+diff --git a/src/gallium/winsys/panfrost/drm/Makefile.am b/src/gallium/winsys/panfrost/drm/Makefile.am
+new file mode 100644
+index 0000000..a32709b
+--- /dev/null
++++ b/src/gallium/winsys/panfrost/drm/Makefile.am
+@@ -0,0 +1,33 @@
++# Copyright © 2014 Broadcom
++#
++# Permission is hereby granted, free of charge, to any person obtaining a
++# copy of this software and associated documentation files (the "Software"),
++# to deal in the Software without restriction, including without limitation
++# the rights to use, copy, modify, merge, publish, distribute, sublicense,
++# and/or sell copies of the Software, and to permit persons to whom the
++# Software is furnished to do so, subject to the following conditions:
++#
++# The above copyright notice and this permission notice (including the next
++# paragraph) shall be included in all copies or substantial portions of the
++# Software.
++#
++# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
++# IN THE SOFTWARE.
++
++include Makefile.sources
++include $(top_srcdir)/src/gallium/Automake.inc
++
++AM_CFLAGS = \
++	-I$(top_srcdir)/src/gallium/drivers \
++	$(GALLIUM_WINSYS_CFLAGS)
++
++noinst_LTLIBRARIES = libvc4drm.la
++
++libvc4drm_la_SOURCES = $(C_SOURCES)
++
++EXTRA_DIST = meson.build
+diff --git a/src/gallium/winsys/panfrost/drm/Makefile.sources b/src/gallium/winsys/panfrost/drm/Makefile.sources
+new file mode 100644
+index 0000000..19cadf7
+--- /dev/null
++++ b/src/gallium/winsys/panfrost/drm/Makefile.sources
+@@ -0,0 +1,3 @@
++C_SOURCES := \
++	vc4_drm_public.h \
++	vc4_drm_winsys.c
+diff --git a/src/gallium/winsys/panfrost/drm/meson.build b/src/gallium/winsys/panfrost/drm/meson.build
+new file mode 100644
+index 0000000..d19ce2d
+--- /dev/null
++++ b/src/gallium/winsys/panfrost/drm/meson.build
+@@ -0,0 +1,29 @@
++# Copyright © 2017 Broadcom
++#
++# Permission is hereby granted, free of charge, to any person obtaining a copy
++# of this software and associated documentation files (the "Software"), to deal
++# in the Software without restriction, including without limitation the rights
++# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++# copies of the Software, and to permit persons to whom the Software is
++# furnished to do so, subject to the following conditions:
++#
++# The above copyright notice and this permission notice shall be included in
++# all copies or substantial portions of the Software.
++#
++# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++# SOFTWARE.
++
++libpanfrostwinsys = static_library(
++  'panfrostwinsys',
++  files('panfrost_drm_winsys.c'),
++  include_directories : [
++    inc_src, inc_include,
++    inc_gallium, inc_gallium_aux, inc_gallium_drivers,
++  ],
++  c_args : [c_vis_args],
++)
+diff --git a/src/gallium/winsys/panfrost/drm/panfrost_drm_public.h b/src/gallium/winsys/panfrost/drm/panfrost_drm_public.h
+new file mode 100644
+index 0000000..2f4e019
+--- /dev/null
++++ b/src/gallium/winsys/panfrost/drm/panfrost_drm_public.h
+@@ -0,0 +1,33 @@
++/*
++ * Copyright © 2014 Broadcom
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
++ * IN THE SOFTWARE.
++ */
++
++#ifndef __PAN_DRM_PUBLIC_H__
++#define __PAN_DRM_PUBLIC_H__
++
++struct pipe_screen;
++struct renderonly;
++
++struct pipe_screen *panfrost_drm_screen_create(int drmFD);
++struct pipe_screen *panfrost_drm_screen_create_renderonly(struct renderonly *ro);
++
++#endif /* __PAN_DRM_PUBLIC_H__ */
+diff --git a/src/gallium/winsys/panfrost/drm/panfrost_drm_winsys.c b/src/gallium/winsys/panfrost/drm/panfrost_drm_winsys.c
+new file mode 100644
+index 0000000..4608637
+--- /dev/null
++++ b/src/gallium/winsys/panfrost/drm/panfrost_drm_winsys.c
+@@ -0,0 +1,41 @@
++/*
++ * Copyright © 2014 Broadcom
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
++ * IN THE SOFTWARE.
++ */
++
++#include <unistd.h>
++#include <fcntl.h>
++
++#include "renderonly/renderonly.h"
++#include "panfrost_drm_public.h"
++#include "panfrost/pan_public.h"
++
++struct pipe_screen *
++panfrost_drm_screen_create(int fd)
++{
++   return panfrost_create_screen(fcntl(fd, F_DUPFD_CLOEXEC, 3), NULL);
++}
++
++struct pipe_screen *
++panfrost_drm_screen_create_renderonly(struct renderonly *ro)
++{
++   return panfrost_create_screen(fcntl(ro->gpu_fd, F_DUPFD_CLOEXEC, 3), ro);
++}
+-- 
+2.7.4
+

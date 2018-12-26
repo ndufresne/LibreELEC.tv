@@ -22,6 +22,13 @@ case $PROJECT in
     PKG_MALI_PLATFORM_NAME="sunxi"
     ;;
   Amlogic)
+    PKG_VERSION="b4efb12e2667ec89eb187d8f59977fbb6e10b9bb" #r27p0 for panfrost
+    PKG_SHA256=""
+    PKG_URL="https://github.com/LibreELEC/mali-midgard/archive/$PKG_VERSION.tar.gz"
+    PKG_SOURCE_DIR="mali-midgard-$PKG_VERSION*"
+    PKG_MALI_PLATFORM_NAME="meson"
+    ;;
+  Amlogic_Test)
     PKG_VERSION="30c56aa749a4f8e582bef4f94f5a809019f79a1a" #r27p0
     PKG_SHA256="6c38f41da44661573272515e88d1a8ebeac51e2cac824d08445f74539ee621de"
     PKG_URL="https://github.com/LibreELEC/mali-midgard/archive/$PKG_VERSION.tar.gz"
@@ -51,11 +58,13 @@ pre_make_target() {
 make_target() {
   DRIVER_DIR=$PKG_BUILD/driver/product/kernel/drivers/gpu/arm/midgard/
 
-  make ARCH=$TARGET_KERNEL_ARCH CROSS_COMPILE=$TARGET_KERNEL_PREFIX KDIR=$(kernel_path) \
-       CONFIG_MALI_MIDGARD=m \
-       CONFIG_MALI_PLATFORM_NAME=$PKG_MALI_PLATFORM_NAME \
-       EXTRA_CFLAGS="-DCONFIG_MALI_MIDGARD=m \
-                     -DCONFIG_MALI_PLATFORM_NAME=$PKG_MALI_PLATFORM_NAME" -C $DRIVER_DIR
+  make ARCH=$TARGET_KERNEL_ARCH CROSS_COMPILE=$TARGET_KERNEL_PREFIX KDIR=$(kernel_path) CONFIG_NAME=config.meson-gxm
+#       CONFIG_MALI_MIDGARD=m \
+#       CONFIG_MALI_PLATFORM_NAME=$PKG_MALI_PLATFORM_NAME \
+#       CONFIG_MALI_PLATFORM_POWER_DOWN_ONLY=y \
+#       EXTRA_CFLAGS="-DCONFIG_MALI_MIDGARD=m \
+#                     -DCONFIG_MALI_PLATFORM_NAME=$PKG_MALI_PLATFORM_NAME \
+#                     -DCONFIG_MALI_PLATFORM_POWER_DOWN_ONLY=y" -C $DRIVER_DIR
 }
 
 makeinstall_target() {

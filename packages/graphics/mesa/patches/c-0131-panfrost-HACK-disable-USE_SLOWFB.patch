@@ -1,0 +1,25 @@
+From 0dee1e324466b8417d192c0e69c643acf6de40da Mon Sep 17 00:00:00 2001
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date: Thu, 29 Nov 2018 09:28:40 +0100
+Subject: [PATCH 131/151] panfrost: HACK: disable USE_SLOWFB
+
+---
+ src/gallium/drivers/panfrost/pan_context.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gallium/drivers/panfrost/pan_context.c b/src/gallium/drivers/panfrost/pan_context.c
+index 7f5eedc..f2a43ad 100644
+--- a/src/gallium/drivers/panfrost/pan_context.c
++++ b/src/gallium/drivers/panfrost/pan_context.c
+@@ -63,7 +63,7 @@ panfrost_allocate_slab(struct panfrost_context *ctx,
+ static bool USE_TRANSACTION_ELIMINATION = false;
+ 
+ /* Don't use the mesa winsys; use our own X11 window with Xshm */
+-#define USE_SLOWFB
++//#define USE_SLOWFB
+ 
+ /* Do not actually send anything to the GPU; merely generate the cmdstream as fast as possible. Disables framebuffer writes */
+ //#define DRY_RUN
+-- 
+2.7.4
+

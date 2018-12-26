@@ -1,0 +1,26 @@
+From b41ab737a9dff35cccc1c5e8ddef3dce1a1e1d43 Mon Sep 17 00:00:00 2001
+From: Qiang Yu <yuq825@gmail.com>
+Date: Sat, 8 Dec 2018 19:24:56 +0800
+Subject: [PATCH 064/151] lima: port to 18.3
+
+Signed-off-by: Qiang Yu <yuq825@gmail.com>
+---
+ src/gallium/drivers/lima/lima_resource.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gallium/drivers/lima/lima_resource.c b/src/gallium/drivers/lima/lima_resource.c
+index ab8b0f4..89f699e 100644
+--- a/src/gallium/drivers/lima/lima_resource.c
++++ b/src/gallium/drivers/lima/lima_resource.c
+@@ -66,7 +66,7 @@ lima_resource_create_scanout(struct pipe_screen *pscreen,
+ 
+    assert(handle.type == WINSYS_HANDLE_TYPE_FD);
+    pres = pscreen->resource_from_handle(pscreen, templat, &handle,
+-                                        PIPE_HANDLE_USAGE_WRITE);
++                                        PIPE_HANDLE_USAGE_FRAMEBUFFER_WRITE);
+ 
+    close(handle.handle);
+    if (!pres) {
+-- 
+2.7.4
+

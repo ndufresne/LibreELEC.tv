@@ -1,0 +1,153 @@
+From a6400f743b3355df4d934161dad8a151043b2d07 Mon Sep 17 00:00:00 2001
+From: Neil Armstrong <narmstrong@baylibre.com>
+Date: Fri, 14 Dec 2018 15:25:47 +0000
+Subject: [PATCH 149/151] [HACK] Remove panfrost-mali-base.h.meson.in
+ generation
+
+---
+ src/gallium/drivers/panfrost/include/meson.build   | 16 --------
+ .../drivers/panfrost/include/panfrost-mali-base.h  | 46 ++++++++++++++++++++++
+ .../panfrost/include/panfrost-mali-base.h.meson.in | 44 ---------------------
+ src/gallium/drivers/panfrost/meson.build           |  1 -
+ 4 files changed, 46 insertions(+), 61 deletions(-)
+ delete mode 100644 src/gallium/drivers/panfrost/include/meson.build
+ create mode 100644 src/gallium/drivers/panfrost/include/panfrost-mali-base.h
+ delete mode 100644 src/gallium/drivers/panfrost/include/panfrost-mali-base.h.meson.in
+
+diff --git a/src/gallium/drivers/panfrost/include/meson.build b/src/gallium/drivers/panfrost/include/meson.build
+deleted file mode 100644
+index 10b6856..0000000
+--- a/src/gallium/drivers/panfrost/include/meson.build
++++ /dev/null
+@@ -1,16 +0,0 @@
+-kbase_conf_data = configuration_data()
+-
+-kbase_conf_data.set('PAGE_SHIFT', cc.run('''
+-  #include <unistd.h>
+-  #include <stdio.h>
+-  #include <math.h>
+-
+-  int main() {
+-      printf("%.0f", log2f(sysconf(_SC_PAGESIZE)));
+-      return 0;
+-  }''', dependencies : dep_m).stdout(),
+-  name : 'PAGE_SHIFT')
+-
+-configure_file(output : 'panfrost-mali-base.h',
+-               input : 'panfrost-mali-base.h.meson.in',
+-               configuration : kbase_conf_data)
+diff --git a/src/gallium/drivers/panfrost/include/panfrost-mali-base.h b/src/gallium/drivers/panfrost/include/panfrost-mali-base.h
+new file mode 100644
+index 0000000..a7acd37
+--- /dev/null
++++ b/src/gallium/drivers/panfrost/include/panfrost-mali-base.h
+@@ -0,0 +1,46 @@
++/*
++ * © Copyright 2017-2018 The Panfrost Community
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a
++ * copy of this software and associated documentation files (the "Software"),
++ * to deal in the Software without restriction, including without limitation
++ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
++ * and/or sell copies of the Software, and to permit persons to whom the
++ * Software is furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice (including the next
++ * paragraph) shall be included in all copies or substantial portions of the
++ * Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
++ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++ * SOFTWARE.
++ *
++ * The bridge between our world, and ARM's. For the *_base_* headers, anyway.
++ *
++ */
++
++#ifndef PANFROST_MALI_BASE_H
++#define PANFROST_MALI_BASE_H
++
++#include <assert.h>
++#include <stddef.h>
++#include <util/macros.h>
++#include <unistd.h>
++#include <math.h>
++
++#include <panfrost-misc.h>
++
++#define KBASE_DEBUG_ASSERT assert
++
++#define PAGE_SHIFT ((unsigned)log2f(sysconf(_SC_PAGESIZE)))
++#define PAGE_SIZE (sysconf(_SC_PAGESIZE))
++#define PAGE_MASK (~(PAGE_SIZE-1))
++
++#include <mali_base_kernel.h>
++
++#endif /* !PANFROST_MALI_BASE_H */
+diff --git a/src/gallium/drivers/panfrost/include/panfrost-mali-base.h.meson.in b/src/gallium/drivers/panfrost/include/panfrost-mali-base.h.meson.in
+deleted file mode 100644
+index 880b3fe..0000000
+--- a/src/gallium/drivers/panfrost/include/panfrost-mali-base.h.meson.in
++++ /dev/null
+@@ -1,44 +0,0 @@
+-/*
+- * © Copyright 2017-2018 The Panfrost Community
+- *
+- * Permission is hereby granted, free of charge, to any person obtaining a
+- * copy of this software and associated documentation files (the "Software"),
+- * to deal in the Software without restriction, including without limitation
+- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+- * and/or sell copies of the Software, and to permit persons to whom the
+- * Software is furnished to do so, subject to the following conditions:
+- *
+- * The above copyright notice and this permission notice (including the next
+- * paragraph) shall be included in all copies or substantial portions of the
+- * Software.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+- *
+- * The bridge between our world, and ARM's. For the *_base_* headers, anyway.
+- *
+- */
+-
+-#ifndef PANFROST_MALI_BASE_H
+-#define PANFROST_MALI_BASE_H
+-
+-#include <assert.h>
+-#include <stddef.h>
+-#include <util/macros.h>
+-
+-#include <panfrost-misc.h>
+-
+-#define KBASE_DEBUG_ASSERT assert
+-
+-#mesondefine PAGE_SHIFT
+-#define PAGE_SIZE (1UL << PAGE_SHIFT)
+-#define PAGE_MASK (~(PAGE_SIZE-1))
+-
+-#include <mali_base_kernel.h>
+-
+-#endif /* !PANFROST_MALI_BASE_H */
+diff --git a/src/gallium/drivers/panfrost/meson.build b/src/gallium/drivers/panfrost/meson.build
+index a5ebc1e..9edb79f 100644
+--- a/src/gallium/drivers/panfrost/meson.build
++++ b/src/gallium/drivers/panfrost/meson.build
+@@ -103,5 +103,4 @@ midgard_compiler = executable(
+   build_by_default : true
+ )
+ 
+-subdir('include')
+ subdir('panwrap')
+-- 
+2.7.4
+

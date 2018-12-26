@@ -1,0 +1,27 @@
+From 6e05332b17c6f0256abcb66561d6069c0f3f2375 Mon Sep 17 00:00:00 2001
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date: Wed, 5 Dec 2018 08:48:20 +0100
+Subject: [PATCH 139/151] panfrost: return DRM_FORMAT_MOD_INVALID as the
+ rockchip drm doesn't support modifiers
+
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
+ src/gallium/drivers/panfrost/pan_screen.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gallium/drivers/panfrost/pan_screen.c b/src/gallium/drivers/panfrost/pan_screen.c
+index 82dd7bb..f1e43f6 100644
+--- a/src/gallium/drivers/panfrost/pan_screen.c
++++ b/src/gallium/drivers/panfrost/pan_screen.c
+@@ -730,7 +730,7 @@ panfrost_resource_get_handle(struct pipe_screen *pscreen,
+         struct renderonly_scanout *scanout = rsrc->scanout;
+ 
+         handle->stride = rsrc->stride;
+-        handle->modifier = DRM_FORMAT_MOD_LINEAR;
++        handle->modifier = DRM_FORMAT_MOD_INVALID;
+ 
+         if (handle->type == WINSYS_HANDLE_TYPE_SHARED) {
+                 printf("Missed shared handle\n");
+-- 
+2.7.4
+

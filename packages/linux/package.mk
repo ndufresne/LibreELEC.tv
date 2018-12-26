@@ -32,8 +32,8 @@ case "$LINUX" in
     PKG_BUILD_PERF="no"
     ;;
   amlogic-mainline)
-    PKG_VERSION="61c68f2a2af0f3dc531053524f980a7875e24e7d" # 4.19.7
-    PKG_SHA256="4a2b1a8bc2cdf32504d21ed2f35079c7771dbdc0a8bf0c966f6553be39069f72"
+    PKG_VERSION="178574b66509c9ff7df4ad26c84a8884567e93b4" # 4.19.8
+    PKG_SHA256=""
     PKG_URL="https://github.com/torvalds/linux/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_DIR="$PKG_NAME-$PKG_VERSION*"
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET u-boot-tools-aml:host"
@@ -46,14 +46,14 @@ case "$LINUX" in
     PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
     ;;
   raspberrypi)
-    PKG_VERSION="44e14b21ac57b47246b903b73fa9b9f2d78ff81e" # 4.19.4
-    PKG_SHA256="4cd3aa5167470dacfe1f6e0bcbf09f4461bcb8db1db06b3405c8fcfc0678218a"
+    PKG_VERSION="7958c6b7107c96939530f731c58e6099183af525" # 4.19.8
+    PKG_SHA256="3c1c014007ba215b764411813d1d6409e09566c606b915d9137b5d2432c14665"
     PKG_URL="https://github.com/raspberrypi/linux/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
     ;;
   *)
-    PKG_VERSION="4.19.4"
-    PKG_SHA256="a38f5606bba1f5611c798541f6c3d43267b8599d9e3167471d4b662e33ff47aa"
+    PKG_VERSION="4.19.8"
+    PKG_SHA256="d540d066f307f13f0cfe7e097373cd1af2cc4866b5e36a503775b4e69167e171"
     PKG_URL="https://www.kernel.org/pub/linux/kernel/v4.x/$PKG_NAME-$PKG_VERSION.tar.xz"
     PKG_PATCH_DIRS="default"
     ;;
@@ -114,8 +114,8 @@ post_patch() {
     sed -i -e "s|^CONFIG_ISCSI_IBFT=.*$|# CONFIG_ISCSI_IBFT is not set|" $PKG_BUILD/.config
   fi
 
-  # disable lima support if not enabled
-  if [ ! "$GRAPHIC_DRIVERS" = lima ]; then
+  # disable lima support if 'meson' not enabled
+  if [ ! "$GRAPHIC_DRIVERS" = meson ]; then
     sed -i -e "s|^CONFIG_DRM_LIMA=.*$|# CONFIG_DRM_LIMA is not set|" $PKG_BUILD/.config
   fi
 

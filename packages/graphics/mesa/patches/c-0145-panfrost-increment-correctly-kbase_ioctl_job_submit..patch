@@ -1,0 +1,30 @@
+From f8da84ad3a04795c89f9c18d7e2abc86b966c8e5 Mon Sep 17 00:00:00 2001
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Date: Mon, 10 Dec 2018 14:35:51 +0100
+Subject: [PATCH 145/151] panfrost: increment correctly
+ kbase_ioctl_job_submit.addr array pointer
+
+Otherwise instead of passing a pointer to the next atom, we pass a
+pointer 1-byte into the first atom.
+
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
+ src/gallium/drivers/panfrost/pan_context.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/gallium/drivers/panfrost/pan_context.c b/src/gallium/drivers/panfrost/pan_context.c
+index cf49698..d7b672b 100644
+--- a/src/gallium/drivers/panfrost/pan_context.c
++++ b/src/gallium/drivers/panfrost/pan_context.c
+@@ -1497,7 +1497,7 @@ panfrost_submit_frame(struct panfrost_context *ctx, bool flush_immediate)
+                 atoms[i].compat_core_req = atoms[i].core_req;
+ 
+         struct kbase_ioctl_job_submit submit = {
+-                .addr = (mali_ptr)atoms + (has_draws ? 0 : 1),
++                .addr = (mali_ptr)(atoms + (has_draws ? 0 : 1)),
+                 .nr_atoms = has_draws ? 2 : 1,
+                 .stride = sizeof(struct base_jd_atom_v2),
+         };
+-- 
+2.7.4
+

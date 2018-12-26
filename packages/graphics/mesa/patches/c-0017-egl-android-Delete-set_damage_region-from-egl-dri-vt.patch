@@ -1,0 +1,223 @@
+From 73a08152304da2f5fd1ef504432c0cf8ef7e2ad2 Mon Sep 17 00:00:00 2001
+From: Harish Krupo <harish.krupo.kps@intel.com>
+Date: Wed, 4 Jul 2018 18:22:58 +0530
+Subject: [PATCH 017/151] egl/android: Delete set_damage_region from egl dri
+ vtbl
+
+The intension of the KHR_partial_update was not to send the damage back
+to the platform but to send the damage to the driver to ensure that the
+following rendering could be restricted to those regions.
+This patch removes the set_damage_region from the egl_dri vtbl and all
+the platfrom_*.c files.
+Then upcomming patches add a new dri2 interface for the drivers to
+implement
+
+Signed-off-by: Harish Krupo <harish.krupo.kps@intel.com>
+---
+ src/egl/drivers/dri2/egl_dri2.c             |  2 +-
+ src/egl/drivers/dri2/egl_dri2.h             |  4 ---
+ src/egl/drivers/dri2/egl_dri2_fallbacks.h   |  9 ------
+ src/egl/drivers/dri2/platform_android.c     | 45 -----------------------------
+ src/egl/drivers/dri2/platform_drm.c         |  1 -
+ src/egl/drivers/dri2/platform_surfaceless.c |  1 -
+ src/egl/drivers/dri2/platform_wayland.c     |  1 -
+ src/egl/drivers/dri2/platform_x11.c         |  2 --
+ src/egl/drivers/dri2/platform_x11_dri3.c    |  1 -
+ 9 files changed, 1 insertion(+), 65 deletions(-)
+
+diff --git a/src/egl/drivers/dri2/egl_dri2.c b/src/egl/drivers/dri2/egl_dri2.c
+index 28b3745..80b388b 100644
+--- a/src/egl/drivers/dri2/egl_dri2.c
++++ b/src/egl/drivers/dri2/egl_dri2.c
+@@ -1696,7 +1696,7 @@ dri2_set_damage_region(_EGLDriver *drv, _EGLDisplay *dpy, _EGLSurface *surf,
+                        EGLint *rects, EGLint n_rects)
+ {
+    struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
+-   return dri2_dpy->vtbl->set_damage_region(drv, dpy, surf, rects, n_rects);
++   return false;
+ }
+ 
+ static EGLBoolean
+diff --git a/src/egl/drivers/dri2/egl_dri2.h b/src/egl/drivers/dri2/egl_dri2.h
+index 4abe1ba..5a40d63 100644
+--- a/src/egl/drivers/dri2/egl_dri2.h
++++ b/src/egl/drivers/dri2/egl_dri2.h
+@@ -119,10 +119,6 @@ struct dri2_egl_display_vtbl {
+                                           _EGLSurface *surface,
+                                           const EGLint *rects, EGLint n_rects);
+ 
+-   EGLBoolean (*set_damage_region)(_EGLDriver *drv, _EGLDisplay *dpy,
+-                                   _EGLSurface *surface,
+-                                   const EGLint *rects, EGLint n_rects);
+-
+    EGLBoolean (*swap_buffers_region)(_EGLDriver *drv, _EGLDisplay *dpy,
+                                      _EGLSurface *surf, EGLint numRects,
+                                      const EGLint *rects);
+diff --git a/src/egl/drivers/dri2/egl_dri2_fallbacks.h b/src/egl/drivers/dri2/egl_dri2_fallbacks.h
+index 1482f17..fd286cd 100644
+--- a/src/egl/drivers/dri2/egl_dri2_fallbacks.h
++++ b/src/egl/drivers/dri2/egl_dri2_fallbacks.h
+@@ -62,7 +62,6 @@ dri2_fallback_swap_buffers_with_damage(_EGLDriver *drv, _EGLDisplay *dpy,
+                                       const EGLint *rects, EGLint n_rects)
+ {
+    struct dri2_egl_display *dri2_dpy = dri2_egl_display(dpy);
+-   dri2_dpy->vtbl->set_damage_region(drv, dpy, surf, rects, n_rects);
+    return dri2_dpy->vtbl->swap_buffers(drv, dpy, surf);
+ }
+ 
+@@ -90,14 +89,6 @@ dri2_fallback_copy_buffers(_EGLDriver *drv, _EGLDisplay *dpy,
+    return _eglError(EGL_BAD_NATIVE_PIXMAP, "no support for native pixmaps");
+ }
+ 
+-static inline EGLBoolean
+-dri2_fallback_set_damage_region(_EGLDriver *drv, _EGLDisplay *dpy,
+-                                _EGLSurface *surf,
+-                                const EGLint *rects, EGLint n_rects)
+-{
+-   return EGL_FALSE;
+-}
+-
+ static inline EGLint
+ dri2_fallback_query_buffer_age(_EGLDriver *drv, _EGLDisplay *dpy,
+                                _EGLSurface *surf)
+diff --git a/src/egl/drivers/dri2/platform_android.c b/src/egl/drivers/dri2/platform_android.c
+index 7fec711..e4eacc1 100644
+--- a/src/egl/drivers/dri2/platform_android.c
++++ b/src/egl/drivers/dri2/platform_android.c
+@@ -730,43 +730,6 @@ droid_swap_buffers(_EGLDriver *drv, _EGLDisplay *disp, _EGLSurface *draw)
+    return EGL_TRUE;
+ }
+ 
+-#if ANDROID_API_LEVEL >= 23
+-static EGLBoolean
+-droid_set_damage_region(_EGLDriver *drv,
+-                        _EGLDisplay *disp,
+-                        _EGLSurface *draw, const EGLint* rects, EGLint n_rects)
+-{
+-   struct dri2_egl_display *dri2_dpy = dri2_egl_display(disp);
+-   struct dri2_egl_surface *dri2_surf = dri2_egl_surface(draw);
+-   android_native_rect_t* droid_rects = NULL;
+-   int ret;
+-
+-   if (n_rects == 0)
+-      return EGL_TRUE;
+-
+-   droid_rects = malloc(n_rects * sizeof(android_native_rect_t));
+-   if (droid_rects == NULL)
+-     return _eglError(EGL_BAD_ALLOC, "eglSetDamageRegionKHR");
+-
+-   for (EGLint num_drects = 0; num_drects < n_rects; num_drects++) {
+-      EGLint i = num_drects * 4;
+-      droid_rects[num_drects].left = rects[i];
+-      droid_rects[num_drects].bottom = rects[i + 1];
+-      droid_rects[num_drects].right = rects[i] + rects[i + 2];
+-      droid_rects[num_drects].top = rects[i + 1] + rects[i + 3];
+-   }
+-
+-   /*
+-    * XXX/TODO: Need to check for other return values
+-    */
+-
+-   ret = native_window_set_surface_damage(dri2_surf->window, droid_rects, n_rects);
+-   free(droid_rects);
+-
+-   return ret == 0 ? EGL_TRUE : EGL_FALSE;
+-}
+-#endif
+-
+ static _EGLImage *
+ droid_create_image_from_prime_fd_yuv(_EGLDisplay *disp, _EGLContext *ctx,
+                                      struct ANativeWindowBuffer *buf, int fd)
+@@ -1236,11 +1199,6 @@ static const struct dri2_egl_display_vtbl droid_display_vtbl = {
+    .swap_buffers_with_damage = dri2_fallback_swap_buffers_with_damage, /* Android implements the function */
+    .swap_buffers_region = dri2_fallback_swap_buffers_region,
+    .swap_interval = droid_swap_interval,
+-#if ANDROID_API_LEVEL >= 23
+-   .set_damage_region = droid_set_damage_region,
+-#else
+-   .set_damage_region = dri2_fallback_set_damage_region,
+-#endif
+    .post_sub_buffer = dri2_fallback_post_sub_buffer,
+    .copy_buffers = dri2_fallback_copy_buffers,
+    .query_buffer_age = droid_query_buffer_age,
+@@ -1584,9 +1542,6 @@ dri2_initialize_android(_EGLDriver *drv, _EGLDisplay *disp)
+    disp->Extensions.ANDROID_framebuffer_target = EGL_TRUE;
+    disp->Extensions.ANDROID_image_native_buffer = EGL_TRUE;
+    disp->Extensions.ANDROID_recordable = EGL_TRUE;
+-#if ANDROID_API_LEVEL >= 23
+-   disp->Extensions.KHR_partial_update = EGL_TRUE;
+-#endif
+    disp->Extensions.KHR_image = EGL_TRUE;
+ #if ANDROID_API_LEVEL >= 24
+    if (dri2_dpy->mutable_render_buffer &&
+diff --git a/src/egl/drivers/dri2/platform_drm.c b/src/egl/drivers/dri2/platform_drm.c
+index 439827d..151d0f2 100644
+--- a/src/egl/drivers/dri2/platform_drm.c
++++ b/src/egl/drivers/dri2/platform_drm.c
+@@ -682,7 +682,6 @@ static const struct dri2_egl_display_vtbl dri2_drm_display_vtbl = {
+    .swap_buffers = dri2_drm_swap_buffers,
+    .swap_buffers_with_damage = dri2_fallback_swap_buffers_with_damage,
+    .swap_buffers_region = dri2_fallback_swap_buffers_region,
+-   .set_damage_region = dri2_fallback_set_damage_region,
+    .post_sub_buffer = dri2_fallback_post_sub_buffer,
+    .copy_buffers = dri2_fallback_copy_buffers,
+    .query_buffer_age = dri2_drm_query_buffer_age,
+diff --git a/src/egl/drivers/dri2/platform_surfaceless.c b/src/egl/drivers/dri2/platform_surfaceless.c
+index 1edfca2..635fb65 100644
+--- a/src/egl/drivers/dri2/platform_surfaceless.c
++++ b/src/egl/drivers/dri2/platform_surfaceless.c
+@@ -227,7 +227,6 @@ static const struct dri2_egl_display_vtbl dri2_surfaceless_display_vtbl = {
+    .destroy_surface = surfaceless_destroy_surface,
+    .create_image = dri2_create_image_khr,
+    .swap_buffers_region = dri2_fallback_swap_buffers_region,
+-   .set_damage_region = dri2_fallback_set_damage_region,
+    .post_sub_buffer = dri2_fallback_post_sub_buffer,
+    .copy_buffers = dri2_fallback_copy_buffers,
+    .query_buffer_age = dri2_fallback_query_buffer_age,
+diff --git a/src/egl/drivers/dri2/platform_wayland.c b/src/egl/drivers/dri2/platform_wayland.c
+index 04f6b35..474b6b8 100644
+--- a/src/egl/drivers/dri2/platform_wayland.c
++++ b/src/egl/drivers/dri2/platform_wayland.c
+@@ -1268,7 +1268,6 @@ static const struct dri2_egl_display_vtbl dri2_wl_display_vtbl = {
+    .swap_buffers = dri2_wl_swap_buffers,
+    .swap_buffers_with_damage = dri2_wl_swap_buffers_with_damage,
+    .swap_buffers_region = dri2_fallback_swap_buffers_region,
+-   .set_damage_region = dri2_fallback_set_damage_region,
+    .post_sub_buffer = dri2_fallback_post_sub_buffer,
+    .copy_buffers = dri2_fallback_copy_buffers,
+    .query_buffer_age = dri2_wl_query_buffer_age,
+diff --git a/src/egl/drivers/dri2/platform_x11.c b/src/egl/drivers/dri2/platform_x11.c
+index 8ac3c03..22bd274 100644
+--- a/src/egl/drivers/dri2/platform_x11.c
++++ b/src/egl/drivers/dri2/platform_x11.c
+@@ -1182,7 +1182,6 @@ static const struct dri2_egl_display_vtbl dri2_x11_swrast_display_vtbl = {
+    .destroy_surface = dri2_x11_destroy_surface,
+    .create_image = dri2_create_image_khr,
+    .swap_buffers = dri2_x11_swap_buffers,
+-   .set_damage_region = dri2_fallback_set_damage_region,
+    .swap_buffers_region = dri2_fallback_swap_buffers_region,
+    .post_sub_buffer = dri2_fallback_post_sub_buffer,
+    /* XXX: should really implement this since X11 has pixmaps */
+@@ -1205,7 +1204,6 @@ static const struct dri2_egl_display_vtbl dri2_x11_display_vtbl = {
+    .swap_buffers = dri2_x11_swap_buffers,
+    .swap_buffers_with_damage = dri2_fallback_swap_buffers_with_damage,
+    .swap_buffers_region = dri2_x11_swap_buffers_region,
+-   .set_damage_region = dri2_fallback_set_damage_region,
+    .post_sub_buffer = dri2_x11_post_sub_buffer,
+    .copy_buffers = dri2_x11_copy_buffers,
+    .query_buffer_age = dri2_fallback_query_buffer_age,
+diff --git a/src/egl/drivers/dri2/platform_x11_dri3.c b/src/egl/drivers/dri2/platform_x11_dri3.c
+index 1206cd3..259e98d 100644
+--- a/src/egl/drivers/dri2/platform_x11_dri3.c
++++ b/src/egl/drivers/dri2/platform_x11_dri3.c
+@@ -498,7 +498,6 @@ struct dri2_egl_display_vtbl dri3_x11_display_vtbl = {
+    .swap_buffers = dri3_swap_buffers,
+    .swap_buffers_with_damage = dri2_fallback_swap_buffers_with_damage,
+    .swap_buffers_region = dri2_fallback_swap_buffers_region,
+-   .set_damage_region = dri2_fallback_set_damage_region,
+    .post_sub_buffer = dri2_fallback_post_sub_buffer,
+    .copy_buffers = dri3_copy_buffers,
+    .query_buffer_age = dri3_query_buffer_age,
+-- 
+2.7.4
+

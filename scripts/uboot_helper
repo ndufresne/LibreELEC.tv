@@ -28,11 +28,8 @@ devices = {
     'LaFrite' : { 'LaFrite' : { 'dtb' : 'meson-gxl-s805x-p241.dtb', 'config' : 'libretech-cc_defconfig' }, },
     'LePotato' : { 'LePotato' : { 'dtb' : 'meson-gxl-s905x-libretech-cc.dtb', 'config' : 'libretech-cc_defconfig' }, },
     'Khadas_VIM' : { 'Khadas_VIM' : { 'dtb' : 'meson-gxl-s905x-khadas-vim.dtb', 'config' : 'khadas-vim_defconfig' }, },
-    'Khadas_VIM_lima' : { 'Khadas_VIM_lima' : { 'dtb' : 'meson-gxl-s905x-khadas-vim.dtb', 'config' : 'khadas-vim_defconfig' }, },
     'LePotato_lima' : { 'LePotato_lima' : { 'dtb' : 'meson-gxl-s905x-libretech-cc.dtb', 'config' : 'libretech-cc_defconfig' }, },
     'Khadas_VIM2' : { 'Khadas_VIM2' : { 'dtb' : 'meson-gxm-khadas-vim2.dtb', 'config' : 'khadas-vim_defconfig' }, },
-    'Khadas_VIM2_mesa' : { 'Khadas_VIM2_mesa' : { 'dtb' : 'meson-gxm-khadas-vim2.dtb', 'config' : 'khadas-vim_defconfig' }, },
-    'Khadas_VIM2_x11' : { 'Khadas_VIM2_x11' : { 'dtb' : 'meson-gxm-khadas-vim2.dtb', 'config' : 'khadas-vim_defconfig' }, },
     'NanoPi_K2' : { 'NanoPi_K2' : { 'dtb' : 'meson-gxbb-nanopi-k2.dtb', 'config' : 'nanopi-k2_defconfig' }, },
   },
   'Rockchip' : {
@@ -46,6 +43,7 @@ devices = {
       'rockbox' : { 'dtb' : 'rk3328-rockbox.dtb', 'config' : 'evb-rk3328_defconfig' },
     },
     'RK3399' : {
+      'khadas-edge' : { 'dtb' : 'rk3399-khadas-edge.dtb', 'config' : 'evb-rk3399_config' },
       'rock960' : { 'dtb' : 'rk3399-rock960.dtb', 'config' : 'evb-rk3399_config' },
       'rockpro64' : { 'dtb' : 'rk3399-rockpro64.dtb', 'config' : 'evb-rk3399_config' },
       'sapphire' : { 'dtb' : 'rk3399-sapphire.dtb', 'config' : 'evb-rk3399_config' },

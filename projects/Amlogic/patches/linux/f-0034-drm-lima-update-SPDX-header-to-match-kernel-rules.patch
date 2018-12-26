@@ -1,7 +1,7 @@
 From b096aea0e4c58be9aa8b8e5e686e2f90c4ad5af8 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Thu, 31 May 2018 22:37:45 +0800
-Subject: [PATCH 34/44] drm/lima: update SPDX header to match kernel rules
+Subject: [PATCH 34/46] drm/lima: update SPDX header to match kernel rules
 
 See
 https://www.kernel.org/doc/html/latest/process/license-rules.html

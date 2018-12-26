@@ -26,9 +26,7 @@
 
   # Additional kernel make parameters (for example to specify the u-boot loadaddress)
     KERNEL_MAKE_EXTRACMD=""
-    KERNEL_MAKE_EXTRACMD+=" rockchip/rk3399-khadas-captain-linux.dtb"
-    KERNEL_MAKE_EXTRACMD+=" rockchip/rk3399-khadas-edge-linux.dtb"
-    KERNEL_MAKE_EXTRACMD+=" rockchip/rk3399-khadas-edgev-linux.dtb"
+    KERNEL_MAKE_EXTRACMD+=" rockchip/rk3399-khadas-edge.dtb"
     KERNEL_MAKE_EXTRACMD+=" rockchip/rk3399-rock960.dtb"
     KERNEL_MAKE_EXTRACMD+=" rockchip/rk3399-rockpro64.dtb"
     KERNEL_MAKE_EXTRACMD+=" rockchip/rk3399-sapphire.dtb"
@@ -37,7 +35,7 @@
     MALI_FAMILY="t860"
 
   # kernel serial console
-#    EXTRA_CMDLINE="console=uart8250,mmio32,0xff1a0000 console=tty0"
+    EXTRA_CMDLINE="console=uart8250,mmio32,0xff1a0000 console=tty0"
 
     UBOOT_VERSION="vendor"
 
@@ -45,19 +43,3 @@
   # Space separated list is supported,
   # e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"
     ADDITIONAL_PACKAGES+=" rockchip-autoscript"
-
-  # additional drivers to install:
-  # for a list of additinoal drivers see packages/linux-drivers
-  # Space separated list is supported,
-  # e.g. ADDITIONAL_DRIVERS="DRIVER1 DRIVER2"
-#    ADDITIONAL_DRIVERS=""
-
-  # additional Firmware to use (dvb-firmware, misc-firmware, wlan-firmware)
-  # Space separated list is supported,
-  # e.g. FIRMWARE="dvb-firmware misc-firmware wlan-firmware"
-#    FIRMWARE="misc-firmware rockchip-firmware"
-
-  # driver addons to install:
-  # for a list of additinoal drivers see packages/linux-driver-addons
-  # Space separated list is supported,
-#    DRIVER_ADDONS=""

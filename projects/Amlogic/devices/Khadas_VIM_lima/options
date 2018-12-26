@@ -24,16 +24,10 @@
   # KODI Player implementation to use (default / bcm2835-driver / libfslvpuwrap / libamcodec)
     KODIPLAYER_DRIVER="mesa"
 
-  # additional drivers to install:
-  # for a list of additinoal drivers see packages/linux-drivers
-  # Space separated list is supported,
-  # e.g. ADDITIONAL_DRIVERS="DRIVER1 DRIVER2"
-    ADDITIONAL_DRIVERS=""
-
   # additional packages to install:
   # Space separated list is supported,
   # e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"
-    ADDITIONAL_PACKAGES+=" aml_autoscript cpumac"
+    ADDITIONAL_PACKAGES+=" aml_autoscript cpumac wireguard-tools"
 
   # additional Firmware to use (dvb-firmware, misc-firmware, wlan-firmware)
   # Space separated list is supported,

@@ -154,8 +154,8 @@ do_lima(){
   rm projects/Amlogic/patches/linux/f-* 2&>/dev/null
   cd ~/linux.lima
   rm *.patch 2&>/dev/null
-  git checkout lima-4.19-rc4
   git fetch origin lima-4.19-rc4
+  git checkout lima-4.19-rc4
   git reset --hard origin/lima-4.19-rc4
   git format-patch --start-number 0001 7876320f88802b22d4e2daf7eb027dd14175a0f8 #4.19-rc4
   for filename in *.patch; do mv "$filename" "f-$filename"; done;
@@ -167,11 +167,24 @@ do_lima(){
   rm packages/graphics/mesa/a-* 2&>/dev/null
   cd ~/mesa.lima
   rm *.patch 2&>/dev/null
-  git checkout lima-18.2
-  git fetch origin lima-18.2
-  git reset --hard origin/lima-18.2
-  git format-patch --start-number 0001 f34bddc325c414cb8ee21666bd307512577efdef #18.2.5
+  git fetch origin lima-18.3
+  git checkout lima-18.3
+  git reset --hard origin/lima-18.3
+  git format-patch --start-number 0001 d81beab96afb403915805435fd4b810a00291b99 #18.3.0
   for filename in *.patch; do mv "$filename" "a-$filename"; done;
+  mv *.patch $DIR/packages/graphics/mesa/patches/
+}
+
+do_panfrost(){
+  # PANFROST MESA PATCHES
+  rm packages/graphics/mesa/c-* 2&>/dev/null
+  cd ~/mesa.narmstrong
+  rm *.patch 2&>/dev/null
+  git fetch origin lima-panfrost-18.3
+  git checkout lima-panfrost-18.3
+  git reset --hard origin/lima-panfrost-18.3
+  git format-patch --start-number 0001 d81beab96afb403915805435fd4b810a00291b99 #18.3.0
+  for filename in *.patch; do mv "$filename" "c-$filename"; done;
   mv *.patch $DIR/packages/graphics/mesa/patches/
 }
 
@@ -194,8 +207,9 @@ case $1 in
   lima)
     do_lima
     ;;
-
-
+  panfrost)
+    do_panfrost
+    ;;
   all|*)
     do_narmstrong
     do_upstream

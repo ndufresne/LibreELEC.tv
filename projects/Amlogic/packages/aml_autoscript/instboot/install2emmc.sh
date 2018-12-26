@@ -26,7 +26,7 @@ dd if=/flash/u-boot-default.img of="${DEV_EMMC}" conv=fsync bs=512 skip=1 seek=1
 
 sync
 
-IMAGE_KERNEL="/flash/Image"
+IMAGE_KERNEL="/flash/KERNEL"
 IMAGE_SYSTEM="/flash/SYSTEM"
 SCRIPT_EMMC="/flash/emmc_autoscript"
 SCRIPT_ENV="/flash/uEnv.ini"
