@@ -27,7 +27,7 @@
   # additional Firmware to use (dvb-firmware, misc-firmware, wlan-firmware)
   # Space separated list is supported,
   # e.g. FIRMWARE="dvb-firmware misc-firmware wlan-firmware"
-    FIRMWARE+=" brcmfmac_sdio-firmware-aml"
+    FIRMWARE+=" brcmfmac_sdio-firmware-aml ath10k-firmware qca-firmware"
 
   # add OOTB support for IR remote
-    IR_REMOTE_KEYMAPS+=" khadas_vim"
+#    IR_REMOTE_KEYMAPS+=" khadas_vim"
