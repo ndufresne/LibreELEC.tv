@@ -3,12 +3,12 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="openvfd"
-PKG_VERSION="d5af7690fc5148f6103964b950d1dc237ef08513"
-PKG_SHA256="3a09c8a61d3a106b8038433788c6c948abb9f4a2198e2934527984f72db395bc"
+PKG_VERSION="6897fc44fe8b8fe02c599c8fa9b2ff3c3f288ac3"
+PKG_SHA256="5e544c05a0ec343bd33cc7d4ab8b443933159204fda47dd6016fc54b77f616a0"
 PKG_ARCH="arm aarch64"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/arthur-liberman/linux_openvfd"
-PKG_URL="https://github.com/arthur-liberman/linux_openvfd/archive/$PKG_VERSION.tar.gz"
+PKG_URL="https://github.com/chewitt/linux_openvfd/archive/$PKG_VERSION.tar.gz"
 PKG_SOURCE_DIR="linux_openvfd-$PKG_VERSION*"
 PKG_DEPENDS_TARGET="toolchain linux"
 PKG_NEED_UNPACK="$LINUX_DEPENDS"
@@ -37,6 +37,9 @@ makeinstall_target() {
 
   mkdir -p $INSTALL/usr/sbin
     cp -P OpenVFDService $INSTALL/usr/sbin
+
+  mkdir -p $INSTALL/usr/config/openvfd
+    cp -P $PKG_BUILD/conf/* $INSTALL/usr/config/openvfd
 }
 
 post_install() {

@@ -3,15 +3,36 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="mesa"
-PKG_VERSION="18.3.1"
-PKG_SHA256="4d59968c5aca7a4bbcfdb6f7c2a4036fac3e1bdad98ac6b239b72cdbc2a9ef21"
 PKG_LICENSE="OSS"
 PKG_SITE="http://www.mesa3d.org/"
-PKG_URL="https://github.com/mesa3d/mesa/archive/mesa-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain expat libdrm Mako:host"
 PKG_LONGDESC="Mesa is a 3-D graphics library with an API."
 PKG_TOOLCHAIN="meson"
 PKG_BUILD_FLAGS="+lto"
+
+case $PROJECT in
+  Amlogic)
+    case $DEVICE in
+          Khadas_VIM2|Nexbox_A1)
+            PKG_VERSION="322802d1893cb38c4b4075ce50caffdc290f8272"
+            PKG_SHA256=""
+            PKG_URL="https://github.com/chewitt/mesa/archive/$PKG_VERSION.tar.gz"
+            PKG_SOURCE_NAME="mesa-$PKG_VERSION.tar.gz"
+	    #PKG_URL="https://gitlab.freedesktop.org/narmstrong/panfrost-mesa/-/archive/$PKG_VERSION/mesa-$PKG_VERSION.tar.gz"
+	    ;;
+	  *)
+            PKG_VERSION="2c752b821704962c3f6352f9bc9174f3feb6902d"
+            PKG_SHA256="177e7a6a2866f24c37ed0aed842c3c51d9a0d015cbbe80b6451dc3e921a28c25"
+	    PKG_URL="https://gitlab.freedesktop.org/lima/mesa/-/archive/$PKG_VERSION/mesa-$PKG_VERSION.tar.gz"
+	    ;;
+    esac
+    ;;
+  *)
+    PKG_VERSION="18.3.1"
+    PKG_SHA256="4d59968c5aca7a4bbcfdb6f7c2a4036fac3e1bdad98ac6b239b72cdbc2a9ef21"
+    PKG_URL="https://github.com/mesa3d/mesa/archive/mesa-$PKG_VERSION.tar.gz"
+    ;;
+esac
 
 get_graphicdrivers
 

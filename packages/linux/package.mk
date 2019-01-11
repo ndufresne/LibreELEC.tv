@@ -32,8 +32,8 @@ case "$LINUX" in
     PKG_BUILD_PERF="no"
     ;;
   amlogic-mainline)
-    PKG_VERSION="178574b66509c9ff7df4ad26c84a8884567e93b4" # 4.19.8
-    PKG_SHA256=""
+    PKG_VERSION="c04c050f5bf98845bfe22164b8a1503d696a6e26" # 4.19.13
+    PKG_SHA256="65f0127dd00dc544d70a8c435f289f65d6b2294ccf0768c8ea34a6c0c9d0561d"
     PKG_URL="https://github.com/torvalds/linux/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_DIR="$PKG_NAME-$PKG_VERSION*"
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET u-boot-tools-aml:host"
@@ -219,7 +219,7 @@ make_target() {
   ( cd $ROOT
     rm -rf $BUILD/initramfs
     $SCRIPTS/install initramfs
-  )
+  ) || die "FAILURE: Building initramfs"
 
   if [ "$BOOTLOADER" = "u-boot" -a -n "$KERNEL_UBOOT_EXTRA_TARGET" ]; then
     for extra_target in "$KERNEL_UBOOT_EXTRA_TARGET"; do

@@ -1,6 +1,3 @@
-  # build and install driver addons (yes / no)
-    DRIVER_ADDONS_SUPPORT="no"
-
   # Configuration for u-boot
     UBOOT_VERSION="vendor"
 
@@ -12,6 +9,9 @@
 
   # Additional kernel make parameters (for example to specify the u-boot loadaddress)
     KERNEL_MAKE_EXTRACMD=" dtbs"
+
+  # Graphic drivers to use
+    GRAPHIC_DRIVERS="panfrost"
 
   # additional drivers to install:
   # for a list of additinoal drivers see packages/linux-drivers

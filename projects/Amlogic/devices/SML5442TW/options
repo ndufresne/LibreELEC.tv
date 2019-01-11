@@ -1,6 +1,3 @@
-  # build and install driver addons (yes / no)
-    DRIVER_ADDONS_SUPPORT="no"
-
   # Configuration for u-boot
     UBOOT_VERSION="vendor"
 
@@ -12,12 +9,6 @@
 
   # Additional options to be passed to Android mkbootimg
     ANDROID_BOOTIMG_OPTIONS="--base 0x0 --kernel_offset 0x1080000"
-
-  # MALI GPU family (dvalin,gondol,midgard,utgard)
-    MALI_FAMILY="utgard"
-
-  # additional drivers to install:
-    ADDITIONAL_DRIVERS="mali-utgard"
 
   # kernel image name
     KERNEL_NAME="kernel.img"
