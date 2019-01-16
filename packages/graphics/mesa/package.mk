@@ -13,12 +13,14 @@ PKG_BUILD_FLAGS="+lto"
 case $PROJECT in
   Amlogic)
     case $DEVICE in
-          Khadas_VIM2|Nexbox_A1)
-            PKG_VERSION="322802d1893cb38c4b4075ce50caffdc290f8272"
-            PKG_SHA256=""
+          Khadas_VIM2|Nexbox_A1|S912)
+            PKG_VERSION="e8ae17e35aad5a667dbc7deacc850029398ea835" # github
+            #PKG_VERSION="76ae2649d4071b3a09394ee91c1608aeefbaab01" # gitlab
+            PKG_SHA256="6e2cc73dcf3d008d8a0caa4e3851c6e157637868ad9882bad20576eaa2ce68b9"
             PKG_URL="https://github.com/chewitt/mesa/archive/$PKG_VERSION.tar.gz"
             PKG_SOURCE_NAME="mesa-$PKG_VERSION.tar.gz"
 	    #PKG_URL="https://gitlab.freedesktop.org/narmstrong/panfrost-mesa/-/archive/$PKG_VERSION/mesa-$PKG_VERSION.tar.gz"
+	    #PKG_URL="https://gitlab.freedesktop.org/panfrost/mesa/-/archive/$PKG_VERSION/mesa-$PKG_VERSION.tar.gz"
 	    ;;
 	  *)
             PKG_VERSION="2c752b821704962c3f6352f9bc9174f3feb6902d"

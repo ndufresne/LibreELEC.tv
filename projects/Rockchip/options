@@ -90,13 +90,13 @@
     case $TARGET_ARCH in
       aarch64)
         ADDON_SERVER_URL="https://balbes150.libreelec.tv/addons"
+	ADDON_PATH="$ADDON_VERSION/Khadas_VIM/$TARGET_ARCH"
         ;;
       arm)
         ADDON_SERVER_URL="https://amlgx.libreelec.tv"
+ 	ADDON_PATH="$ADDON_VERSION/${DEVICE:-$PROJECT}/$TARGET_ARCH"
         ;;
     esac
 
   # set the addon dirs
-#    ADDON_PATH="$ADDON_VERSION/${DEVICE:-$PROJECT}/$TARGET_ARCH"
-    ADDON_PATH="$ADDON_VERSION/Khadas_VIM/$TARGET_ARCH"
     ADDON_URL="$ADDON_SERVER_URL/$ADDON_PATH"

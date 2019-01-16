@@ -23,6 +23,20 @@ case "$LINUX" in
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET aml-dtbtools:host u-boot-tools-aml:host"
     PKG_BUILD_PERF="no"
     ;;
+  amlogic-s8xx)
+    PKG_VERSION="1be06c2371eb3cc3376b282cf77b4d4dee50f01f"
+    PKG_URL="https://github.com/kszaq/linux/archive/$PKG_VERSION.tar.gz"
+    PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
+    PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET aml-dtbtools:host u-boot-tools-aml:host"
+    PKG_BUILD_PERF="no"
+    ;;
+  amlogic-s805)
+    PKG_VERSION="dbc3c7eb1d562eec234dac5f449b8fa89fc6a130"
+    PKG_URL="https://github.com/150balbes/Amlogic_s8xx-kernel/archive/$PKG_VERSION.tar.gz"
+    PKG_SOURCE_NAME="Amlogic_s8xx-kernel-$PKG_VERSION.tar.gz"
+    PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET aml-dtbtools:host u-boot-tools-aml:host"
+    PKG_BUILD_PERF="no"
+    ;;
   amlogic-3.14)
     PKG_VERSION="6d8fbb4ee61a7779ac57b5961e076f0c63ff8b65"
     PKG_SHA256="ef05c88779c893f92e92e5315d0e5396f34c32289726c301fae7ffe8c4214227"
@@ -46,14 +60,14 @@ case "$LINUX" in
     PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
     ;;
   raspberrypi)
-    PKG_VERSION="e75aca6e66f6091dd3b9c316750025c8e9684f16" # 4.19.12
-    PKG_SHA256="0f29fb52dc4d7fd705c9215e8a910a6e854b8014e697bdd7b6ce4854d7e342f4"
+    PKG_VERSION="7e312d57b01683ee93699fdac1121d5cc62fb211" # 4.19.14
+    PKG_SHA256="666ffbf5783b08a144e00c7f94a81e60678ce14e1f809a9126d62ea67981de24"
     PKG_URL="https://github.com/raspberrypi/linux/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
     ;;
   *)
-    PKG_VERSION="4.19.12"
-    PKG_SHA256="4d81ac539d62617f5b52f25971749d8c6d3a200deee76898bb99be8492999b77"
+    PKG_VERSION="4.19.14"
+    PKG_SHA256="24326849dd5120186d8db165ad4410bf0eb28ef07a20141acbad49f125f71c46"
     PKG_URL="https://www.kernel.org/pub/linux/kernel/v4.x/$PKG_NAME-$PKG_VERSION.tar.xz"
     PKG_PATCH_DIRS="default"
     ;;
