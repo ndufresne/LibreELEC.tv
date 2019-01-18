@@ -22,10 +22,11 @@ case $PROJECT in
     PKG_MALI_PLATFORM_CONFIG="sunxi"
     ;;
   Amlogic)
-    PKG_VERSION="b4efb12e2667ec89eb187d8f59977fbb6e10b9bb" #r27p0 for panfrost
-    PKG_SHA256="b3aa9308bb671b00f0f2a6cf011517df897696ce11d248d3ac0b06cd0a33141b"
-    PKG_URL="https://github.com/LibreELEC/mali-midgard/archive/$PKG_VERSION.tar.gz"
-    PKG_SOURCE_DIR="mali-midgard-$PKG_VERSION*"
+    PKG_VERSION="46d7ff7772e59d302c3850880f96992c362138d5" # mali_kbase for panfrost
+    PKG_SHA256="de8591c93c50b1e0515795abf7b946e412aa9121d967e0268a49483ddd59c8af"
+    PKG_URL="https://gitlab.freedesktop.org/panfrost/mali_kbase/-/archive/$PKG_VERSION/mali_kbase-$PKG_VERSION.tar.gz"
+    PKG_SOURCE_DIR="mali_kbase-$PKG_VERSION*"
+    PKG_PATCH_DIRS="amlogic"
     PKG_MALI_PLATFORM_CONFIG="config.meson-gxm"
     ;;
   Amlogic_Legacy)

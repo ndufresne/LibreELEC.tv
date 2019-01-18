@@ -1,10 +1,10 @@
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi	2018-06-11 12:48:21.613571301 +0100
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi	2018-06-11 12:49:49.343455688 +0100
-@@ -38,7 +38,7 @@
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi	2019-01-16 17:55:35.095332656 +0000
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi	2019-01-16 17:59:12.105217859 +0000
+@@ -44,7 +44,7 @@
  		linux,cma {
  			compatible = "shared-dma-pool";
  			reusable;
--			size = <0x0 0xbc00000>;
+-			size = <0x0 0x10000000>;
 +			size = <0x0 0x38000000>;
  			alignment = <0x0 0x400000>;
  			linux,cma-default;
