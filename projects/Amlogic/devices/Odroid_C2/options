@@ -6,12 +6,12 @@
 
   # additional packages to install:
   # e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"
-    ADDITIONAL_PACKAGES+=" amlogic-boot-fip"
+    ADDITIONAL_PACKAGES+=" amlogic-boot-fip cpumac wireguard-tools"
 
   # additional Firmware to use (dvb-firmware, misc-firmware, wlan-firmware)
   # Space separated list is supported,
   # e.g. FIRMWARE="dvb-firmware misc-firmware wlan-firmware"
-    FIRMWARE="brcmfmac_sdio-firmware-aml meson-firmware"
+    FIRMWARE+=" brcmfmac_sdio-firmware-aml"
 
   # OOTB support for IR remote
     IR_REMOTE_KEYMAPS+=" odroid"

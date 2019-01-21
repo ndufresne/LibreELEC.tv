@@ -14,8 +14,8 @@ case $PROJECT in
   Amlogic)
     case $DEVICE in
       Khadas_VIM2|Nexbox_A1|S912)
-        PKG_VERSION="f532ab09eaa686d68e182d1ebcb58d995f53aa57" # winsys-rebased-meson
-        PKG_SHA256="a12e893e1f23897de5b33dea9dba651fe13b2ed45a363faeccd45bdbb6ad80e6"
+        PKG_VERSION="5f3fc953b7d241ce757fe7066f61f571c20c51bf" # winsys-rebased-meson
+        PKG_SHA256="f1833163166442555bdb36f9abb3eb443e2b0f3af38be3a7dc212483694cd84c"
         PKG_URL="https://github.com/chewitt/mesa/archive/$PKG_VERSION.tar.gz"
         PKG_SOURCE_NAME="mesa-$PKG_VERSION.tar.gz"
         PKG_PATCH_DIRS="panfrost"
