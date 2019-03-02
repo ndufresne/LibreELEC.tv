@@ -46,8 +46,8 @@ case "$LINUX" in
     PKG_BUILD_PERF="no"
     ;;
   amlogic-mainline)
-    PKG_VERSION="7f600870eca5a3b1ad58afe78098613d35b6466e" # 4.20.10
-    PKG_SHA256=""
+    PKG_VERSION="5908e6b738e3357af42c10e1183753c70a0117a9" # 5.0.0-rc8
+    PKG_SHA256="ba73ed891b9d473c1714238abfbd405b80c6a12d054052809a422e0e42679762"
     PKG_URL="https://github.com/torvalds/linux/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_DIR="$PKG_NAME-$PKG_VERSION*"
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET u-boot-tools-aml:host"
@@ -59,15 +59,21 @@ case "$LINUX" in
     PKG_URL="https://github.com/rockchip-linux/kernel/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
     ;;
+  rockchip-5.x)
+    PKG_VERSION="5.0-rc6"
+    PKG_SHA256="dc0ffa31389ab6a349339a93b388f36605ef8cd3d6238f129c27d5c7e584258c"
+    PKG_URL="https://git.kernel.org/torvalds/t/$PKG_NAME-$PKG_VERSION.tar.gz"
+    PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
+    ;;
   raspberrypi)
-    PKG_VERSION="5c4a6441f890845472a698e35c8df995804e06e2" # 4.19.17
-    PKG_SHA256="58eac16e603edfd106993ae057bcc13adf3f8ffce609172f404144696edd7221"
+    PKG_VERSION="0a7f6900636f7c5a027124fe3388c928f1769c52" # 4.19.23
+    PKG_SHA256="937cbaa16d33260148c405f984a9c44bac0e62c5028249a00b2a3ca01605ba91"
     PKG_URL="https://github.com/raspberrypi/linux/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
     ;;
   *)
-    PKG_VERSION="4.19.17"
-    PKG_SHA256="872d92a17a2d252ccd6334503bc8f67eebceeb99cb822a77f5c72b936f2ccb59"
+    PKG_VERSION="4.19.23"
+    PKG_SHA256="2d9b25678aac7f3f109c52e6266fb6ee89cc424b597518a2875874bacb8f130a"
     PKG_URL="https://www.kernel.org/pub/linux/kernel/v4.x/$PKG_NAME-$PKG_VERSION.tar.xz"
     PKG_PATCH_DIRS="default"
     ;;

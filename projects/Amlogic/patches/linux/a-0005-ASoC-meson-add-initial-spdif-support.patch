@@ -1,7 +1,7 @@
-From fc4c80dc71aba3359809c647cb05c9d6bed43146 Mon Sep 17 00:00:00 2001
+From 4a7717118fdb3ef5cefb18a838243e623a423a08 Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
 Date: Thu, 30 Mar 2017 13:46:03 +0200
-Subject: [PATCH 05/29] ASoC: meson: add initial spdif support
+Subject: [PATCH 05/21] ASoC: meson: add initial spdif support
 
 Add support for the spdif found on Amlogic Meson SoC family.
 With this initial implementation, only uncompressed pcm playback
@@ -12,12 +12,12 @@ Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
  sound/soc/meson-gx/Kconfig     |   7 +
  sound/soc/meson-gx/Makefile    |   3 +-
- sound/soc/meson-gx/aiu-spdif.c | 669 +++++++++++++++++++++++++++++++++++++++++
+ sound/soc/meson-gx/aiu-spdif.c | 669 +++++++++++++++++++++++++++++++++
  3 files changed, 678 insertions(+), 1 deletion(-)
  create mode 100644 sound/soc/meson-gx/aiu-spdif.c
 
 diff --git a/sound/soc/meson-gx/Kconfig b/sound/soc/meson-gx/Kconfig
-index 8ec683c..141afab 100644
+index 8ec683cdf327..141afabfacea 100644
 --- a/sound/soc/meson-gx/Kconfig
 +++ b/sound/soc/meson-gx/Kconfig
 @@ -17,3 +17,10 @@ config SND_SOC_MESON_GX_I2S
@@ -32,7 +32,7 @@ index 8ec683c..141afab 100644
 +	  Say Y or M if you want to add support for spdif driver for Amlogic
 +	  Meson SoCs.
 diff --git a/sound/soc/meson-gx/Makefile b/sound/soc/meson-gx/Makefile
-index 02f9c4d..d37672e 100644
+index 02f9c4df6348..d37672ebe57b 100644
 --- a/sound/soc/meson-gx/Makefile
 +++ b/sound/soc/meson-gx/Makefile
 @@ -1,6 +1,7 @@
@@ -46,7 +46,7 @@ index 02f9c4d..d37672e 100644
 +obj-$(CONFIG_SND_SOC_MESON_GX_SPDIF)	+= snd-soc-meson-aiu-spdif.o
 diff --git a/sound/soc/meson-gx/aiu-spdif.c b/sound/soc/meson-gx/aiu-spdif.c
 new file mode 100644
-index 0000000..17cfe13
+index 000000000000..17cfe134e8f7
 --- /dev/null
 +++ b/sound/soc/meson-gx/aiu-spdif.c
 @@ -0,0 +1,669 @@
@@ -720,5 +720,5 @@ index 0000000..17cfe13
 +MODULE_AUTHOR("Jerome Brunet <jbrunet@baylibre.com>");
 +MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
+2.17.1
 

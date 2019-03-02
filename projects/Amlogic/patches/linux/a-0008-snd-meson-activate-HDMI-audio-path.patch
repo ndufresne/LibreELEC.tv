@@ -1,7 +1,7 @@
-From 5fa81de3b8f8c2dbb60a837c6d09028d6d076be1 Mon Sep 17 00:00:00 2001
+From c0e764f71fa54f2cc1bd30a8fe4ac3b203369e7f Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
 Date: Fri, 7 Jul 2017 17:39:21 +0200
-Subject: [PATCH 08/29] snd: meson: activate HDMI audio path
+Subject: [PATCH 08/21] snd: meson: activate HDMI audio path
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
@@ -9,7 +9,7 @@ Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
  1 file changed, 22 insertions(+)
 
 diff --git a/sound/soc/meson-gx/aiu-i2s.c b/sound/soc/meson-gx/aiu-i2s.c
-index d57f351..450f1d2 100644
+index d57f351b502f..450f1d20a1d6 100644
 --- a/sound/soc/meson-gx/aiu-i2s.c
 +++ b/sound/soc/meson-gx/aiu-i2s.c
 @@ -332,8 +332,19 @@ static int meson_aiu_i2s_dma_new(struct snd_soc_pcm_runtime *rtd)
@@ -51,5 +51,5 @@ index d57f351..450f1d2 100644
  }
  
 -- 
-2.7.4
+2.17.1
 

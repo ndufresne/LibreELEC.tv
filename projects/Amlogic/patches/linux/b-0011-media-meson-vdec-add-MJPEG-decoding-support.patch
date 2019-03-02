@@ -1,20 +1,20 @@
-From 103b054eeb0769adaa101113c5bfa2f3adb3e1d1 Mon Sep 17 00:00:00 2001
+From 0eac9626cea74f85a19aea87b97d8987c11b6485 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Sun, 21 Oct 2018 15:14:27 +0200
-Subject: [PATCH 11/22] media: meson: vdec: add MJPEG decoding support
+Subject: [PATCH 11/24] media: meson: vdec: add MJPEG decoding support
 
 Add support for V4L2_PIX_FMT_MJPEG
 ---
- drivers/media/platform/meson/vdec/Makefile        |   2 +-
- drivers/media/platform/meson/vdec/codec_mjpeg.c   | 140 ++++++++++++++++++++++
- drivers/media/platform/meson/vdec/codec_mjpeg.h   |  13 ++
- drivers/media/platform/meson/vdec/vdec_platform.c |  31 +++++
+ drivers/media/platform/meson/vdec/Makefile    |   2 +-
+ .../media/platform/meson/vdec/codec_mjpeg.c   | 140 ++++++++++++++++++
+ .../media/platform/meson/vdec/codec_mjpeg.h   |  13 ++
+ .../media/platform/meson/vdec/vdec_platform.c |  31 ++++
  4 files changed, 185 insertions(+), 1 deletion(-)
  create mode 100644 drivers/media/platform/meson/vdec/codec_mjpeg.c
  create mode 100644 drivers/media/platform/meson/vdec/codec_mjpeg.h
 
 diff --git a/drivers/media/platform/meson/vdec/Makefile b/drivers/media/platform/meson/vdec/Makefile
-index bb7a134..acf07f3 100644
+index bb7a134e2728..acf07f3c3dac 100644
 --- a/drivers/media/platform/meson/vdec/Makefile
 +++ b/drivers/media/platform/meson/vdec/Makefile
 @@ -3,6 +3,6 @@
@@ -27,7 +27,7 @@ index bb7a134..acf07f3 100644
  obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
 diff --git a/drivers/media/platform/meson/vdec/codec_mjpeg.c b/drivers/media/platform/meson/vdec/codec_mjpeg.c
 new file mode 100644
-index 0000000..abea9e3
+index 000000000000..abea9e3f944c
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_mjpeg.c
 @@ -0,0 +1,140 @@
@@ -173,7 +173,7 @@ index 0000000..abea9e3
 +};
 diff --git a/drivers/media/platform/meson/vdec/codec_mjpeg.h b/drivers/media/platform/meson/vdec/codec_mjpeg.h
 new file mode 100644
-index 0000000..cc1cf73
+index 000000000000..cc1cf731050d
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_mjpeg.h
 @@ -0,0 +1,13 @@
@@ -192,7 +192,7 @@ index 0000000..cc1cf73
 +#endif
 \ No newline at end of file
 diff --git a/drivers/media/platform/meson/vdec/vdec_platform.c b/drivers/media/platform/meson/vdec/vdec_platform.c
-index 80b43fd..61def15 100644
+index 80b43fd5d01f..61def155a5fd 100644
 --- a/drivers/media/platform/meson/vdec/vdec_platform.c
 +++ b/drivers/media/platform/meson/vdec/vdec_platform.c
 @@ -11,9 +11,20 @@
@@ -251,5 +251,5 @@ index 80b43fd..61def15 100644
  		.min_buffers = 8,
  		.max_buffers = 8,
 -- 
-2.7.4
+2.17.1
 

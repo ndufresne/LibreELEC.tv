@@ -1,19 +1,19 @@
-From 55e7c33909ea8a66768f9d5f78df5e04b3247ff1 Mon Sep 17 00:00:00 2001
+From 54dbae4f46d3e6e6c64361f648f2ef5f7cba6498 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 23 Jan 2019 07:28:55 +0100
-Subject: [PATCH 22/22] media: meson: vp9: multiple fixes for lockups
+Subject: [PATCH 22/24] media: meson: vp9: multiple fixes for lockups
 
 Some reference frames in VP9 can be held for a very long time, but
 unfortunately they're also display frames.
 
 This forces us to DONE those frames early and keep track of their use.
 ---
- drivers/media/platform/meson/vdec/codec_vp9.c | 57 ++++++++++++++++++---------
+ drivers/media/platform/meson/vdec/codec_vp9.c | 57 ++++++++++++-------
  drivers/media/platform/meson/vdec/esparser.c  |  4 +-
  2 files changed, 41 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/media/platform/meson/vdec/codec_vp9.c b/drivers/media/platform/meson/vdec/codec_vp9.c
-index 9f3be63..e1c5df1 100644
+index 9f3be63f2e35..e1c5df1d7285 100644
 --- a/drivers/media/platform/meson/vdec/codec_vp9.c
 +++ b/drivers/media/platform/meson/vdec/codec_vp9.c
 @@ -208,9 +208,11 @@ struct loopfilter {
@@ -160,7 +160,7 @@ index 9f3be63..e1c5df1 100644
  }
  
 diff --git a/drivers/media/platform/meson/vdec/esparser.c b/drivers/media/platform/meson/vdec/esparser.c
-index f46c4a0..43bbda0 100644
+index f46c4a08f0af..43bbda02349e 100644
 --- a/drivers/media/platform/meson/vdec/esparser.c
 +++ b/drivers/media/platform/meson/vdec/esparser.c
 @@ -279,7 +279,9 @@ esparser_queue(struct amvdec_session *sess, struct vb2_v4l2_buffer *vbuf)
@@ -175,5 +175,5 @@ index f46c4a0..43bbda0 100644
  	if (esparser_vififo_get_free_space(sess) < payload_size ||
  	    atomic_read(&sess->esparser_queued_bufs) >= num_dst_bufs)
 -- 
-2.7.4
+2.17.1
 

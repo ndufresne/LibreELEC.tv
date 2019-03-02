@@ -1,7 +1,7 @@
-From 27fa46a5068d0504dc64263689449870464ed453 Mon Sep 17 00:00:00 2001
+From e7e2be841e35f2fa7f2dad5ee7643f97528ca2a3 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Thu, 4 Oct 2018 15:37:39 +0200
-Subject: [PATCH 07/22] media: videodev2: add V4L2_FMT_FLAG_NO_SOURCE_CHANGE
+Subject: [PATCH 07/24] media: videodev2: add V4L2_FMT_FLAG_NO_SOURCE_CHANGE
 
 When a v4l2 driver exposes V4L2_EVENT_SOURCE_CHANGE, some (usually
 OUTPUT) formats may not be able to trigger this event.
@@ -15,10 +15,10 @@ Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
  2 files changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/media/uapi/v4l/vidioc-enum-fmt.rst b/Documentation/media/uapi/v4l/vidioc-enum-fmt.rst
-index 019c513..e0040b3 100644
+index 822d6730e7d2..5d95bb579397 100644
 --- a/Documentation/media/uapi/v4l/vidioc-enum-fmt.rst
 +++ b/Documentation/media/uapi/v4l/vidioc-enum-fmt.rst
-@@ -116,6 +116,11 @@ one until ``EINVAL`` is returned.
+@@ -127,6 +127,11 @@ one until ``EINVAL`` is returned.
        - This format is not native to the device but emulated through
  	software (usually libv4l2), where possible try to use a native
  	format instead for better performance.
@@ -31,10 +31,10 @@ index 019c513..e0040b3 100644
  
  Return Value
 diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 2ba2ad0..dea6716 100644
+index b5671ce2724f..4040d04d349a 100644
 --- a/include/uapi/linux/videodev2.h
 +++ b/include/uapi/linux/videodev2.h
-@@ -736,8 +736,9 @@ struct v4l2_fmtdesc {
+@@ -739,8 +739,9 @@ struct v4l2_fmtdesc {
  	__u32		    reserved[4];
  };
  
@@ -47,5 +47,5 @@ index 2ba2ad0..dea6716 100644
  	/* Frame Size and frame rate enumeration */
  /*
 -- 
-2.7.4
+2.17.1
 

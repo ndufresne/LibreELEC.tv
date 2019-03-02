@@ -1,17 +1,17 @@
-From 30c288ab0618143c4f13e1b2171456b4d793465b Mon Sep 17 00:00:00 2001
+From 69740dedd7b865a31dd46cda827889f2d2a654de Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 29 Aug 2018 18:48:35 +0200
-Subject: [PATCH 15/22] media: meson: vdec: add HEVC decoding support
+Subject: [PATCH 15/24] media: meson: vdec: add HEVC decoding support
 
 Add support for V4L2_PIX_FMT_HEVC
 ---
- drivers/media/platform/meson/vdec/Makefile        |    4 +-
- drivers/media/platform/meson/vdec/codec_hevc.c    | 1564 +++++++++++++++++++++
- drivers/media/platform/meson/vdec/codec_hevc.h    |   13 +
- drivers/media/platform/meson/vdec/hevc_regs.h     |  205 +++
- drivers/media/platform/meson/vdec/vdec_hevc.c     |  191 +++
- drivers/media/platform/meson/vdec/vdec_hevc.h     |   22 +
- drivers/media/platform/meson/vdec/vdec_platform.c |   32 +
+ drivers/media/platform/meson/vdec/Makefile    |    4 +-
+ .../media/platform/meson/vdec/codec_hevc.c    | 1564 +++++++++++++++++
+ .../media/platform/meson/vdec/codec_hevc.h    |   13 +
+ drivers/media/platform/meson/vdec/hevc_regs.h |  205 +++
+ drivers/media/platform/meson/vdec/vdec_hevc.c |  191 ++
+ drivers/media/platform/meson/vdec/vdec_hevc.h |   22 +
+ .../media/platform/meson/vdec/vdec_platform.c |   32 +
  7 files changed, 2029 insertions(+), 2 deletions(-)
  create mode 100644 drivers/media/platform/meson/vdec/codec_hevc.c
  create mode 100644 drivers/media/platform/meson/vdec/codec_hevc.h
@@ -20,7 +20,7 @@ Add support for V4L2_PIX_FMT_HEVC
  create mode 100644 drivers/media/platform/meson/vdec/vdec_hevc.h
 
 diff --git a/drivers/media/platform/meson/vdec/Makefile b/drivers/media/platform/meson/vdec/Makefile
-index acf07f3..ddcf38a 100644
+index acf07f3c3dac..ddcf38a7c3e6 100644
 --- a/drivers/media/platform/meson/vdec/Makefile
 +++ b/drivers/media/platform/meson/vdec/Makefile
 @@ -2,7 +2,7 @@
@@ -35,7 +35,7 @@ index acf07f3..ddcf38a 100644
  obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
 diff --git a/drivers/media/platform/meson/vdec/codec_hevc.c b/drivers/media/platform/meson/vdec/codec_hevc.c
 new file mode 100644
-index 0000000..116e9ff
+index 000000000000..116e9ffc4560
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_hevc.c
 @@ -0,0 +1,1564 @@
@@ -1605,7 +1605,7 @@ index 0000000..116e9ff
 +};
 diff --git a/drivers/media/platform/meson/vdec/codec_hevc.h b/drivers/media/platform/meson/vdec/codec_hevc.h
 new file mode 100644
-index 0000000..5017e874
+index 000000000000..5017e874e3dd
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_hevc.h
 @@ -0,0 +1,13 @@
@@ -1625,7 +1625,7 @@ index 0000000..5017e874
 \ No newline at end of file
 diff --git a/drivers/media/platform/meson/vdec/hevc_regs.h b/drivers/media/platform/meson/vdec/hevc_regs.h
 new file mode 100644
-index 0000000..ba49f90
+index 000000000000..ba49f906be5a
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/hevc_regs.h
 @@ -0,0 +1,205 @@
@@ -1836,7 +1836,7 @@ index 0000000..ba49f90
 +#endif
 diff --git a/drivers/media/platform/meson/vdec/vdec_hevc.c b/drivers/media/platform/meson/vdec/vdec_hevc.c
 new file mode 100644
-index 0000000..8872f58
+index 000000000000..8872f58d39fe
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec_hevc.c
 @@ -0,0 +1,191 @@
@@ -2034,7 +2034,7 @@ index 0000000..8872f58
 \ No newline at end of file
 diff --git a/drivers/media/platform/meson/vdec/vdec_hevc.h b/drivers/media/platform/meson/vdec/vdec_hevc.h
 new file mode 100644
-index 0000000..f1ccad7
+index 000000000000..f1ccad7d5f94
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec_hevc.h
 @@ -0,0 +1,22 @@
@@ -2062,7 +2062,7 @@ index 0000000..f1ccad7
 +#endif
 \ No newline at end of file
 diff --git a/drivers/media/platform/meson/vdec/vdec_platform.c b/drivers/media/platform/meson/vdec/vdec_platform.c
-index 61def15..86c2a2f 100644
+index 61def155a5fd..86c2a2f0b18e 100644
 --- a/drivers/media/platform/meson/vdec/vdec_platform.c
 +++ b/drivers/media/platform/meson/vdec/vdec_platform.c
 @@ -8,13 +8,25 @@
@@ -2126,5 +2126,5 @@ index 61def15..86c2a2f 100644
  		.min_buffers = 4,
  		.max_buffers = 4,
 -- 
-2.7.4
+2.17.1
 

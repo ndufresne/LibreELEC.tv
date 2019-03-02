@@ -37,9 +37,12 @@ else
   PKG_FFMPEG_VDPAU="--disable-vdpau"
 fi
 
-if [ "$PROJECT" = "Rockchip" ]; then
+if [ "$PROJECT" = "Rockchip" -a "$LINUX" = "rockchip-4.4" ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET rkmpp"
   PKG_FFMPEG_RKMPP="--enable-rkmpp --enable-libdrm --enable-version3"
+elif [ "$PROJECT" = "Rockchip" -a "$LINUX" != "rockchip-4.4" ]; then
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libdrm"
+  PKG_FFMPEG_RKMPP="--disable-rkmpp --enable-v4l2-request --enable-libdrm"
 else
   PKG_FFMPEG_RKMPP="--disable-rkmpp"
 fi

@@ -1,7 +1,7 @@
-From fc8d456659bfe20284f50d7551b6479a1c5166bb Mon Sep 17 00:00:00 2001
+From 106d2ac0695d3d02444a9bdcf0ec53b526e9e3e1 Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
 Date: Thu, 30 Mar 2017 12:17:27 +0200
-Subject: [PATCH 04/29] ASoC: meson: add initial aiu i2s support
+Subject: [PATCH 04/21] ASoC: meson: add initial aiu i2s support
 
 Add support for the aiu i2s found on Amlogic Meson SoC family.
 With this initial implementation, only playback is supported.
@@ -11,12 +11,12 @@ Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
  sound/soc/meson-gx/Kconfig   |   8 +
  sound/soc/meson-gx/Makefile  |   3 +
- sound/soc/meson-gx/aiu-i2s.c | 747 +++++++++++++++++++++++++++++++++++++++++++
+ sound/soc/meson-gx/aiu-i2s.c | 747 +++++++++++++++++++++++++++++++++++
  3 files changed, 758 insertions(+)
  create mode 100644 sound/soc/meson-gx/aiu-i2s.c
 
 diff --git a/sound/soc/meson-gx/Kconfig b/sound/soc/meson-gx/Kconfig
-index 280e49e..8ec683c 100644
+index 280e49e7c16f..8ec683cdf327 100644
 --- a/sound/soc/meson-gx/Kconfig
 +++ b/sound/soc/meson-gx/Kconfig
 @@ -9,3 +9,11 @@ menuconfig SND_SOC_MESON_GX
@@ -32,7 +32,7 @@ index 280e49e..8ec683c 100644
 +	  Meson SoCs.
 +
 diff --git a/sound/soc/meson-gx/Makefile b/sound/soc/meson-gx/Makefile
-index 6f124c3..02f9c4d 100644
+index 6f124c31a85c..02f9c4df6348 100644
 --- a/sound/soc/meson-gx/Makefile
 +++ b/sound/soc/meson-gx/Makefile
 @@ -1,3 +1,6 @@
@@ -44,7 +44,7 @@ index 6f124c3..02f9c4d 100644
 +
 diff --git a/sound/soc/meson-gx/aiu-i2s.c b/sound/soc/meson-gx/aiu-i2s.c
 new file mode 100644
-index 0000000..d57f351
+index 000000000000..d57f351b502f
 --- /dev/null
 +++ b/sound/soc/meson-gx/aiu-i2s.c
 @@ -0,0 +1,747 @@
@@ -796,5 +796,5 @@ index 0000000..d57f351
 +MODULE_AUTHOR("Jerome Brunet <jbrunet@baylibre.com>");
 +MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
+2.17.1
 

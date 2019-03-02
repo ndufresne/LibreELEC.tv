@@ -1,7 +1,7 @@
-From b87352c573060828ebfdb369ad8fee66f240de9a Mon Sep 17 00:00:00 2001
+From bbdc110a2961c21220fff70dbec4e37fd3bbf5af Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 23 Jan 2019 07:28:30 +0100
-Subject: [PATCH 21/22] media: meson: vdec: don't keep queuing inputs on
+Subject: [PATCH 21/24] media: meson: vdec: don't keep queuing inputs on
  stop_streaming
 
 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 21/22] media: meson: vdec: don't keep queuing inputs on
  2 files changed, 4 insertions(+)
 
 diff --git a/drivers/media/platform/meson/vdec/esparser.c b/drivers/media/platform/meson/vdec/esparser.c
-index cfb3fcd..f46c4a0 100644
+index cfb3fcd44311..f46c4a08f0af 100644
 --- a/drivers/media/platform/meson/vdec/esparser.c
 +++ b/drivers/media/platform/meson/vdec/esparser.c
 @@ -334,6 +334,9 @@ void esparser_queue_all_src(struct work_struct *work)
@@ -24,7 +24,7 @@ index cfb3fcd..f46c4a0 100644
  			break;
  	}
 diff --git a/drivers/media/platform/meson/vdec/vdec.c b/drivers/media/platform/meson/vdec/vdec.c
-index dcde0a2..947edd2 100644
+index dcde0a2e5640..947edd24c851 100644
 --- a/drivers/media/platform/meson/vdec/vdec.c
 +++ b/drivers/media/platform/meson/vdec/vdec.c
 @@ -116,6 +116,7 @@ static void vdec_poweroff(struct amvdec_session *sess)
@@ -36,5 +36,5 @@ index dcde0a2..947edd2 100644
  	if (codec_ops->drain)
  		codec_ops->drain(sess);
 -- 
-2.7.4
+2.17.1
 

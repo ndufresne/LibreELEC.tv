@@ -1,21 +1,21 @@
-From d1e2bbbf5894ebb13cfef0fbf6021f4b931884a5 Mon Sep 17 00:00:00 2001
+From 5788e6db15a9e5ea0045546bdd30f9126c1f6e2f Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Thu, 17 Jan 2019 16:58:29 +0100
-Subject: [PATCH 18/22] media: meson: vdec: commonize some HEVC code
+Subject: [PATCH 18/24] media: meson: vdec: commonize some HEVC code
 
 Will be shared with the VP9 codebase.
 ---
- drivers/media/platform/meson/vdec/Makefile         |   2 +-
- drivers/media/platform/meson/vdec/codec_hevc.c     | 239 ++-------------------
- .../media/platform/meson/vdec/codec_hevc_common.c  | 188 ++++++++++++++++
- .../media/platform/meson/vdec/codec_hevc_common.h  |  49 +++++
- drivers/media/platform/meson/vdec/vdec.h           |   7 +-
+ drivers/media/platform/meson/vdec/Makefile    |   2 +-
+ .../media/platform/meson/vdec/codec_hevc.c    | 239 ++----------------
+ .../platform/meson/vdec/codec_hevc_common.c   | 188 ++++++++++++++
+ .../platform/meson/vdec/codec_hevc_common.h   |  49 ++++
+ drivers/media/platform/meson/vdec/vdec.h      |   7 +-
  5 files changed, 260 insertions(+), 225 deletions(-)
  create mode 100644 drivers/media/platform/meson/vdec/codec_hevc_common.c
  create mode 100644 drivers/media/platform/meson/vdec/codec_hevc_common.h
 
 diff --git a/drivers/media/platform/meson/vdec/Makefile b/drivers/media/platform/meson/vdec/Makefile
-index ddcf38a..4fba9e0 100644
+index ddcf38a7c3e6..4fba9e052f14 100644
 --- a/drivers/media/platform/meson/vdec/Makefile
 +++ b/drivers/media/platform/meson/vdec/Makefile
 @@ -3,6 +3,6 @@
@@ -27,7 +27,7 @@ index ddcf38a..4fba9e0 100644
  
  obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
 diff --git a/drivers/media/platform/meson/vdec/codec_hevc.c b/drivers/media/platform/meson/vdec/codec_hevc.c
-index 116e9ff..03f00f9 100644
+index 116e9ffc4560..03f00f969f02 100644
 --- a/drivers/media/platform/meson/vdec/codec_hevc.c
 +++ b/drivers/media/platform/meson/vdec/codec_hevc.c
 @@ -1,6 +1,6 @@
@@ -364,7 +364,7 @@ index 116e9ff..03f00f9 100644
  		amvdec_abort(sess);
 diff --git a/drivers/media/platform/meson/vdec/codec_hevc_common.c b/drivers/media/platform/meson/vdec/codec_hevc_common.c
 new file mode 100644
-index 0000000..2b296be
+index 000000000000..2b296beb5d88
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_hevc_common.c
 @@ -0,0 +1,188 @@
@@ -559,7 +559,7 @@ index 0000000..2b296be
 \ No newline at end of file
 diff --git a/drivers/media/platform/meson/vdec/codec_hevc_common.h b/drivers/media/platform/meson/vdec/codec_hevc_common.h
 new file mode 100644
-index 0000000..96493f9
+index 000000000000..96493f9fe699
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_hevc_common.h
 @@ -0,0 +1,49 @@
@@ -614,7 +614,7 @@ index 0000000..96493f9
 +#endif
 \ No newline at end of file
 diff --git a/drivers/media/platform/meson/vdec/vdec.h b/drivers/media/platform/meson/vdec/vdec.h
-index 7df42c5..9eefe9a 100644
+index 7df42c5f6290..9eefe9ac373c 100644
 --- a/drivers/media/platform/meson/vdec/vdec.h
 +++ b/drivers/media/platform/meson/vdec/vdec.h
 @@ -17,7 +17,9 @@
@@ -639,5 +639,5 @@ index 7df42c5..9eefe9a 100644
  	void *priv;
  };
 -- 
-2.7.4
+2.17.1
 

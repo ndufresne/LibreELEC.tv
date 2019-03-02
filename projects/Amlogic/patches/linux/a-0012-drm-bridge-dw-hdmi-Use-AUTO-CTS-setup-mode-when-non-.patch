@@ -1,16 +1,16 @@
-From 6df5dab16dc45dddd7d6c328168c3930555c6bbb Mon Sep 17 00:00:00 2001
+From a160e0e50f076f66997d742d6acbe29221266a2c Mon Sep 17 00:00:00 2001
 From: Neil Armstrong <narmstrong@baylibre.com>
 Date: Mon, 2 Jul 2018 12:21:55 +0200
-Subject: [PATCH 12/29] drm: bridge: dw-hdmi: Use AUTO CTS setup mode when
+Subject: [PATCH 12/21] drm: bridge: dw-hdmi: Use AUTO CTS setup mode when
  non-AHB audio
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 41 ++++++++++++++++++++-----------
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 41 ++++++++++++++---------
  1 file changed, 26 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 5971976..1fc1270 100644
+index 64c3cf027518..128083c72dfc 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 @@ -430,8 +430,12 @@ static void hdmi_set_cts_n(struct dw_hdmi *hdmi, unsigned int cts,
@@ -74,5 +74,5 @@ index 5971976..1fc1270 100644
  	spin_lock_irq(&hdmi->audio_lock);
  	hdmi->audio_n = n;
 -- 
-2.7.4
+2.17.1
 

@@ -1,20 +1,20 @@
-From 67cad1ed792dd82f08a7b72e13c5d992a9879d01 Mon Sep 17 00:00:00 2001
+From a17a12c2d419586cf24aa6d274091c4b0bb4b90c Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 29 Aug 2018 15:05:05 +0200
-Subject: [PATCH 01/22] dt-bindings: media: add Amlogic Video Decoder Bindings
+Subject: [PATCH 01/24] dt-bindings: media: add Amlogic Video Decoder Bindings
 
 Add documentation for the meson vdec dts node.
 
 Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/media/amlogic,vdec.txt     | 71 ++++++++++++++++++++++
+ .../bindings/media/amlogic,vdec.txt           | 71 +++++++++++++++++++
  1 file changed, 71 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
 
 diff --git a/Documentation/devicetree/bindings/media/amlogic,vdec.txt b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
 new file mode 100644
-index 0000000..aabdd01
+index 000000000000..aabdd01bcf32
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
 @@ -0,0 +1,71 @@
@@ -90,5 +90,5 @@ index 0000000..aabdd01
 +	reset-names = "esparser";
 +};
 -- 
-2.7.4
+2.17.1
 

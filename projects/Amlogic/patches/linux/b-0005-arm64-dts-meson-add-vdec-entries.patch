@@ -1,7 +1,7 @@
-From c7b0311f4676661ad445f9e36c669886f1bc7835 Mon Sep 17 00:00:00 2001
+From 875b1f546ab57e8cb7b11bd736b27900c65daa37 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 29 Aug 2018 15:24:22 +0200
-Subject: [PATCH 04/12] ARM64: dts: meson: add vdec entries
+Subject: [PATCH 05/24] arm64: dts: meson: add vdec entries
 
 This enables the video decoder for gxbb, gxl and gxm chips
 
@@ -13,10 +13,10 @@ Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
  3 files changed, 26 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 98cbba6..daee53a 100644
+index a7b883ced0a8..a55e42c9f5a8 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -814,3 +814,13 @@
+@@ -853,3 +853,13 @@
  	power-domains = <&pwrc_vpu>;
  };
  
@@ -31,14 +31,13 @@ index 98cbba6..daee53a 100644
 +	reset-names = "esparser";
 +};
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index c87a80e..bfd65d1 100644
+index d5c3d78aafeb..4b6d06ddfca0 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -814,3 +814,14 @@
+@@ -856,3 +856,13 @@
  	power-domains = <&pwrc_vpu>;
  };
  
-+
 +&vdec {
 +	compatible = "amlogic,gxl-vdec";
 +	clocks = <&clkc CLKID_DOS_PARSER>,
@@ -50,7 +49,7 @@ index c87a80e..bfd65d1 100644
 +	reset-names = "esparser";
 +};
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
-index 247888d..2f35649 100644
+index 247888d68a3a..2f356495be5e 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxm.dtsi
 @@ -117,3 +117,7 @@
@@ -62,5 +61,4 @@ index 247888d..2f35649 100644
 +	compatible = "amlogic,gxm-vdec";
 +};
 -- 
-2.7.4
-
+2.17.1

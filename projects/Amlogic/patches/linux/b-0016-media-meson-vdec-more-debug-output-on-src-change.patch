@@ -1,14 +1,14 @@
-From f981054b34c6f5e782363bed59c7485bd4a7c344 Mon Sep 17 00:00:00 2001
+From e49fc457cc8056dc923ca220c13fd6ffa81305c8 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Mon, 5 Nov 2018 10:42:29 +0100
-Subject: [PATCH 16/22] media: meson: vdec: more debug output on src change
+Subject: [PATCH 16/24] media: meson: vdec: more debug output on src change
 
 ---
  drivers/media/platform/meson/vdec/vdec_helpers.c | 7 +++++--
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/meson/vdec/vdec_helpers.c b/drivers/media/platform/meson/vdec/vdec_helpers.c
-index 1cc697f..e7b6651 100644
+index 1cc697fd0afa..e7b6651d5a0f 100644
 --- a/drivers/media/platform/meson/vdec/vdec_helpers.c
 +++ b/drivers/media/platform/meson/vdec/vdec_helpers.c
 @@ -455,12 +455,15 @@ void amvdec_src_change(struct amvdec_session *sess, u32 width, u32 height, u32 d
@@ -30,5 +30,5 @@ index 1cc697f..e7b6651 100644
  }
  EXPORT_SYMBOL_GPL(amvdec_src_change);
 -- 
-2.7.4
+2.17.1
 

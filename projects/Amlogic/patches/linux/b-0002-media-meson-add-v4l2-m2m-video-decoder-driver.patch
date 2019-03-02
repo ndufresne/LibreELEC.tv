@@ -1,7 +1,7 @@
-From ea791eff8fd9d943d7514cacf9dd5d83225fa9d3 Mon Sep 17 00:00:00 2001
+From 873ad014baf4749622d4edf1f0b382a6ebac5d9b Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 29 Aug 2018 15:17:22 +0200
-Subject: [PATCH 02/22] media: meson: add v4l2 m2m video decoder driver
+Subject: [PATCH 02/24] media: meson: add v4l2 m2m video decoder driver
 
 Amlogic SoCs feature a powerful video decoder unit able to
 decode many formats, with a performance of usually up to 4k60.
@@ -18,22 +18,22 @@ There is also a hardware bitstream parser (ESPARSER) that is handled here.
 
 Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 ---
- drivers/media/platform/Kconfig                    |   10 +
- drivers/media/platform/meson/Makefile             |    1 +
- drivers/media/platform/meson/vdec/Makefile        |    8 +
- drivers/media/platform/meson/vdec/codec_mpeg12.c  |  209 +++++
- drivers/media/platform/meson/vdec/codec_mpeg12.h  |   14 +
- drivers/media/platform/meson/vdec/dos_regs.h      |   98 ++
- drivers/media/platform/meson/vdec/esparser.c      |  320 +++++++
- drivers/media/platform/meson/vdec/esparser.h      |   32 +
- drivers/media/platform/meson/vdec/vdec.c          | 1034 +++++++++++++++++++++
- drivers/media/platform/meson/vdec/vdec.h          |  251 +++++
- drivers/media/platform/meson/vdec/vdec_1.c        |  231 +++++
- drivers/media/platform/meson/vdec/vdec_1.h        |   14 +
- drivers/media/platform/meson/vdec/vdec_helpers.c  |  412 ++++++++
- drivers/media/platform/meson/vdec/vdec_helpers.h  |   48 +
- drivers/media/platform/meson/vdec/vdec_platform.c |  101 ++
- drivers/media/platform/meson/vdec/vdec_platform.h |   30 +
+ drivers/media/platform/Kconfig                |   10 +
+ drivers/media/platform/meson/Makefile         |    1 +
+ drivers/media/platform/meson/vdec/Makefile    |    8 +
+ .../media/platform/meson/vdec/codec_mpeg12.c  |  209 ++++
+ .../media/platform/meson/vdec/codec_mpeg12.h  |   14 +
+ drivers/media/platform/meson/vdec/dos_regs.h  |   98 ++
+ drivers/media/platform/meson/vdec/esparser.c  |  320 +++++
+ drivers/media/platform/meson/vdec/esparser.h  |   32 +
+ drivers/media/platform/meson/vdec/vdec.c      | 1034 +++++++++++++++++
+ drivers/media/platform/meson/vdec/vdec.h      |  251 ++++
+ drivers/media/platform/meson/vdec/vdec_1.c    |  231 ++++
+ drivers/media/platform/meson/vdec/vdec_1.h    |   14 +
+ .../media/platform/meson/vdec/vdec_helpers.c  |  412 +++++++
+ .../media/platform/meson/vdec/vdec_helpers.h  |   48 +
+ .../media/platform/meson/vdec/vdec_platform.c |  101 ++
+ .../media/platform/meson/vdec/vdec_platform.h |   30 +
  16 files changed, 2813 insertions(+)
  create mode 100644 drivers/media/platform/meson/vdec/Makefile
  create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.c
@@ -51,10 +51,10 @@ Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
  create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.h
 
 diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 70c4f6c..619a9b5 100644
+index a505e9f5a1e2..587909f6db30 100644
 --- a/drivers/media/platform/Kconfig
 +++ b/drivers/media/platform/Kconfig
-@@ -492,6 +492,16 @@ config VIDEO_QCOM_VENUS
+@@ -502,6 +502,16 @@ config VIDEO_QCOM_VENUS
  	  on various Qualcomm SoCs.
  	  To compile this driver as a module choose m here.
  
@@ -72,7 +72,7 @@ index 70c4f6c..619a9b5 100644
  
  # TI VIDEO PORT Helper Modules
 diff --git a/drivers/media/platform/meson/Makefile b/drivers/media/platform/meson/Makefile
-index 597beb8..f7c6e10 100644
+index 597beb8f34d1..f7c6e1031f25 100644
 --- a/drivers/media/platform/meson/Makefile
 +++ b/drivers/media/platform/meson/Makefile
 @@ -1 +1,2 @@
@@ -80,7 +80,7 @@ index 597beb8..f7c6e10 100644
 +obj-$(CONFIG_VIDEO_MESON_VDEC)	+= vdec/
 diff --git a/drivers/media/platform/meson/vdec/Makefile b/drivers/media/platform/meson/vdec/Makefile
 new file mode 100644
-index 0000000..6bea129
+index 000000000000..6bea129084b7
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/Makefile
 @@ -0,0 +1,8 @@
@@ -94,7 +94,7 @@ index 0000000..6bea129
 +obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
 diff --git a/drivers/media/platform/meson/vdec/codec_mpeg12.c b/drivers/media/platform/meson/vdec/codec_mpeg12.c
 new file mode 100644
-index 0000000..d88530a
+index 000000000000..d88530a7b81a
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_mpeg12.c
 @@ -0,0 +1,209 @@
@@ -309,7 +309,7 @@ index 0000000..d88530a
 +};
 diff --git a/drivers/media/platform/meson/vdec/codec_mpeg12.h b/drivers/media/platform/meson/vdec/codec_mpeg12.h
 new file mode 100644
-index 0000000..43cab5f
+index 000000000000..43cab5f39ca0
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_mpeg12.h
 @@ -0,0 +1,14 @@
@@ -329,7 +329,7 @@ index 0000000..43cab5f
 +#endif
 diff --git a/drivers/media/platform/meson/vdec/dos_regs.h b/drivers/media/platform/meson/vdec/dos_regs.h
 new file mode 100644
-index 0000000..abd8105
+index 000000000000..abd810542dbb
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/dos_regs.h
 @@ -0,0 +1,98 @@
@@ -433,7 +433,7 @@ index 0000000..abd8105
 +#endif
 diff --git a/drivers/media/platform/meson/vdec/esparser.c b/drivers/media/platform/meson/vdec/esparser.c
 new file mode 100644
-index 0000000..c3ddc6f
+index 000000000000..c3ddc6f985a0
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/esparser.c
 @@ -0,0 +1,320 @@
@@ -759,7 +759,7 @@ index 0000000..c3ddc6f
 +}
 diff --git a/drivers/media/platform/meson/vdec/esparser.h b/drivers/media/platform/meson/vdec/esparser.h
 new file mode 100644
-index 0000000..ff51fe7
+index 000000000000..ff51fe7fda66
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/esparser.h
 @@ -0,0 +1,32 @@
@@ -797,7 +797,7 @@ index 0000000..ff51fe7
 +#endif
 diff --git a/drivers/media/platform/meson/vdec/vdec.c b/drivers/media/platform/meson/vdec/vdec.c
 new file mode 100644
-index 0000000..d8db52c
+index 000000000000..d8db52c01fbe
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec.c
 @@ -0,0 +1,1034 @@
@@ -1837,7 +1837,7 @@ index 0000000..d8db52c
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/media/platform/meson/vdec/vdec.h b/drivers/media/platform/meson/vdec/vdec.h
 new file mode 100644
-index 0000000..4e8c3f1
+index 000000000000..4e8c3f1742ac
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec.h
 @@ -0,0 +1,251 @@
@@ -2094,7 +2094,7 @@ index 0000000..4e8c3f1
 +#endif
 diff --git a/drivers/media/platform/meson/vdec/vdec_1.c b/drivers/media/platform/meson/vdec/vdec_1.c
 new file mode 100644
-index 0000000..88b8bed
+index 000000000000..88b8bed9441e
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec_1.c
 @@ -0,0 +1,231 @@
@@ -2331,7 +2331,7 @@ index 0000000..88b8bed
 +};
 diff --git a/drivers/media/platform/meson/vdec/vdec_1.h b/drivers/media/platform/meson/vdec/vdec_1.h
 new file mode 100644
-index 0000000..042d930
+index 000000000000..042d930c40d7
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec_1.h
 @@ -0,0 +1,14 @@
@@ -2351,7 +2351,7 @@ index 0000000..042d930
 +#endif
 diff --git a/drivers/media/platform/meson/vdec/vdec_helpers.c b/drivers/media/platform/meson/vdec/vdec_helpers.c
 new file mode 100644
-index 0000000..700a055
+index 000000000000..700a0558d901
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec_helpers.c
 @@ -0,0 +1,412 @@
@@ -2769,7 +2769,7 @@ index 0000000..700a055
 +EXPORT_SYMBOL_GPL(amvdec_abort);
 diff --git a/drivers/media/platform/meson/vdec/vdec_helpers.h b/drivers/media/platform/meson/vdec/vdec_helpers.h
 new file mode 100644
-index 0000000..b9250a8
+index 000000000000..b9250a8157c4
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec_helpers.h
 @@ -0,0 +1,48 @@
@@ -2823,7 +2823,7 @@ index 0000000..b9250a8
 +#endif
 diff --git a/drivers/media/platform/meson/vdec/vdec_platform.c b/drivers/media/platform/meson/vdec/vdec_platform.c
 new file mode 100644
-index 0000000..46eeb74
+index 000000000000..46eeb7426f54
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec_platform.c
 @@ -0,0 +1,101 @@
@@ -2930,7 +2930,7 @@ index 0000000..46eeb74
 +};
 diff --git a/drivers/media/platform/meson/vdec/vdec_platform.h b/drivers/media/platform/meson/vdec/vdec_platform.h
 new file mode 100644
-index 0000000..f602532
+index 000000000000..f6025326db1d
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec_platform.h
 @@ -0,0 +1,30 @@
@@ -2965,5 +2965,5 @@ index 0000000..f602532
 +
 +#endif
 -- 
-2.7.4
+2.17.1
 

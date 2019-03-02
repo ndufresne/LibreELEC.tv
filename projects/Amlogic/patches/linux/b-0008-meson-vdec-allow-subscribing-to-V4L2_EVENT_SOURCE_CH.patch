@@ -1,20 +1,20 @@
-From 45344bd1d0684c1ad7e41dd9a5bc20390dd3d1ce Mon Sep 17 00:00:00 2001
+From cca888386743a755eb07777d9ad8ef8df4d57897 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 10 Oct 2018 15:44:56 +0200
-Subject: [PATCH 08/22] meson: vdec: allow subscribing to
+Subject: [PATCH 08/24] meson: vdec: allow subscribing to
  V4L2_EVENT_SOURCE_CHANGE
 
 Flag MPEG1/MPEG2 as NO_SOURCE_CHANGE.
 ---
- drivers/media/platform/meson/vdec/vdec.c          | 20 ++++++++++++++--
- drivers/media/platform/meson/vdec/vdec.h          | 13 +++++++++++
- drivers/media/platform/meson/vdec/vdec_helpers.c  | 28 +++++++++++++++++++++++
- drivers/media/platform/meson/vdec/vdec_helpers.h  |  1 +
- drivers/media/platform/meson/vdec/vdec_platform.c |  6 +++++
+ drivers/media/platform/meson/vdec/vdec.c      | 20 +++++++++++--
+ drivers/media/platform/meson/vdec/vdec.h      | 13 +++++++++
+ .../media/platform/meson/vdec/vdec_helpers.c  | 28 +++++++++++++++++++
+ .../media/platform/meson/vdec/vdec_helpers.h  |  1 +
+ .../media/platform/meson/vdec/vdec_platform.c |  6 ++++
  5 files changed, 66 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/platform/meson/vdec/vdec.c b/drivers/media/platform/meson/vdec/vdec.c
-index 1c5d3e9..ca64045 100644
+index 1c5d3e912bee..ca6404546eb8 100644
 --- a/drivers/media/platform/meson/vdec/vdec.c
 +++ b/drivers/media/platform/meson/vdec/vdec.c
 @@ -230,7 +230,8 @@ static int vdec_queue_setup(struct vb2_queue *q,
@@ -94,7 +94,7 @@ index 1c5d3e9..ca64045 100644
  		return -EINVAL;
  	}
 diff --git a/drivers/media/platform/meson/vdec/vdec.h b/drivers/media/platform/meson/vdec/vdec.h
-index 6be7de2..8f8ce62 100644
+index 6be7de2849b6..8f8ce629c698 100644
 --- a/drivers/media/platform/meson/vdec/vdec.h
 +++ b/drivers/media/platform/meson/vdec/vdec.h
 @@ -101,6 +101,7 @@ struct amvdec_ops {
@@ -167,7 +167,7 @@ index 6be7de2..8f8ce62 100644
  };
  
 diff --git a/drivers/media/platform/meson/vdec/vdec_helpers.c b/drivers/media/platform/meson/vdec/vdec_helpers.c
-index 700a055..bb0f386 100644
+index 700a0558d901..bb0f38642805 100644
 --- a/drivers/media/platform/meson/vdec/vdec_helpers.c
 +++ b/drivers/media/platform/meson/vdec/vdec_helpers.c
 @@ -403,6 +403,34 @@ void amvdec_set_par_from_dar(struct amvdec_session *sess,
@@ -206,7 +206,7 @@ index 700a055..bb0f386 100644
  {
  	dev_info(sess->core->dev, "Aborting decoding session!\n");
 diff --git a/drivers/media/platform/meson/vdec/vdec_helpers.h b/drivers/media/platform/meson/vdec/vdec_helpers.h
-index b9250a8..060799b 100644
+index b9250a8157c4..060799b5e4d4 100644
 --- a/drivers/media/platform/meson/vdec/vdec_helpers.h
 +++ b/drivers/media/platform/meson/vdec/vdec_helpers.h
 @@ -44,5 +44,6 @@ void amvdec_remove_ts(struct amvdec_session *sess, u64 ts);
@@ -217,7 +217,7 @@ index b9250a8..060799b 100644
  void amvdec_abort(struct amvdec_session *sess);
  #endif
 diff --git a/drivers/media/platform/meson/vdec/vdec_platform.c b/drivers/media/platform/meson/vdec/vdec_platform.c
-index 46eeb74..291f1ee 100644
+index 46eeb7426f54..291f1eeb27d9 100644
 --- a/drivers/media/platform/meson/vdec/vdec_platform.c
 +++ b/drivers/media/platform/meson/vdec/vdec_platform.c
 @@ -17,6 +17,7 @@ static const struct amvdec_format vdec_formats_gxbb[] = {
@@ -269,5 +269,5 @@ index 46eeb74..291f1ee 100644
  		.codec_ops = &codec_mpeg12_ops,
  		.firmware_path = "meson/gx/vmpeg12_mc",
 -- 
-2.7.4
+2.17.1
 

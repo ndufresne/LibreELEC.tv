@@ -1,21 +1,21 @@
-From d0a277569c46a5117feebe06cc0ffc6eeddaf6f6 Mon Sep 17 00:00:00 2001
+From bfcbee701e853d5331f7d115dda8504468e98151 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 10 Oct 2018 17:22:27 +0200
-Subject: [PATCH 06/22] meson: vdec: introduce controls and
+Subject: [PATCH 06/24] meson: vdec: introduce controls and
  V4L2_CID_MIN_BUFFERS_FOR_CAPTURE
 
 ---
- drivers/media/platform/meson/vdec/Makefile     |  2 +-
- drivers/media/platform/meson/vdec/vdec.c       |  7 ++++
- drivers/media/platform/meson/vdec/vdec.h       |  2 ++
- drivers/media/platform/meson/vdec/vdec_ctrls.c | 45 ++++++++++++++++++++++++++
- drivers/media/platform/meson/vdec/vdec_ctrls.h |  8 +++++
+ drivers/media/platform/meson/vdec/Makefile    |  2 +-
+ drivers/media/platform/meson/vdec/vdec.c      |  7 +++
+ drivers/media/platform/meson/vdec/vdec.h      |  2 +
+ .../media/platform/meson/vdec/vdec_ctrls.c    | 45 +++++++++++++++++++
+ .../media/platform/meson/vdec/vdec_ctrls.h    |  8 ++++
  5 files changed, 63 insertions(+), 1 deletion(-)
  create mode 100644 drivers/media/platform/meson/vdec/vdec_ctrls.c
  create mode 100644 drivers/media/platform/meson/vdec/vdec_ctrls.h
 
 diff --git a/drivers/media/platform/meson/vdec/Makefile b/drivers/media/platform/meson/vdec/Makefile
-index 6bea129..eba8608 100644
+index 6bea129084b7..eba86083aadb 100644
 --- a/drivers/media/platform/meson/vdec/Makefile
 +++ b/drivers/media/platform/meson/vdec/Makefile
 @@ -1,7 +1,7 @@
@@ -28,7 +28,7 @@ index 6bea129..eba8608 100644
  meson-vdec-objs += codec_mpeg12.o
  
 diff --git a/drivers/media/platform/meson/vdec/vdec.c b/drivers/media/platform/meson/vdec/vdec.c
-index d8db52c..1c5d3e9 100644
+index d8db52c01fbe..1c5d3e912bee 100644
 --- a/drivers/media/platform/meson/vdec/vdec.c
 +++ b/drivers/media/platform/meson/vdec/vdec.c
 @@ -21,6 +21,7 @@
@@ -67,7 +67,7 @@ index d8db52c..1c5d3e9 100644
  	sess->fh.m2m_ctx = sess->m2m_ctx;
  	file->private_data = &sess->fh;
 diff --git a/drivers/media/platform/meson/vdec/vdec.h b/drivers/media/platform/meson/vdec/vdec.h
-index 4e8c3f1..6be7de2 100644
+index 4e8c3f1742ac..6be7de2849b6 100644
 --- a/drivers/media/platform/meson/vdec/vdec.h
 +++ b/drivers/media/platform/meson/vdec/vdec.h
 @@ -203,6 +203,7 @@ struct amvdec_session {
@@ -88,7 +88,7 @@ index 4e8c3f1..6be7de2 100644
  };
 diff --git a/drivers/media/platform/meson/vdec/vdec_ctrls.c b/drivers/media/platform/meson/vdec/vdec_ctrls.c
 new file mode 100644
-index 0000000..cd6dd6d
+index 000000000000..cd6dd6d87172
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec_ctrls.c
 @@ -0,0 +1,45 @@
@@ -139,7 +139,7 @@ index 0000000..cd6dd6d
 +EXPORT_SYMBOL_GPL(amvdec_init_ctrls);
 diff --git a/drivers/media/platform/meson/vdec/vdec_ctrls.h b/drivers/media/platform/meson/vdec/vdec_ctrls.h
 new file mode 100644
-index 0000000..4bcc5e6
+index 000000000000..4bcc5e68865c
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/vdec_ctrls.h
 @@ -0,0 +1,8 @@
@@ -152,5 +152,5 @@ index 0000000..4bcc5e6
 +
 +#endif
 -- 
-2.7.4
+2.17.1
 

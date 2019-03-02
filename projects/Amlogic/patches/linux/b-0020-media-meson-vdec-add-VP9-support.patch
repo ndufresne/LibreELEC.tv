@@ -1,20 +1,20 @@
-From 225a39fe1155fd3d4a5cf2baa027e04b3ded5fc6 Mon Sep 17 00:00:00 2001
+From 209fa6def5e11718554230dae429537dddbfa19b Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Thu, 17 Jan 2019 17:00:11 +0100
-Subject: [PATCH 20/22] media: meson: vdec: add VP9 support
+Subject: [PATCH 20/24] media: meson: vdec: add VP9 support
 
 ---
- drivers/media/platform/meson/vdec/Makefile        |    2 +-
- drivers/media/platform/meson/vdec/codec_vp9.c     | 1069 +++++++++++++++++++++
- drivers/media/platform/meson/vdec/codec_vp9.h     |   13 +
- drivers/media/platform/meson/vdec/hevc_regs.h     |    7 +
- drivers/media/platform/meson/vdec/vdec_platform.c |   23 +
+ drivers/media/platform/meson/vdec/Makefile    |    2 +-
+ drivers/media/platform/meson/vdec/codec_vp9.c | 1069 +++++++++++++++++
+ drivers/media/platform/meson/vdec/codec_vp9.h |   13 +
+ drivers/media/platform/meson/vdec/hevc_regs.h |    7 +
+ .../media/platform/meson/vdec/vdec_platform.c |   23 +
  5 files changed, 1113 insertions(+), 1 deletion(-)
  create mode 100644 drivers/media/platform/meson/vdec/codec_vp9.c
  create mode 100644 drivers/media/platform/meson/vdec/codec_vp9.h
 
 diff --git a/drivers/media/platform/meson/vdec/Makefile b/drivers/media/platform/meson/vdec/Makefile
-index 4fba9e0..c6b0c29 100644
+index 4fba9e052f14..c6b0c299c037 100644
 --- a/drivers/media/platform/meson/vdec/Makefile
 +++ b/drivers/media/platform/meson/vdec/Makefile
 @@ -3,6 +3,6 @@
@@ -27,7 +27,7 @@ index 4fba9e0..c6b0c29 100644
  obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
 diff --git a/drivers/media/platform/meson/vdec/codec_vp9.c b/drivers/media/platform/meson/vdec/codec_vp9.c
 new file mode 100644
-index 0000000..9f3be63
+index 000000000000..9f3be63f2e35
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_vp9.c
 @@ -0,0 +1,1069 @@
@@ -1102,7 +1102,7 @@ index 0000000..9f3be63
 +};
 diff --git a/drivers/media/platform/meson/vdec/codec_vp9.h b/drivers/media/platform/meson/vdec/codec_vp9.h
 new file mode 100644
-index 0000000..641cd75
+index 000000000000..641cd75e323b
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_vp9.h
 @@ -0,0 +1,13 @@
@@ -1121,7 +1121,7 @@ index 0000000..641cd75
 +#endif
 \ No newline at end of file
 diff --git a/drivers/media/platform/meson/vdec/hevc_regs.h b/drivers/media/platform/meson/vdec/hevc_regs.h
-index ba49f90..c80479d 100644
+index ba49f906be5a..c80479d7c9c3 100644
 --- a/drivers/media/platform/meson/vdec/hevc_regs.h
 +++ b/drivers/media/platform/meson/vdec/hevc_regs.h
 @@ -120,6 +120,8 @@
@@ -1153,7 +1153,7 @@ index ba49f90..c80479d 100644
  
  #define HEVC_SAO_VERSION 0xd800
 diff --git a/drivers/media/platform/meson/vdec/vdec_platform.c b/drivers/media/platform/meson/vdec/vdec_platform.c
-index 86c2a2f..6bd9d7d 100644
+index 86c2a2f0b18e..6bd9d7dad3d6 100644
 --- a/drivers/media/platform/meson/vdec/vdec_platform.c
 +++ b/drivers/media/platform/meson/vdec/vdec_platform.c
 @@ -14,6 +14,7 @@
@@ -1164,10 +1164,11 @@ index 86c2a2f..6bd9d7d 100644
  
  static const struct amvdec_format vdec_formats_gxbb[] = {
  	{
-@@ -103,6 +104,17 @@ static const struct amvdec_format vdec_formats_gxbb[] = {
+@@ -102,6 +103,17 @@ static const struct amvdec_format vdec_formats_gxbb[] = {
+ };
  
  static const struct amvdec_format vdec_formats_gxl[] = {
- 	{
++	{
 +		.pixfmt = V4L2_PIX_FMT_VP9,
 +		.min_buffers = 16,
 +		.max_buffers = 24,
@@ -1178,14 +1179,14 @@ index 86c2a2f..6bd9d7d 100644
 +		.firmware_path = "meson/gx/vvp9_mc",
 +		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, V4L2_PIX_FMT_AM21C, 0 },
 +	},
-+	{
+ 	{
  		.pixfmt = V4L2_PIX_FMT_HEVC,
  		.min_buffers = 16,
- 		.max_buffers = 24,
-@@ -189,6 +201,17 @@ static const struct amvdec_format vdec_formats_gxl[] = {
+@@ -188,6 +200,17 @@ static const struct amvdec_format vdec_formats_gxl[] = {
+ };
  
  static const struct amvdec_format vdec_formats_gxm[] = {
- 	{
++	{
 +		.pixfmt = V4L2_PIX_FMT_VP9,
 +		.min_buffers = 16,
 +		.max_buffers = 24,
@@ -1196,10 +1197,9 @@ index 86c2a2f..6bd9d7d 100644
 +		.firmware_path = "meson/gx/vvp9_mc",
 +		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, V4L2_PIX_FMT_AM21C, 0 },
 +	},
-+	{
+ 	{
  		.pixfmt = V4L2_PIX_FMT_HEVC,
  		.min_buffers = 16,
- 		.max_buffers = 24,
 -- 
-2.7.4
+2.17.1
 

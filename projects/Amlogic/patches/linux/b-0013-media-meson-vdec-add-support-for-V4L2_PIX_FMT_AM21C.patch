@@ -1,17 +1,17 @@
-From 8117bac2e77a0fa32a7370c0599ffdb21f0b1c65 Mon Sep 17 00:00:00 2001
+From 318c6749464f0a7e08526d760d754897f5c3a676 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Sun, 21 Oct 2018 15:15:26 +0200
-Subject: [PATCH 13/22] media: meson: vdec: add support for V4L2_PIX_FMT_AM21C
+Subject: [PATCH 13/24] media: meson: vdec: add support for V4L2_PIX_FMT_AM21C
 
 Support the lossless framebuffer compression format.
 ---
- drivers/media/platform/meson/vdec/vdec.c         | 12 +++++++++
- drivers/media/platform/meson/vdec/vdec_helpers.c | 31 ++++++++++++++++++++++++
- drivers/media/platform/meson/vdec/vdec_helpers.h |  4 +++
+ drivers/media/platform/meson/vdec/vdec.c      | 12 +++++++
+ .../media/platform/meson/vdec/vdec_helpers.c  | 31 +++++++++++++++++++
+ .../media/platform/meson/vdec/vdec_helpers.h  |  4 +++
  3 files changed, 47 insertions(+)
 
 diff --git a/drivers/media/platform/meson/vdec/vdec.c b/drivers/media/platform/meson/vdec/vdec.c
-index ca64045..dcde0a2 100644
+index ca6404546eb8..dcde0a2e5640 100644
 --- a/drivers/media/platform/meson/vdec/vdec.c
 +++ b/drivers/media/platform/meson/vdec/vdec.c
 @@ -164,6 +164,7 @@ static int vdec_queue_setup(struct vb2_queue *q,
@@ -55,7 +55,7 @@ index ca64045..dcde0a2 100644
  	} else {
  		return NULL;
 diff --git a/drivers/media/platform/meson/vdec/vdec_helpers.c b/drivers/media/platform/meson/vdec/vdec_helpers.c
-index bb0f386..eda11c3 100644
+index bb0f38642805..eda11c317ab7 100644
 --- a/drivers/media/platform/meson/vdec/vdec_helpers.c
 +++ b/drivers/media/platform/meson/vdec/vdec_helpers.c
 @@ -50,6 +50,33 @@ void amvdec_write_parser(struct amvdec_core *core, u32 reg, u32 val)
@@ -104,7 +104,7 @@ index bb0f386..eda11c3 100644
  
  	vbuf->vb2_buf.timestamp = timestamp;
 diff --git a/drivers/media/platform/meson/vdec/vdec_helpers.h b/drivers/media/platform/meson/vdec/vdec_helpers.h
-index 060799b..189e55a 100644
+index 060799b5e4d4..189e55aa0e16 100644
 --- a/drivers/media/platform/meson/vdec/vdec_helpers.h
 +++ b/drivers/media/platform/meson/vdec/vdec_helpers.h
 @@ -26,6 +26,10 @@ void amvdec_clear_dos_bits(struct amvdec_core *core, u32 reg, u32 val);
@@ -119,5 +119,5 @@ index 060799b..189e55a 100644
  			     u32 offset, u32 field);
  void amvdec_dst_buf_done(struct amvdec_session *sess,
 -- 
-2.7.4
+2.17.1
 

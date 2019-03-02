@@ -1,16 +1,16 @@
-From 2669a6dbff7a3f30c74c206921ede74d24024176 Mon Sep 17 00:00:00 2001
+From 8215355c871a5a11a59032e34f583065ee55ef6e Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Thu, 17 Jan 2019 16:59:11 +0100
-Subject: [PATCH 19/22] media: meson: vdec: add VP9 input support
+Subject: [PATCH 19/24] media: meson: vdec: add VP9 input support
 
 Amlogic VP9 decoder requires an additional 16-byte payload before every
 frame header.
 ---
- drivers/media/platform/meson/vdec/esparser.c | 101 +++++++++++++++++++++++++--
+ drivers/media/platform/meson/vdec/esparser.c | 101 ++++++++++++++++++-
  1 file changed, 97 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/platform/meson/vdec/esparser.c b/drivers/media/platform/meson/vdec/esparser.c
-index c3ddc6f..cfb3fcd 100644
+index c3ddc6f985a0..cfb3fcd44311 100644
 --- a/drivers/media/platform/meson/vdec/esparser.c
 +++ b/drivers/media/platform/meson/vdec/esparser.c
 @@ -51,6 +51,7 @@
@@ -149,5 +149,5 @@ index c3ddc6f..cfb3fcd 100644
  
  	if (ret <= 0) {
 -- 
-2.7.4
+2.17.1
 

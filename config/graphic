@@ -56,7 +56,7 @@ get_graphicdrivers() {
   fi
 
   if listcontains "$GRAPHIC_DRIVERS" "panfrost"; then
-    GALLIUM_DRIVERS="$GALLIUM_DRIVERS,panfrost,meson"
+    GALLIUM_DRIVERS="$GALLIUM_DRIVERS,panfrost,kmsro"
     V4L2_SUPPORT="yes"
   fi
 

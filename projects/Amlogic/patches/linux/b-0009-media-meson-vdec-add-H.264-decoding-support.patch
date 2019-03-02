@@ -1,20 +1,20 @@
-From b7f3a490b8bcb3aa5c9b10979878d2ce71231c89 Mon Sep 17 00:00:00 2001
+From b9ee9e3b66961d9fd10d7eb8c84a5ec02e517806 Mon Sep 17 00:00:00 2001
 From: Maxime Jourdan <mjourdan@baylibre.com>
 Date: Wed, 29 Aug 2018 15:42:56 +0200
-Subject: [PATCH 09/22] media: meson: vdec: add H.264 decoding support
+Subject: [PATCH 09/24] media: meson: vdec: add H.264 decoding support
 
 Add support for V4L2_PIX_FMT_H264
 ---
- drivers/media/platform/meson/vdec/Makefile        |   2 +-
- drivers/media/platform/meson/vdec/codec_h264.c    | 478 ++++++++++++++++++++++
- drivers/media/platform/meson/vdec/codec_h264.h    |  13 +
- drivers/media/platform/meson/vdec/vdec_platform.c |  31 ++
+ drivers/media/platform/meson/vdec/Makefile    |   2 +-
+ .../media/platform/meson/vdec/codec_h264.c    | 478 ++++++++++++++++++
+ .../media/platform/meson/vdec/codec_h264.h    |  13 +
+ .../media/platform/meson/vdec/vdec_platform.c |  31 ++
  4 files changed, 523 insertions(+), 1 deletion(-)
  create mode 100644 drivers/media/platform/meson/vdec/codec_h264.c
  create mode 100644 drivers/media/platform/meson/vdec/codec_h264.h
 
 diff --git a/drivers/media/platform/meson/vdec/Makefile b/drivers/media/platform/meson/vdec/Makefile
-index eba8608..01dc960 100644
+index eba86083aadb..01dc9603abdd 100644
 --- a/drivers/media/platform/meson/vdec/Makefile
 +++ b/drivers/media/platform/meson/vdec/Makefile
 @@ -3,6 +3,6 @@
@@ -27,7 +27,7 @@ index eba8608..01dc960 100644
  obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
 diff --git a/drivers/media/platform/meson/vdec/codec_h264.c b/drivers/media/platform/meson/vdec/codec_h264.c
 new file mode 100644
-index 0000000..6ac0115
+index 000000000000..6ac0115afaa3
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_h264.c
 @@ -0,0 +1,478 @@
@@ -511,7 +511,7 @@ index 0000000..6ac0115
 +};
 diff --git a/drivers/media/platform/meson/vdec/codec_h264.h b/drivers/media/platform/meson/vdec/codec_h264.h
 new file mode 100644
-index 0000000..7a15976
+index 000000000000..7a1597611faf
 --- /dev/null
 +++ b/drivers/media/platform/meson/vdec/codec_h264.h
 @@ -0,0 +1,13 @@
@@ -530,7 +530,7 @@ index 0000000..7a15976
 +#endif
 \ No newline at end of file
 diff --git a/drivers/media/platform/meson/vdec/vdec_platform.c b/drivers/media/platform/meson/vdec/vdec_platform.c
-index 291f1ee..baecf59 100644
+index 291f1eeb27d9..baecf5921d56 100644
 --- a/drivers/media/platform/meson/vdec/vdec_platform.c
 +++ b/drivers/media/platform/meson/vdec/vdec_platform.c
 @@ -9,9 +9,20 @@
@@ -589,5 +589,5 @@ index 291f1ee..baecf59 100644
  		.min_buffers = 8,
  		.max_buffers = 8,
 -- 
-2.7.4
+2.17.1
 
