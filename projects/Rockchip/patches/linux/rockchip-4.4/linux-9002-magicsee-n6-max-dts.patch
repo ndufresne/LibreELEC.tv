@@ -9,7 +9,7 @@
 +	ir-receiver {
 +		compatible = "gpio-ir-receiver";
 +		gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_LOW>;
-+		linux,rc-map-name = "rc-pine64";
++		linux,rc-map-name = "rc-magicn6";
 +		pinctrl-0 = <&ir_int>;
 +		pinctrl-names = "default";
  	};
