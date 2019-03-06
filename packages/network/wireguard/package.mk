@@ -23,19 +23,24 @@ make_target() {
 
 makeinstall_target() {
   mkdir -p $INSTALL/usr/bin
+    cp $PKG_DIR/scripts/wireguard-config $INSTALL/usr/bin
     cp $PKG_BUILD/src/tools/wg $INSTALL/usr/bin
-    cp $PKG_DIR/scripts/wireguard-setup $INSTALL/usr/bin
+
+  mkdir -p $INSTALL/usr/template
+    cp $PKG_DIR/template/wg0.conf $INSTALL/usr/template
+    cp $PKG_DIR/template/wgnet $INSTALL/usr/template
 
   mkdir -p $INSTALL/usr/config
     cp $PKG_DIR/config/wireguard.conf.sample $INSTALL/usr/config
 
   mkdir -p $INSTALL/etc/wireguard
-    ln -sf /storage/.config/wireguard.conf $INSTALL/etc/wireguard/wg0.conf
+    ln -sf /run/libreelec/wireguard/wg0.conf $INSTALL/etc/wireguard/wg0.conf
 
   mkdir -p $INSTALL/$(get_full_module_dir)/$PKG_NAME
     cp src/*.ko $INSTALL/$(get_full_module_dir)/$PKG_NAME
 }
 
 post_install() {
-  enable_service wireguard-defaults.service
+  enable_service wireguard-config.service
+  enable_service wireguard.service
 }

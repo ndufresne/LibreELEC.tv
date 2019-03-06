@@ -1,0 +1,15 @@
+[Unit]
+Description=WireGuard VPN Service
+After=network-online.target wireguard-config.service
+Requires=wireguard-config.service
+
+ConditionPathExists=/run/libreelec/wireguard/wg0.conf
+ConditionPathExists=/run/libreelec/wireguard/wgnet
+
+[Service]
+ExecStart=/bin/sh -c '/run/libreelec/wireguard/wgnet up'
+ExecStop=/bin/sh -c '/run/libreelec/wireguard/wgnet down'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=basic.target

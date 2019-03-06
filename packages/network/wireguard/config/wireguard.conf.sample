@@ -1,17 +1,13 @@
-[Interface]
-Address = @@INT_CIDR@@
-PrivateKey = @@INT_PRIVATEKEY@@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# Copyright (C) 2019-present Team LibreELEC (https://libreelec.tv)
 
-[Peer]
-PublicKey = @@PEER_PUBLICKEY@@
-PresharedKey = @@PEER_PRESHAREDKEY@@
-AllowedIPs = 0.0.0.0/0
-Endpoint = @@PEER_ENDPOINT@@:@@PEER_PORT@@
-PersistentKeepalive = 25
-
-# Copy the following to the [Peer] section on the server (remove # marks)
-#
-# [Peer]
-# PublicKey = @@INT_PUBLICKEY@@
-# PresharedKey = @@INT_PRESHARED@@
-# AllowedIPs = @@WAN_CIDR@@
+INT_LISTENPORT=""     # local port that this host listens for wireguard traffic on:
+INT_PRIVATEKEY=""     # local private key from /storage/.cache/wireguard/privatekey
+INT_CIDR=""           # local wireguard private address in CIDR format, e.g. 10.0.0.2/32
+INT_GATEWAY=""        # local network gateway address, e.g. 192.168.1.1
+PEER_PUBLICKEY=""     # remote peer public key
+PEER_ALLOWEDIPS=""    # remote peer allowed IPs, set 0.0.0.0/0 to route all traffic
+PEER_SERVER=""        # remote peer server IP address, used in routing rules
+PEER_LISTENPORT=""    # remote peer wireguard traffic/listen port
+PEER_KEEPALIVE=""     # remote peer keepalive value in seconds, 0 disables keepalive
+PEER_PRESHAREDKEY=""  # remote peer presharedkey (optional)

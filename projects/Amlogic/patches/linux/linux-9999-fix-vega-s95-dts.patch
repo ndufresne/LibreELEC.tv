@@ -27,28 +27,27 @@ index 93a4acf2c4..153b98fd16 100644
  		ethernet0 = &ethmac;
  	};
  
-@@ -28,16 +33,37 @@
+@@ -28,10 +33,10 @@
  		};
  	};
  
 -	usb_vbus: regulator-usb0-vbus {
--		compatible = "regulator-fixed";
--
--		regulator-name = "USB0_VBUS";
 +	usb_pwr: regulator-usb-pwrs {
-+		compatible = "regulator-fixed";
-+
+ 		compatible = "regulator-fixed";
+ 
+-		regulator-name = "USB0_VBUS";
 +		regulator-name = "USB_PWR";
  
  		regulator-min-microvolt = <5000000>;
  		regulator-max-microvolt = <5000000>;
- 
- 		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
+@@ -40,20 +45,34 @@
  		enable-active-high;
-+	};
-+
+ 	};
+ 
+-	vcc_3v3: regulator-vcc_3v3 {
 +	vddio_boot: regulator-vddio_boot {
-+		compatible = "regulator-fixed";
+ 		compatible = "regulator-fixed";
+-		regulator-name = "VCC_3V3";
 +		regulator-name = "VDDIO_BOOT";
 +		regulator-min-microvolt = <1800000>;
 +		regulator-max-microvolt = <1800000>;
@@ -57,32 +56,29 @@ index 93a4acf2c4..153b98fd16 100644
 +	vddao_3v3: regulator-vddao_3v3 {
 +		compatible = "regulator-fixed";
 +		regulator-name = "VDDAO_3V3";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 	};
+ 
+-	vcc_1v8: regulator-vcc_1v8 {
++	vddio_ao18: regulator-vddio_ao18 {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "VCC_1V8";
++		regulator-name = "VDDIO_AO18";
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
+ 	};
+ 
++	vcc_3v3: regulator-vcc_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
 +		regulator-min-microvolt = <3300000>;
 +		regulator-max-microvolt = <3300000>;
 +	};
 +
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
- 	};
- 
- 	vcc_3v3: regulator-vcc_3v3 {
-@@ -45,13 +71,6 @@
- 		regulator-name = "VCC_3V3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
--	};
--
--	vcc_1v8: regulator-vcc_1v8 {
--		compatible = "regulator-fixed";
--		regulator-name = "VCC_1V8";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
- 	};
- 
  	emmc_pwrseq: emmc-pwrseq {
+ 		compatible = "mmc-pwrseq-emmc";
+ 		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
 @@ -73,6 +92,61 @@
  		clocks = <&wifi32k>;
  		clock-names = "ext_clock";
@@ -145,7 +141,7 @@ index 93a4acf2c4..153b98fd16 100644
  };
  
  &ethmac {
-@@ -97,14 +171,30 @@
+@@ -97,10 +171,25 @@
  		eth_phy0: ethernet-phy@0 {
  			/* Realtek RTL8211F (0x001cc916) */
  			reg = <0>;
@@ -171,12 +167,7 @@ index 93a4acf2c4..153b98fd16 100644
  &ir {
  	status = "okay";
  	pinctrl-0 = <&remote_input_ao_pins>;
- 	pinctrl-names = "default";
-+	linux,rc-map-name = "rc-geekbox";
- };
- 
- &pwm_ef {
-@@ -115,10 +205,15 @@
+@@ -115,6 +204,11 @@
  	clock-names = "clkin0";
  };
  
@@ -188,12 +179,7 @@ index 93a4acf2c4..153b98fd16 100644
  /* Wireless SDIO Module */
  &sd_emmc_a {
  	status = "okay";
--	pinctrl-0 = <&sdio_pins &sdio_irq_pins>;
-+	pinctrl-0 = <&sdio_pins>, <&sdio_irq_pins>;
- 	pinctrl-1 = <&sdio_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
- 	#address-cells = <1>;
-@@ -133,8 +228,8 @@
+@@ -133,8 +227,8 @@
  
  	mmc-pwrseq = <&sdio_pwrseq>;
  
@@ -204,9 +190,9 @@ index 93a4acf2c4..153b98fd16 100644
  
  	brcmf: wifi@1 {
  		reg = <1>;
-@@ -156,7 +251,8 @@
- 
- 	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+@@ -157,7 +251,8 @@
+ 	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+ 	cd-inverted;
  
 -	vmmc-supply = <&vcc_3v3>;
 +	vmmc-supply = <&vddao_3v3>;
@@ -214,13 +200,11 @@ index 93a4acf2c4..153b98fd16 100644
  };
  
  /* eMMC */
-@@ -176,9 +272,22 @@
+@@ -177,9 +272,22 @@
  
  	mmc-pwrseq = <&emmc_pwrseq>;
  	vmmc-supply = <&vcc_3v3>;
 -	vmmcq-sumpply = <&vcc_1v8>;
--};
--
 +	vqmmc-supply = <&vddio_boot>;
 +};
 +
@@ -232,15 +216,15 @@ index 93a4acf2c4..153b98fd16 100644
 +
 +	bluetooth {
 +		compatible = "brcm,bcm43438-bt";
-+//		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
 +	};
-+};
-+
+ };
+ 
 +/* This UART is brought out to the DB9 connector */
  &uart_AO {
  	status = "okay";
  	pinctrl-0 = <&uart_ao_a_pins>;
-@@ -187,7 +296,7 @@
+@@ -188,7 +296,7 @@
  
  &usb0_phy {
  	status = "okay";
@@ -249,4 +233,3 @@ index 93a4acf2c4..153b98fd16 100644
  };
  
  &usb1_phy {
-
