@@ -69,15 +69,31 @@ do_lima(){
   rm projects/Amlogic/patches/linux/e-* 2&>/dev/null
   cd ~/linux.lima
   rm *.patch 2&>/dev/null
-  git fetch origin lima-5.0-rc7
-  git checkout lima-5.0-rc7
-  git reset --hard origin/lima-5.0-rc7
-  git format-patch --start-number 0001 a3b22b9f11d9fbc48b0291ea92259a5a810e9438 #5.0.0-rc7
+  git fetch origin lima-5.0-rc8-2
+  git checkout lima-5.0-rc8-2
+  git reset --hard origin/lima-5.0-rc8-2
+  git format-patch --start-number 0001 5908e6b738e3357af42c10e1183753c70a0117a9 #5.0.0-rc8
   for filename in *.patch; do mv "$filename" "e-$filename"; done;
   mv *.patch $DIR/projects/Amlogic/patches/linux/
 }
 
 do_panfrost(){
+  # PANFROST KERNEL DRIVER
+  rm projects/Amlogic/patches/linux/f-* 2&>/dev/null
+  cd ~/linux.panfrost
+  rm *.patch 2&>/dev/null
+  git fetch origin panfrost-5.0
+  git checkout panfrost-5.0
+  git reset --hard origin/panfrost-5.0
+  git format-patch --start-number 0001 12ad143e1b803e541e48b8ba40f550250259ecdd #5.0.0
+  for filename in *.patch; do mv "$filename" "f-$filename"; done;
+  mv *.patch $DIR/projects/Amlogic/patches/linux/
+  cd $DIR
+  rm projects/Amlogic/patches/linux/f-0009-drm-Add-reservation_object-to-drm_gem_object.patch
+  rm projects/Amlogic/patches/linux/f-0017-drm-doc-document-recommended-component-helper-usage.patch
+}
+
+do_nondrm(){
   # PANFROST NONDRM MESA PATCHES
   rm packages/graphics/mesa/patches/panfrost/a-* 2&>/dev/null
   cd ~/panfrost.nondrm
@@ -85,7 +101,7 @@ do_panfrost(){
   git fetch origin master
   git checkout master
   git reset --hard origin/master
-  git format-patch --start-number 0001 a98efe3901c3b4d6cc7587b0909d6fb9c49e8323
+  git format-patch --start-number 0001 a98efe3901c3b4d6cc7587b0909d6fb9c49e8323 #nondrm
   for filename in *.patch; do mv "$filename" "a-$filename"; done;
   sed -i 's|a/|a/src/gallium/drivers/panfrost/nondrm/|g' *.patch
   sed -i 's|b/|b/src/gallium/drivers/panfrost/nondrm/|g' *.patch
@@ -114,12 +130,12 @@ case $1 in
   panfrost)
     do_panfrost
     ;;
-  all|*)
-    do_narmstrong
-    do_upstream
-    do_elyotna
-    do_kwiboo
-    do_erstrom
+  nondrm)
+    do_nondrm
+    ;;
+  *)
+    echo "error: nothing selected!"
+    ;;
 esac
 
 cd $DIR

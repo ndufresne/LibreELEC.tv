@@ -21,6 +21,9 @@
         ;;
     esac
 
+    LINUX="${LINUX:-rockchip-4.4}"
+#    LINUX="${LINUX:-rockchip-5.x}"
+
   # Kernel target
     KERNEL_TARGET="Image"
 
@@ -49,7 +52,7 @@
   # e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"
     ADDITIONAL_PACKAGES+=" rockchip-autoscript"
 
-
     if [ "$LINUX" != "rockchip-4.4" ]; then
-      ADDITIONAL_DRIVERS="mali-midgard-rockchip"
+#      ADDITIONAL_DRIVERS="mali-midgard-rockchip"
+      ADDITIONAL_DRIVERS=""
     fi

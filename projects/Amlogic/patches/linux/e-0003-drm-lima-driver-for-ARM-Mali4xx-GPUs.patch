@@ -1,7 +1,7 @@
-From 4cac0ddf316eac9780d9dcb3977b1498fe182d88 Mon Sep 17 00:00:00 2001
+From 9f78f6a4fdbf6dd3f0214083e6427f3a3beea2f1 Mon Sep 17 00:00:00 2001
 From: Qiang Yu <yuq825@gmail.com>
 Date: Mon, 14 May 2018 20:53:38 +0800
-Subject: [PATCH 3/5] drm/lima: driver for ARM Mali4xx GPUs
+Subject: [PATCH 3/9] drm/lima: driver for ARM Mali4xx GPUs
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -37,6 +37,10 @@ Content-Transfer-Encoding: 8bit
   from different user. drm_sched gets task from each lima context
   in a fair way.
 
+v3:
+- fix comments from kbuild robot
+- restrict supported arch to tested ones
+
 v2:
 - fix syscall argument check
 - fix job finish fence leak since kernel 5.0
@@ -66,7 +70,7 @@ Signed-off-by: Qiang Yu <yuq825@gmail.com>
 ---
  drivers/gpu/drm/Kconfig               |   2 +
  drivers/gpu/drm/Makefile              |   1 +
- drivers/gpu/drm/lima/Kconfig          |   9 +
+ drivers/gpu/drm/lima/Kconfig          |  10 +
  drivers/gpu/drm/lima/Makefile         |  21 ++
  drivers/gpu/drm/lima/lima_bcast.c     |  46 +++
  drivers/gpu/drm/lima/lima_bcast.h     |  14 +
@@ -78,7 +82,7 @@ Signed-off-by: Qiang Yu <yuq825@gmail.com>
  drivers/gpu/drm/lima/lima_dlbu.h      |  18 ++
  drivers/gpu/drm/lima/lima_drv.c       | 353 +++++++++++++++++++++
  drivers/gpu/drm/lima/lima_drv.h       |  46 +++
- drivers/gpu/drm/lima/lima_gem.c       | 376 +++++++++++++++++++++++
+ drivers/gpu/drm/lima/lima_gem.c       | 379 +++++++++++++++++++++++
  drivers/gpu/drm/lima/lima_gem.h       |  25 ++
  drivers/gpu/drm/lima/lima_gem_prime.c |  47 +++
  drivers/gpu/drm/lima/lima_gem_prime.h |  13 +
@@ -88,19 +92,19 @@ Signed-off-by: Qiang Yu <yuq825@gmail.com>
  drivers/gpu/drm/lima/lima_l2_cache.h  |  14 +
  drivers/gpu/drm/lima/lima_mmu.c       | 142 +++++++++
  drivers/gpu/drm/lima/lima_mmu.h       |  16 +
- drivers/gpu/drm/lima/lima_object.c    | 128 ++++++++
+ drivers/gpu/drm/lima/lima_object.c    | 124 ++++++++
  drivers/gpu/drm/lima/lima_object.h    |  36 +++
  drivers/gpu/drm/lima/lima_pmu.c       |  59 ++++
  drivers/gpu/drm/lima/lima_pmu.h       |  12 +
  drivers/gpu/drm/lima/lima_pp.c        | 423 ++++++++++++++++++++++++++
  drivers/gpu/drm/lima/lima_pp.h        |  19 ++
  drivers/gpu/drm/lima/lima_regs.h      | 298 ++++++++++++++++++
- drivers/gpu/drm/lima/lima_sched.c     | 399 ++++++++++++++++++++++++
+ drivers/gpu/drm/lima/lima_sched.c     | 398 ++++++++++++++++++++++++
  drivers/gpu/drm/lima/lima_sched.h     | 104 +++++++
- drivers/gpu/drm/lima/lima_vm.c        | 274 +++++++++++++++++
+ drivers/gpu/drm/lima/lima_vm.c        | 280 +++++++++++++++++
  drivers/gpu/drm/lima/lima_vm.h        |  62 ++++
  include/uapi/drm/lima_drm.h           | 126 ++++++++
- 36 files changed, 4157 insertions(+)
+ 36 files changed, 4162 insertions(+)
  create mode 100644 drivers/gpu/drm/lima/Kconfig
  create mode 100644 drivers/gpu/drm/lima/Makefile
  create mode 100644 drivers/gpu/drm/lima/lima_bcast.c
@@ -160,16 +164,17 @@ index ce8d1d384319..8d024b729902 100644
 +obj-$(CONFIG_DRM_LIMA)  += lima/
 diff --git a/drivers/gpu/drm/lima/Kconfig b/drivers/gpu/drm/lima/Kconfig
 new file mode 100644
-index 000000000000..7cf061ced1f2
+index 000000000000..260a3b41f364
 --- /dev/null
 +++ b/drivers/gpu/drm/lima/Kconfig
-@@ -0,0 +1,9 @@
+@@ -0,0 +1,10 @@
 +# SPDX-License-Identifier: GPL-2.0 OR MIT
 +# Copyright 2017-2018 Qiang Yu <yuq825@gmail.com>
 +
 +config DRM_LIMA
 +       tristate "LIMA (DRM support for ARM Mali 400/450 GPU)"
 +       depends on DRM
++       depends on ARM || ARM64 || COMPILE_TEST
 +       select DRM_SCHED
 +       help
 +         DRM driver for ARM Mali 400/450 GPUs.
@@ -421,7 +426,7 @@ index 000000000000..2d32ff9b30ad
 +#endif
 diff --git a/drivers/gpu/drm/lima/lima_device.c b/drivers/gpu/drm/lima/lima_device.c
 new file mode 100644
-index 000000000000..771642a4bdf9
+index 000000000000..2e137a0baddb
 --- /dev/null
 +++ b/drivers/gpu/drm/lima/lima_device.c
 @@ -0,0 +1,376 @@
@@ -567,7 +572,7 @@ index 000000000000..771642a4bdf9
 +		dev->regulator = NULL;
 +		if (ret == -ENODEV)
 +			return 0;
-+		dev_err(dev->dev, "failed to get regulator: %ld\n", PTR_ERR(dev->regulator));
++		dev_err(dev->dev, "failed to get regulator: %d\n", ret);
 +		return ret;
 +	}
 +
@@ -1435,10 +1440,10 @@ index 000000000000..640a548cd617
 +#endif
 diff --git a/drivers/gpu/drm/lima/lima_gem.c b/drivers/gpu/drm/lima/lima_gem.c
 new file mode 100644
-index 000000000000..b26fa28119bd
+index 000000000000..666960345566
 --- /dev/null
 +++ b/drivers/gpu/drm/lima/lima_gem.c
-@@ -0,0 +1,376 @@
+@@ -0,0 +1,379 @@
 +// SPDX-License-Identifier: GPL-2.0 OR MIT
 +/* Copyright 2017-2018 Qiang Yu <yuq825@gmail.com> */
 +
@@ -1491,7 +1496,7 @@ index 000000000000..b26fa28119bd
 +	struct lima_drm_priv *priv = to_lima_drm_priv(file);
 +	struct lima_vm *vm = priv->vm;
 +
-+	return lima_vm_bo_add(vm, bo);
++	return lima_vm_bo_add(vm, bo, true);
 +}
 +
 +void lima_gem_object_close(struct drm_gem_object *obj, struct drm_file *file)
@@ -1730,7 +1735,7 @@ index 000000000000..b26fa28119bd
 +
 +		/* increase refcnt of gpu va map to prevent unmapped when executing,
 +		 * will be decreased when task done */
-+		err = lima_vm_bo_add(vm, bo);
++		err = lima_vm_bo_add(vm, bo, false);
 +		if (err) {
 +			drm_gem_object_put_unlocked(obj);
 +			goto err_out0;
@@ -1773,6 +1778,9 @@ index 000000000000..b26fa28119bd
 +	}
 +
 +	lima_gem_unlock_bos(bos, submit->nr_bos, &ctx);
++
++	for (i = 0; i < submit->nr_bos; i++)
++		drm_gem_object_put_unlocked(&bos[i]->gem);
 +
 +	if (out_sync) {
 +		drm_syncobj_replace_fence(out_sync, fence);
@@ -2506,10 +2514,10 @@ index 000000000000..ca173b60fc73
 +#endif
 diff --git a/drivers/gpu/drm/lima/lima_object.c b/drivers/gpu/drm/lima/lima_object.c
 new file mode 100644
-index 000000000000..4113881877df
+index 000000000000..28ff1b8e1dca
 --- /dev/null
 +++ b/drivers/gpu/drm/lima/lima_object.c
-@@ -0,0 +1,128 @@
+@@ -0,0 +1,124 @@
 +// SPDX-License-Identifier: GPL-2.0 OR MIT
 +/* Copyright 2018 Qiang Yu <yuq825@gmail.com> */
 +
@@ -2522,9 +2530,7 @@ index 000000000000..4113881877df
 +void lima_bo_destroy(struct lima_bo *bo)
 +{
 +        if (bo->sgt) {
-+		if (bo->pages)
-+			kfree(bo->pages);
-+
++		kfree(bo->pages);
 +		drm_prime_gem_destroy(&bo->gem, bo->sgt);
 +	}
 +	else {
@@ -2543,9 +2549,7 @@ index 000000000000..4113881877df
 +			drm_gem_put_pages(&bo->gem, bo->pages, true, true);
 +	}
 +
-+	if (bo->pages_dma_addr)
-+		kfree(bo->pages_dma_addr);
-+
++	kfree(bo->pages_dma_addr);
 +	drm_gem_object_release(&bo->gem);
 +	kfree(bo);
 +}
@@ -3523,10 +3527,10 @@ index 000000000000..d5ade8fc8901
 +#endif
 diff --git a/drivers/gpu/drm/lima/lima_sched.c b/drivers/gpu/drm/lima/lima_sched.c
 new file mode 100644
-index 000000000000..9a77e0d505de
+index 000000000000..539b29ce5e9a
 --- /dev/null
 +++ b/drivers/gpu/drm/lima/lima_sched.c
-@@ -0,0 +1,399 @@
+@@ -0,0 +1,398 @@
 +// SPDX-License-Identifier: GPL-2.0 OR MIT
 +/* Copyright 2017-2018 Qiang Yu <yuq825@gmail.com> */
 +
@@ -3560,8 +3564,7 @@ index 000000000000..9a77e0d505de
 +
 +void lima_sched_slab_fini(void)
 +{
-+	if (lima_fence_slab)
-+		kmem_cache_destroy(lima_fence_slab);
++	kmem_cache_destroy(lima_fence_slab);
 +}
 +
 +static inline struct lima_fence *to_lima_fence(struct dma_fence *fence)
@@ -3639,12 +3642,14 @@ index 000000000000..9a77e0d505de
 +			 struct lima_bo **bos, int num_bos,
 +			 struct lima_vm *vm)
 +{
-+	int err;
++	int err, i;
 +
-+	task->bos = kmalloc(sizeof(*bos) * num_bos, GFP_KERNEL);
++	task->bos = kmemdup(bos, sizeof(*bos) * num_bos, GFP_KERNEL);
 +	if (!task->bos)
-+		return -ENOMEM;
-+	memcpy(task->bos, bos, sizeof(*bos) * num_bos);
++		return -ENOMEM;	
++
++	for (i = 0; i < num_bos; i++)
++		drm_gem_object_get(&bos[i]->gem);
 +
 +	err = drm_sched_job_init(&task->base, &context->base, vm);
 +	if (err) {
@@ -3663,16 +3668,16 @@ index 000000000000..9a77e0d505de
 +
 +	drm_sched_job_cleanup(&task->base);
 +
-+	for (i = 0; i < task->num_dep; i++) {
-+		if (task->dep[i])
-+			dma_fence_put(task->dep[i]);
-+	}
++	for (i = 0; i < task->num_dep; i++)
++		dma_fence_put(task->dep[i]);
 +
-+	if (task->dep)
-+		kfree(task->dep);
++	kfree(task->dep);
 +
-+	if (task->bos)
++	if (task->bos) {
++		for (i = 0; i < task->num_bos; i++)
++			drm_gem_object_put_unlocked(&task->bos[i]->gem);
 +		kfree(task->bos);
++	}
 +
 +	lima_vm_put(task->vm);
 +}
@@ -3868,10 +3873,8 @@ index 000000000000..9a77e0d505de
 +
 +	dma_fence_put(task->fence);
 +
-+	for (i = 0; i < task->num_bos; i++) {
++	for (i = 0; i < task->num_bos; i++)
 +		lima_vm_bo_del(vm, bos[i]);
-+		drm_gem_object_put_unlocked(&bos[i]->gem);
-+	}
 +
 +	lima_sched_task_fini(task);
 +	kmem_cache_free(pipe->task_slab, task);
@@ -4038,10 +4041,10 @@ index 000000000000..44985e4da3fb
 +#endif
 diff --git a/drivers/gpu/drm/lima/lima_vm.c b/drivers/gpu/drm/lima/lima_vm.c
 new file mode 100644
-index 000000000000..7e29ebbfddc7
+index 000000000000..39eba3fae019
 --- /dev/null
 +++ b/drivers/gpu/drm/lima/lima_vm.c
-@@ -0,0 +1,274 @@
+@@ -0,0 +1,280 @@
 +// SPDX-License-Identifier: GPL-2.0 OR MIT
 +/* Copyright 2017-2018 Qiang Yu <yuq825@gmail.com> */
 +
@@ -4141,7 +4144,7 @@ index 000000000000..7e29ebbfddc7
 +	return ret;
 +}
 +
-+int lima_vm_bo_add(struct lima_vm *vm, struct lima_bo *bo)
++int lima_vm_bo_add(struct lima_vm *vm, struct lima_bo *bo, bool create)
 +{
 +	struct lima_bo_va *bo_va;
 +	int err;
@@ -4153,6 +4156,12 @@ index 000000000000..7e29ebbfddc7
 +		bo_va->ref_count++;
 +		mutex_unlock(&bo->lock);
 +		return 0;
++	}
++
++	/* should not create new bo_va if not asked by caller */
++	if (!create) {
++		mutex_unlock(&bo->lock);
++		return -ENOENT;
 +	}
 +
 +	bo_va = kzalloc(sizeof(*bo_va), GFP_KERNEL);
@@ -4318,7 +4327,7 @@ index 000000000000..7e29ebbfddc7
 +}
 diff --git a/drivers/gpu/drm/lima/lima_vm.h b/drivers/gpu/drm/lima/lima_vm.h
 new file mode 100644
-index 000000000000..ed01f0e00778
+index 000000000000..a135e2f05315
 --- /dev/null
 +++ b/drivers/gpu/drm/lima/lima_vm.h
 @@ -0,0 +1,62 @@
@@ -4362,7 +4371,7 @@ index 000000000000..ed01f0e00778
 +	struct lima_vm_page bts[LIMA_VM_NUM_BT];
 +};
 +
-+int lima_vm_bo_add(struct lima_vm *vm, struct lima_bo *bo);
++int lima_vm_bo_add(struct lima_vm *vm, struct lima_bo *bo, bool create);
 +void lima_vm_bo_del(struct lima_vm *vm, struct lima_bo *bo);
 +
 +u32 lima_vm_get_va(struct lima_vm *vm, struct lima_bo *bo);

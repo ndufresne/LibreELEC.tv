@@ -3,12 +3,12 @@
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="brcmfmac_sdio-firmware-aml"
-PKG_VERSION="cf5f4f90ae0cfda80864ab5aabcec738f45c5eb1"
-PKG_SHA256="ca2d7d181d3759f614921a12d958ba450899643d6c46dea91d1b2fecfa20532a"
+PKG_VERSION="8ec7882b55a2e16b284a5b98ba17649f9ab2f6d3"
+PKG_SHA256=""
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="https://github.com/chewitt/brcmfmac_sdio-firmware-aml"
-PKG_URL="https://github.com/chewitt/$PKG_NAME/archive/$PKG_VERSION.tar.gz"
+PKG_SITE="https://github.com/150balbes/brcmfmac_sdio-firmware"
+PKG_URL="https://github.com/150balbes/brcmfmac_sdio-firmware/archive/$PKG_VERSION.tar.gz"
 PKG_SECTION="firmware"
 PKG_LONGDESC="Broadcom SDIO firmware used with LibreELEC mainline kernels"
 PKG_TOOLCHAIN="manual"

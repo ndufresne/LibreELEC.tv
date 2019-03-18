@@ -46,8 +46,8 @@ case "$LINUX" in
     PKG_BUILD_PERF="no"
     ;;
   amlogic-mainline)
-    PKG_VERSION="1c163f4c7b3f621efff9b28a47abb36f7378d783" # 5.0.0
-    PKG_SHA256="1ef2358df48eaced974e049037d20d4280603ba26fdf6e0072f749180c9c66cd"
+    PKG_VERSION="9e6fdea016e45c5feab60589241e0d3607d39945" # 5.0.2
+    PKG_SHA256="ed84ec0dd48dfb01596f179639baf85099ea8fcba0dfc8bad67e1fca81ce0b2d"
     PKG_URL="https://github.com/torvalds/linux/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_DIR="$PKG_NAME-$PKG_VERSION*"
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET u-boot-tools-aml:host"
@@ -60,6 +60,12 @@ case "$LINUX" in
     PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
     ;;
   rockchip-5.x)
+    PKG_VERSION="5.0-rc6"
+    PKG_SHA256="dc0ffa31389ab6a349339a93b388f36605ef8cd3d6238f129c27d5c7e584258c"
+    PKG_URL="https://git.kernel.org/torvalds/t/$PKG_NAME-$PKG_VERSION.tar.gz"
+    PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
+    ;;
+  rockchip-5.0)
     PKG_VERSION="5.0-rc6"
     PKG_SHA256="dc0ffa31389ab6a349339a93b388f36605ef8cd3d6238f129c27d5c7e584258c"
     PKG_URL="https://git.kernel.org/torvalds/t/$PKG_NAME-$PKG_VERSION.tar.gz"

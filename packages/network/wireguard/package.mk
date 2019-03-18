@@ -23,7 +23,8 @@ make_target() {
 
 makeinstall_target() {
   mkdir -p $INSTALL/usr/bin
-    cp $PKG_DIR/scripts/wireguard-config $INSTALL/usr/bin
+    cp $PKG_DIR/scripts/wg-config $INSTALL/usr/bin
+    cp $PKG_DIR/scripts/wg-quick $INSTALL/usr/bin
     cp $PKG_BUILD/src/tools/wg $INSTALL/usr/bin
 
   mkdir -p $INSTALL/usr/template
